@@ -155,9 +155,9 @@ sub make {
 }
 
 sub print_mhtml {
-    my ($self) = @_;
-    my $arg = shift;
+    my ($self, $arg) = @_;
 
+    #TODO: Only if a TOC was set!
     $self->_generate_toc();
 
     unless ($arg) {
