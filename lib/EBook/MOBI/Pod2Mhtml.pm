@@ -30,7 +30,7 @@ sub begin_input {
     $parser->_debug('found POD, parsing...');
 
     # make sure that this variable is set to 0 at beginning
-    $parser->{__listcontext} = 0;
+    $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 0;
 
     if (exists $parser->{__body} and $parser->{__body}) {
         print $out_fh "<body>\n";
@@ -46,7 +46,7 @@ sub end_input {
     $parser->_debug('...end of POD reached');
 
     # at the end of file we should not be in listcontext anymore
-    if($parser->{__listcontext}) {
+    if($parser->{EBook_MOBI_Pod2Mhtml_listcontext}) {
         croak "POD parsing error. Did you forget '=back' at end of list?";
     }
 
@@ -138,26 +138,27 @@ sub command {
             # unordered list! So we just set a global variable to 'begin',
             # the first item call can then know that it is the first item
             # and that it defines the rest of the list type.
-            $parser->{__listcontext} = 'begin';
+            $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 'begin';
         }
         # BACK: ends the listcontext
         elsif ($command eq 'back') {
 
             # print end-tag according to the lists type
-            if ($parser->{__listcontext} eq 'ul') {
+            if ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'ul') {
+                print $out_fh '</li>' . "\n"; # close last item
                 print $out_fh '</ul>' . "\n";
             }
-            elsif ($parser->{__listcontext} eq 'ol') {
+            elsif ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'ol') {
+                print $out_fh '</li>' . "\n"; # close last item
                 print $out_fh '</ol>' . "\n";
             }
             else {
                 croak 'POD parsing error. Undefined listcontext:'
-                      . $parser->{__listcontext};
+                      . $parser->{EBook_MOBI_Pod2Mhtml_listcontext};
             }
 
             # Set listcontext to zero
-            $parser->{__listcontext} = 0;
-
+            $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 0;
         }
         # ITEM: the lists items
         elsif ($command eq 'item') {
@@ -165,36 +166,61 @@ sub command {
             # If we are still in listcontext 'begin' this means that this is
             # the first item of the list, which will be used to figure out
             # the type of the list.
-            if ($parser->{__listcontext} eq 'begin') {
+            if ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'begin') {
 
                 # is there a digit at first, if yes this is an ordered list
                 if ($expansion =~ /^\s*\d+\s*(.*)$/) {
                     $expansion = $1;
-                    $parser->{__listcontext} = 'ol';
-                    print $out_fh '<ol>' . "\n"
+                    $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 'ol';
+                    print $out_fh '<ol>' . "\n";
                 }
                 # is there a '*' at first, if yes this is an unordered list
                 elsif ($expansion =~ /^\s*\*{1}\s*(.*)$/) {
                     $expansion = $1;
-                    $parser->{__listcontext} = 'ul';
-                    print $out_fh '<ul>' . "\n"
+                    $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 'ul';
+                    print $out_fh '<ul>' . "\n";
                 }
                 # are there only prinable chars? We default to unordered
                 elsif ($expansion =~ /^[[:print:]]+$/) {
-                    $parser->{__listcontext} = 'ul';
-                    print $out_fh '<ul>' . "\n"
+                    $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 'ul';
+                    print $out_fh '<ul>' . "\n";
                     # do nothing
                 }
-                # something seems to be wrong if we reach here!
+                # The lists text may be in a normal text section...
+                # we default to unordered
                 else {
-                    croak 'This string does not seem to fit into a list: '
-                          . $expansion;
+                    $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 'ul';
+                    print $out_fh '<ul>' . "\n";
+                    #croak 'This string does not seem to fit into a list: '
+                          #. $expansion;
                 }
+
+                # no matter what: first item starts with content now!
+                print $out_fh '<li>' . $expansion;
             }
-            
-            # If it is not the first item, but also after the first one...
-            # we always need to print out the items content.
-            print $out_fh '<li>' . $expansion . '</li>' . "\n"
+
+            # if it is not the first item we save the checks for list-type
+            else {
+
+                # but first we need to close the last item!
+                print $out_fh '</li>' . "\n";
+
+                # then we check the type and extract the content
+                if ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'ol') {
+                    if ($expansion =~ /^\s*\d+\s*(.*)$/) {
+                        $expansion = $1;
+                    }
+                }
+                if ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'ul') {
+                    if ($expansion =~ /^\s*\*{1}\s*(.*)$/) {
+                        $expansion = $1;
+                    }
+                }
+
+                # we print the item... but we don't close it!
+                # it get's closed by the next item or the =back call
+                print $out_fh '<li>' . $expansion;
+            }
         }
         elsif ($command eq 'cut') {
             # We don't need to do anything here...
@@ -241,6 +267,26 @@ sub textblock {
     my ($parser, $paragraph, $line_num) = @_; 
     my $out_fh = $parser->output_handle();       # handle for parsing output
 
+    # ok, this one is tricky...
+    # textblock() can be called when the parser is actually parsing a list.
+    # this happens if the list is written like that:
+    # =over
+    #
+    # =item
+    #
+    # Text that appears in this sub as $paragraph
+    #
+    # =back
+    # If the text is on the SAME LINE as the =item command, this will not
+    # happen. It is only when the text is separated with newline.
+    # Ok... we need to check here if we are in a list.. and then do some
+    # stuffe to handle that case.
+    my $is_list = 0;
+    if ($parser->{EBook_MOBI_Pod2Mhtml_listcontext}) {
+        $is_list = 1;;
+    }
+    # ok, that's it... the rest will be handled at the output
+
     # we translate the POD inline commands...
     my $expansion = $parser->interpolate($paragraph, $line_num);
     # remove leading and trailing whitespace...
@@ -248,8 +294,13 @@ sub textblock {
     # and translate special chars to HTML
     $expansion = _html_enc($expansion);
 
-    # that's it. we're done!
-    print $out_fh '<p>' . $expansion . '</p>' . "\n";
+    if ($is_list) {
+        print $out_fh $expansion;
+    }
+    else {
+        # that's it. we're done!
+        print $out_fh '<p>' . $expansion . '</p>' . "\n";
+    }
 }
 
 # Overwrite sub of Pod::Parser

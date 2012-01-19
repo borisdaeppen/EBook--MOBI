@@ -89,7 +89,7 @@ $html_out{lists} = <<'HEREDOC';
 </ul>
 <ol>
 <li>numbered list</li>
-<li>2 numbered list</li>
+<li>numbered list</li>
 </ol>
 <ul>
 <li>5</li>
@@ -150,7 +150,7 @@ $html_out{lists_breakline} = <<'HEREDOC';
 </ul>
 <ol>
 <li>numbered list</li>
-<li>2 numbered list</li>
+<li>numbered list</li>
 </ol>
 <ul>
 <li>5</li>
