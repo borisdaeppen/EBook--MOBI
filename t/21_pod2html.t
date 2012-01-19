@@ -9,7 +9,7 @@ use File::Temp qw(tempfile);
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 12;
+use Test::More tests => 13;
 
 ###########################
 # General module tests... #
@@ -99,6 +99,67 @@ $html_out{lists} = <<'HEREDOC';
 HEREDOC
 
 # 3
+$pod_input{lists_breakline} = <<'HEREDOC';
+==head1 LISTS
+
+==over
+
+==item
+
+normal list (1)
+
+==item
+
+normal list (2)
+
+==back
+
+==over
+
+==item 1
+
+numbered list
+
+==item 2
+
+numbered list
+
+==back
+
+==over
+
+==item *
+
+5
+
+==item
+
+normal list with number as first item
+
+==back
+
+==cut
+HEREDOC
+
+$html_out{lists_breakline} = <<'HEREDOC';
+<body>
+<h1>LISTS</h1>
+<ul>
+<li>normal list (1)</li>
+<li>normal list (2)</li>
+</ul>
+<ol>
+<li>numbered list</li>
+<li>2 numbered list</li>
+</ol>
+<ul>
+<li>5</li>
+<li>normal list with number as first item</li>
+</ul>
+</body>
+HEREDOC
+
+# 4
 $pod_input{pic} = <<'HEREDOC';
 ==head2 PIC
 
@@ -121,7 +182,7 @@ $html_out{pic} = <<'HEREDOC';
 </body>
 HEREDOC
 
-# 4
+# 5
 $pod_input{umlaut} = <<'HEREDOC';
 ==head3 UMLAUT
 
@@ -139,7 +200,7 @@ $html_out{umlaut} = <<'HEREDOC';
 </body>
 HEREDOC
 
-# 5
+# 6
 $pod_input{angle_bracket} = <<'HEREDOC';
 ==head4 ANGLE BRACKET
 
@@ -162,7 +223,7 @@ $html_out{angle_bracket} = <<'HEREDOC';
 </body>
 HEREDOC
 
-# 6
+# 7
 $pod_input{code} = <<'HEREDOC';
 ==head1 CODE
 
@@ -193,7 +254,7 @@ $html_out{code} = <<'HEREDOC';
 </body>
 HEREDOC
 
-# 7
+# 8
 $pod_input{pagebreak} = <<'HEREDOC';
 ==head1 PAGEBREAK
 
