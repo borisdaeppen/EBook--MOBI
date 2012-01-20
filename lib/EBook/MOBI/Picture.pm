@@ -21,6 +21,9 @@ sub new {
             };
 
     bless($ref, $self);
+
+    $self->_debug('Tests with PNG on the Kindle-Reader failed. So all poictures get converted to JPG!');
+
     return $ref;
 }
 
@@ -61,7 +64,11 @@ sub rescale_dimensions {
     my ($self, $image_path) = @_;
 
     # Prepare for work...
-    my $image = Image::Resize->new($image_path);
+    my $image = GD::Image->new($image_path);
+
+    # Get details for renaming
+    my @suffixlist = qw( .jpg .jpeg .gif .png );
+    my ($name,$path,$suffix) = fileparse($image_path,@suffixlist);
 
     # determine the size of the image
     my $width = $image->width();
@@ -70,10 +77,10 @@ sub rescale_dimensions {
     # Only resize the image if it is bigger than max
     if ($width > $self->{max_width} or $height > $self->{max_height}) {
 
+        my $resize = Image::Resize->new($image);
+
         # We rename the out-file so that we don't destroy the original
         # picture by overwriting it with the resized version
-        my @suffixlist = qw( .jpg .jpeg .gif .png );
-        my ($name,$path,$suffix) = fileparse($image_path,@suffixlist);
         my $outfilename = $path . $name . '-mobi_resized.jpg';
 
         #copy ($image_path, $outfilename);
@@ -83,7 +90,7 @@ sub rescale_dimensions {
                       );
 
         # Resize the image... proportions will stay the same
-        my $gd = $image->resize($self->{max_width}, $self->{max_height});
+        my $gd = $resize->resize($self->{max_width}, $self->{max_height});
 
         # Write the file as JPG
         open(my $FH, ">$outfilename");
@@ -95,11 +102,21 @@ sub rescale_dimensions {
     }
     
     # If the file is below max width/height we dont to anything
+    # NOPE: We do convert to JPG, because PNG fails on Kindle
     else {
-        # nothing to do
         $self->_debug(
           "Image $image_path is of size $width"."x$height - no resizing."
         );
+
+        # BUG: Seems like Kindle Reader can't display PNG in my tests...
+        # SO I CONVERT EVERYTHING TO JPEG
+        my $outfilename = $path . $name . '-mobi.jpg';
+        # Write the file as JPG
+        open(my $FH, ">$outfilename");
+        print $FH $image->jpeg();
+        close($FH);
+        # this is so that return returns the right value
+        $image_path = $outfilename;
     }
 
     # return path of the picture with the valid size
@@ -132,11 +149,18 @@ And this is what this method does, it ensures that this maximum is kept.
 
 Pass a path to an image as the first argument, you will then get the path of a rescaled image back. The image is only rescaled if necessary.
 
-=head2 set_publisher
+Attention: All pictures, no matter what size will be converted to JPG.
+In my tests, the Kindle-Reader failed to display PNG, that is why I convert everything - to go safe.
+
+=head2 debug_on
 
 You can just ignore this method if you are not interested in debuging!
 
-Pass a reference to an object which provides a method named debug() and all the debug-output will be written there if the $DEBUG variable is true.
+Pass a reference to a debug subroutine and enable debug messages.
+
+=head2 debug_off
+
+Stop debug messages and erease the the reference to the subroutine.
 
 =head1 TODO
 
