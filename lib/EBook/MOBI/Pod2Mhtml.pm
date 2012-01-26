@@ -32,7 +32,8 @@ sub begin_input {
     # make sure that this variable is set to 0 at beginning
     $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 0;
 
-    if (exists $parser->{__body} and $parser->{__body}) {
+    if (exists $parser->{EBook_MOBI_Pod2Mhtml_body}
+      and $parser->{EBook_MOBI_Pod2Mhtml_body}) {
         print $out_fh "<body>\n";
     }
 }
@@ -50,7 +51,8 @@ sub end_input {
         croak "POD parsing error. Did you forget '=back' at end of list?";
     }
 
-    if (exists $parser->{__body} and $parser->{__body}) {
+    if (exists $parser->{EBook_MOBI_Pod2Mhtml_body}
+      and $parser->{EBook_MOBI_Pod2Mhtml_body}) {
         print $out_fh "</body>\n";
     }
 }
@@ -93,8 +95,45 @@ sub command {
             print $out_fh '<p>' . $img_desc . '</p>' . "\n";
         }
     }
+    # Lists are a bit complex. The commands 'over', 'back' and 'item'
+    # are used. They exchange state over a global variable. This state
+    # is the listcontext, which can be: 'begin', 'ul' or 'ol'.
+    # OVER: starts the listcontext
+    elsif ($command eq 'over') {
+
+        # If we reach an 'over' command we can't do anything yet
+        # because we don't know if it will be an ordered or an
+        # unordered list! So we just set a global variable to 'begin',
+        # the first item call can then know that it is the first item
+        # and that it defines the rest of the list type.
+        $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 'begin';
+    }
+    # BACK: ends the listcontext
+    elsif ($command eq 'back') {
+
+        # print end-tag according to the lists type
+        if ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'ul') {
+            print $out_fh '</li>' . "\n"; # close last item
+            print $out_fh '</ul>' . "\n";
+        }
+        elsif ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'ol') {
+            print $out_fh '</li>' . "\n"; # close last item
+            print $out_fh '</ol>' . "\n";
+        }
+        else {
+            croak 'POD parsing error. Undefined listcontext:'
+                  . $parser->{EBook_MOBI_Pod2Mhtml_listcontext};
+        }
+
+        # Set listcontext to zero
+        $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 0;
+    }
+    # CUT: end of POD
+    elsif ($command eq 'cut') {
+        # We don't need to do anything here...
+    }
     # if we reach this ELSE, this means that the command can only be
-    # of type HEAD
+    # of type HEAD or ITEM (so they contain some text!)
     else {
         # first we remove all whitespace from begin and end of the title
         trim $paragraph;
@@ -108,13 +147,13 @@ sub command {
         if ($command eq 'head1') {
             # before every head1 we insert a "mobi-pagebreak"
             # but not before the first one!
-            if (exists $parser->{__firstH1passed} and
-                exists $parser->{__pages} and
-                       $parser->{__pages}) {
+            if (exists $parser->{EBook_MOBI_Pod2Mhtml_firstH1passed} and
+                exists $parser->{EBook_MOBI_Pod2Mhtml_pages} and
+                       $parser->{EBook_MOBI_Pod2Mhtml_pages}) {
                 print $out_fh '<mbp:pagebreak />'       . "\n";
             }
             else {
-                $parser->{__firstH1passed} = 1;
+                $parser->{EBook_MOBI_Pod2Mhtml_firstH1passed} = 1;
             }
             print $out_fh '<h1>' . $expansion . '</h1>' . "\n"
         }
@@ -126,39 +165,6 @@ sub command {
         }
         elsif ($command eq 'head4') {
             print $out_fh '<h4>' . $expansion . '</h4>' . "\n"
-        }
-        # Lists are a bit complex. The commands 'over', 'back' and 'item'
-        # are used. They exchange state over a global variable. This state
-        # is the listcontext, which can be: 'begin', 'ul' or 'ol'.
-        # OVER: starts the listcontext
-        elsif ($command eq 'over') {
-
-            # If we reach an 'over' command we can't do anything yet
-            # because we don't know if it will be an ordered or an
-            # unordered list! So we just set a global variable to 'begin',
-            # the first item call can then know that it is the first item
-            # and that it defines the rest of the list type.
-            $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 'begin';
-        }
-        # BACK: ends the listcontext
-        elsif ($command eq 'back') {
-
-            # print end-tag according to the lists type
-            if ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'ul') {
-                print $out_fh '</li>' . "\n"; # close last item
-                print $out_fh '</ul>' . "\n";
-            }
-            elsif ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'ol') {
-                print $out_fh '</li>' . "\n"; # close last item
-                print $out_fh '</ol>' . "\n";
-            }
-            else {
-                croak 'POD parsing error. Undefined listcontext:'
-                      . $parser->{EBook_MOBI_Pod2Mhtml_listcontext};
-            }
-
-            # Set listcontext to zero
-            $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 0;
         }
         # ITEM: the lists items
         elsif ($command eq 'item') {
@@ -221,9 +227,6 @@ sub command {
                 # it get's closed by the next item or the =back call
                 print $out_fh '<li>' . $expansion;
             }
-        }
-        elsif ($command eq 'cut') {
-            # We don't need to do anything here...
         }
     }
 }
@@ -334,13 +337,13 @@ sub interior_sequence {
 sub html_body {
     my ($self, $boolean) = @_;
 
-    $self->{__body} = $boolean;
+    $self->{EBook_MOBI_Pod2Mhtml_body} = $boolean;
 }
 
 sub pagemode {
     my ($self, $boolean) = @_;
 
-    $self->{__pages} = $boolean;
+    $self->{EBook_MOBI_Pod2Mhtml_pages} = $boolean;
 }
 
 sub debug_on {
