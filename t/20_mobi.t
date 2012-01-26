@@ -6,7 +6,7 @@ use warnings;
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 4;
+use Test::More tests => 9;
 
 ###########################
 # General module tests... #
@@ -132,6 +132,155 @@ for my $key (keys %html_in) {
 
     is($html_res, $html_out{$key}, "Book -> $key");
 }
+
+###
+### Let's do some more testing
+###
+
+$obj->reset();
+
+my $POD_in = <<END;
+=head0 Zero
+
+=head1 One
+
+Text 1
+
+=head2 Two
+
+Text 2
+
+=head0 Zero 2
+
+=head1 Three
+
+Text 3
+
+=cut
+END
+
+my $POD_res_default = <<END;
+<html>
+<head>
+</head>
+<body>
+<h1>One</h1>
+<p>Text 1</p>
+<h2>Two</h2>
+<p>Text 2</p>
+<h1>Three</h1>
+<p>Text 3</p>
+</body>
+</html>
+END
+
+my $POD_res_head0_mode = <<END;
+<html>
+<head>
+</head>
+<body>
+<h1>Zero</h1>
+<h2>One</h2>
+<p>Text 1</p>
+<h3>Two</h3>
+<p>Text 2</p>
+<h1>Zero 2</h1>
+<h2>Three</h2>
+<p>Text 3</p>
+</body>
+</html>
+END
+
+my $POD_res_pagemode = <<END;
+<html>
+<head>
+</head>
+<body>
+<h1>One</h1>
+<p>Text 1</p>
+<h2>Two</h2>
+<p>Text 2</p>
+<mbp:pagebreak />
+<h1>Three</h1>
+<p>Text 3</p>
+</body>
+</html>
+END
+
+my $POD_res_head0_and_pagemode = <<END;
+<html>
+<head>
+</head>
+<body>
+<h1>Zero</h1>
+<h2>One</h2>
+<p>Text 1</p>
+<h3>Two</h3>
+<p>Text 2</p>
+<mbp:pagebreak />
+<h1>Zero 2</h1>
+<h2>Three</h2>
+<p>Text 3</p>
+</body>
+</html>
+END
+
+my $POD_res_toc_and_head0_and_pagemode = <<END;
+<html>
+<head>
+<guide>
+<reference type="toc" title="Table of Contents" filepos="00000115"/>
+</guide>
+</head>
+<body>
+<h1>Table of Contents</h1><!-- TOC start -->
+<p><ul>
+<li><a filepos="00000297">Zero</a></li><!-- TOC entry -->
+<li><a filepos="00000383">Zero 2</a></li><!-- TOC entry -->
+</ul></p>
+
+<h1>Zero</h1>
+<h2>One</h2>
+<p>Text 1</p>
+<h3>Two</h3>
+<p>Text 2</p>
+<mbp:pagebreak />
+<h1>Zero 2</h1>
+<h2>Three</h2>
+<p>Text 3</p>
+</body>
+</html>
+END
+
+$obj->add_pod_content($POD_in);
+$obj->make();
+my $res = $obj->print_mhtml(1);
+is($res, $POD_res_default, "Book -> default");
+
+$obj->reset();
+$obj->add_pod_content($POD_in, 0, 'head0_mode');
+$obj->make();
+$res = $obj->print_mhtml(1);
+is($res, $POD_res_head0_mode, "Book -> head0_mode");
+
+$obj->reset();
+$obj->add_pod_content($POD_in, 'pagemode', 0);
+$obj->make();
+$res = $obj->print_mhtml(1);
+is($res, $POD_res_pagemode, "Book -> pagemode");
+
+$obj->reset();
+$obj->add_pod_content($POD_in, 'pagemode', 1, 1);
+$obj->make();
+$res = $obj->print_mhtml(1);
+is($res, $POD_res_head0_and_pagemode, "Book -> head0+pagemode");
+
+$obj->reset();
+$obj->add_toc_once();
+$obj->add_pod_content($POD_in, 'pagemode', 1, 1);
+$obj->make();
+$res = $obj->print_mhtml(1);
+is($res, $POD_res_toc_and_head0_and_pagemode, "Book -> toc+head0+pagemode");
 
 ########
 # done #

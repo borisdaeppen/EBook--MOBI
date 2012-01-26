@@ -164,23 +164,23 @@ sub command {
             }
         }
         elsif ($command eq 'head1') {
-            # before every head1 we insert a "mobi-pagebreak"
-            # but not before the first one!
-            if (exists $parser->{EBook_MOBI_Pod2Mhtml_firstH1passed} and
-                exists $parser->{EBook_MOBI_Pod2Mhtml_pages} and
-                       $parser->{EBook_MOBI_Pod2Mhtml_pages}) {
-                print $out_fh '<mbp:pagebreak />'       . "\n";
-            }
-            else {
-                $parser->{EBook_MOBI_Pod2Mhtml_firstH1passed} = 1;
-            }
-
             # we need to check to which level we translate the headings...
             if (exists $parser->{EBook_MOBI_Pod2Mhtml_head0_mode}
               and $parser->{EBook_MOBI_Pod2Mhtml_head0_mode}) {
                 print $out_fh '<h2>' . $expansion . '</h2>' . "\n"
             }
             else {
+                # before every head1 we insert a "mobi-pagebreak"
+                # but not before the first one!
+                if (exists $parser->{EBook_MOBI_Pod2Mhtml_firstH1passed} and
+                    exists $parser->{EBook_MOBI_Pod2Mhtml_pages} and
+                           $parser->{EBook_MOBI_Pod2Mhtml_pages}) {
+                    print $out_fh '<mbp:pagebreak />'       . "\n";
+                }
+                else {
+                    $parser->{EBook_MOBI_Pod2Mhtml_firstH1passed} = 1;
+                }
+
                 print $out_fh '<h1>' . $expansion . '</h1>' . "\n"
             }
         }

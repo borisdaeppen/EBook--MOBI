@@ -16,8 +16,8 @@ use EBook::MOBI::Mhtml2Mobi;
 
 # Constructor of this class
 sub new {
-    my $self=shift;
-    my $ref={   html_data => '',
+    my $self = shift;
+    my $ref = { html_data => '',
                 html_toc  => '',
 
                 filename  => 'book',
@@ -31,6 +31,20 @@ sub new {
 
     bless($ref, $self);
     return $ref;
+}
+
+sub reset {
+    my $self = shift;
+    $self->{html_data} = '',
+    $self->{html_toc } = '',
+
+    $self->{filename } = 'book',
+    $self->{title    } = 'This Book has no Title',
+    $self->{author   } = 'This Book has no Author',
+
+    $self->{encoding } = 'utf-8',
+
+    $self->{CONST    } = '6_--TOC-_thisStringShouldNeverOccurInInput',
 }
 
 sub debug_on {
@@ -142,6 +156,7 @@ sub add_pagebreak {
 sub add_toc_once {
     my ($self, $html) = @_;
 
+    $self->{toc_set} = 1;
     $self->{html_data} .= $self->{CONST};
     # this newline is needed, otherwise the generation of the toc will
     # not recognise the first <h1> in the split function
@@ -151,15 +166,21 @@ sub add_toc_once {
 sub make {
     my ($self) = @_;
 
-    $self->_generate_toc();
-
+    if (exists $self->{toc_set} and $self->{toc_set}) {
+        $self->_generate_toc();
+    }
+    else {
+        my $tmp = $self->{html_data};
+    $self->{html_data} = "<html>
+<head>
+</head>
+<body>
+" . $tmp . "</body>\n</html>\n";
+    }
 }
 
 sub print_mhtml {
     my ($self, $arg) = @_;
-
-    #TODO: Only if a TOC was set!
-    $self->_generate_toc();
 
     unless ($arg) {
         print $self->{html_data};
@@ -209,6 +230,7 @@ sub _generate_toc {
 
     $self->{html_data} =~ s/$self->{CONST}/$toc/;
 
+    my $tmp = $self->{html_data};
     $self->{html_data} = "<html>
 <head>
 <guide>
@@ -216,8 +238,7 @@ sub _generate_toc {
 </guide>
 </head>
 <body>
-" . $self->{html_data}
-  . "</body>\n</html>\n";
+" . $tmp . "</body>\n</html>\n";
 
     # now we need to calculate the positions for "filepos"
     my $chars = 0;
@@ -441,6 +462,11 @@ This will create a file, with the name and location you gave with set_filename()
 
 In this process it will also read images and store them into the eBook.
 So it is important, that the images are readable at the path you provided in your POD or mhtml syntax.
+
+=head2 reset
+
+Reset the object, so that all the content is purged.
+Helpful if you like to make a new book, but are to lazy to create a new object. (e.g. for testing)
 
 =head2 debug_on
 
