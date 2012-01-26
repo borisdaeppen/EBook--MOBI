@@ -97,7 +97,7 @@ sub add_mhtml_content {
 }
 
 sub add_pod_content {
-    my ($self, $pod, $pagemode) = @_;
+    my ($self, $pod, $pagemode, $head0_mode) = @_;
 
     # With this parser we will create HTML out of POD.
     # The HTML is specially prepared for the MOBI format
@@ -105,7 +105,8 @@ sub add_pod_content {
 
     # pass some settings
     $parser->debug_on($self->{ref_to_debug_sub}) if ($DEBUG);
-    $parser->pagemode()                          if ($pagemode);
+    $parser->pagemode($pagemode);
+    $parser->head0_mode($head0_mode);
 
     # ok, now we prepare the parsing, unfortunately we have to do
     # some complicated magic with the string data...
@@ -355,9 +356,38 @@ Your POD will automatically be parsed and transformed to what I call
 'mhtml' format.
 This means, your POD content will just look great in the eBook.
 
-  $book->add_pod_content($pod, 'pagemode');
+  $book->add_pod_content($pod, 'pagemode', 'head0_mode');
+
+=head3 pagemode
 
 If you pass any true value as the second argument, every head1 chapter will end with a peagebreak. This mostly makes sence, so it is a good idea to use this feature.
+
+Default is to not insert pagebreak.
+
+=head3 head0_mode
+
+Pass any true value as the third argument to enable 'head0_mode'.
+The effect will be, that you are allowed to use a '=head0' command in your POD.
+
+  $book->head0_mode(1);
+  $book->add_pod_content('=head0 Module EBook::MOBI
+  
+  =head1 NAME
+
+  =head1 SYNOPSIS
+
+  =head0 Module EBook::MOBI::Pod2Mhtml
+
+  =head1 NAME
+
+  =head1 SYNOPSIS
+
+  =cut', 0, 1);
+
+This feature is useful if you want to have the documentation of several modules in Perl in one eBook.
+You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
+
+Default is to ignore any '=head0' command.
 
 =head3 Special syntax for images
 

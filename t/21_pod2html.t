@@ -9,7 +9,7 @@ use File::Temp qw(tempfile);
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 13;
+use Test::More tests => 14;
 
 ###########################
 # General module tests... #
@@ -35,11 +35,11 @@ my %html_out;  # parsing result
 
 # 1
 $pod_input{minimal} = <<'HEREDOC';
-==head1 MINIMAL
+=head1 MINIMAL
 
 Text
 
-==cut
+=cut
 HEREDOC
 
 $html_out{minimal} = <<'HEREDOC';
@@ -51,33 +51,33 @@ HEREDOC
 
 # 2
 $pod_input{lists} = <<'HEREDOC';
-==head1 LISTS
+=head1 LISTS
 
-==over
+=over
 
-==item normal list (1)
+=item normal list (1)
 
-==item normal list (2)
+=item normal list (2)
 
-==back
+=back
 
-==over
+=over
 
-==item 1 numbered list
+=item 1 numbered list
 
-==item 2 numbered list
+=item 2 numbered list
 
-==back
+=back
 
-==over
+=over
 
-==item * 5
+=item * 5
 
-==item normal list with number as first item
+=item normal list with number as first item
 
-==back
+=back
 
-==cut
+=cut
 HEREDOC
 
 $html_out{lists} = <<'HEREDOC';
@@ -100,45 +100,45 @@ HEREDOC
 
 # 3
 $pod_input{lists_breakline} = <<'HEREDOC';
-==head1 LISTS
+=head1 LISTS
 
-==over
+=over
 
-==item
+=item
 
 normal list (1)
 
-==item
+=item
 
 normal list (2)
 
-==back
+=back
 
-==over
+=over
 
-==item 1
-
-numbered list
-
-==item 2
+=item 1
 
 numbered list
 
-==back
+=item 2
 
-==over
+numbered list
 
-==item *
+=back
+
+=over
+
+=item *
 
 5
 
-==item
+=item
 
 normal list with number as first item
 
-==back
+=back
 
-==cut
+=cut
 HEREDOC
 
 $html_out{lists_breakline} = <<'HEREDOC';
@@ -161,15 +161,15 @@ HEREDOC
 
 # 4
 $pod_input{pic} = <<'HEREDOC';
-==head2 PIC
+=head2 PIC
 
 Some text?
 
-==image /path/to/pic.jpg This is the description!
+=image /path/to/pic.jpg This is the description!
 
 Some other text...
 
-==cut
+=cut
 HEREDOC
 
 $html_out{pic} = <<'HEREDOC';
@@ -184,12 +184,12 @@ HEREDOC
 
 # 5
 $pod_input{umlaut} = <<'HEREDOC';
-==head3 UMLAUT
+=head3 UMLAUT
 
 üöäÜÖÄ
 éàèÉÀÈ
 
-==cut
+=cut
 HEREDOC
 
 $html_out{umlaut} = <<'HEREDOC';
@@ -202,7 +202,7 @@ HEREDOC
 
 # 6
 $pod_input{angle_bracket} = <<'HEREDOC';
-==head4 ANGLE BRACKET
+=head4 ANGLE BRACKET
 
 HTML chars::
 <html> &nbsp; </html>
@@ -210,7 +210,7 @@ HTML chars::
 POD markup:
 B<BOLD> C<CODE> F<FILE> I<ITALIC> E<nbsp> L<perl.org>
 
-==cut
+=cut
 HEREDOC
 
 $html_out{angle_bracket} = <<'HEREDOC';
@@ -225,7 +225,7 @@ HEREDOC
 
 # 7
 $pod_input{code} = <<'HEREDOC';
-==head1 CODE
+=head1 CODE
 
 Text1
 
@@ -237,7 +237,7 @@ Text1
 
 Text2
 
-==cut
+=cut
 HEREDOC
 
 $html_out{code} = <<'HEREDOC';
@@ -256,15 +256,15 @@ HEREDOC
 
 # 8
 $pod_input{pagebreak} = <<'HEREDOC';
-==head1 PAGEBREAK
+=head1 PAGEBREAK
 
 Text1
 
-==head1 Here should be a break
+=head1 Here should be a break
 
 Text2
 
-==cut
+=cut
 HEREDOC
 
 $html_out{pagebreak} = <<'HEREDOC';
@@ -306,11 +306,11 @@ $obj = $module->new();
 
 my ($fh,$f_name) = tempfile();
 binmode $fh;
-print $fh "==head1 NO BODY
+print $fh "=head1 NO BODY
 
 There should be no html body-tag here.
 
-==cut
+=cut
 ";
 close $fh;
 open my $pod_handle, "<:encoding(utf-8)", $f_name;
@@ -322,6 +322,34 @@ $obj->parse_from_filehandle($pod_handle, $res_handle);
 is($html_res,
    "<h1>NO BODY</h1>\n<p>There should be no html body-tag here.</p>\n",
    "POD to HTML -> no-body-tag"
+  );
+
+# Ok, and we should also test what happens if we
+# use $obj->head0_mode() so we do a seperate test here.
+$obj = $module->new();
+$obj->head0_mode(1);
+
+($fh,$f_name) = tempfile();
+binmode $fh;
+print $fh "=head0 Biggest Title
+
+Some text...
+
+=head1 Head One
+
+...should now be Head Two!
+
+=cut
+";
+close $fh;
+open $pod_handle, "<:encoding(utf-8)", $f_name;
+
+$res_handle = IO::String->new($html_res);
+
+$obj->parse_from_filehandle($pod_handle, $res_handle);
+is($html_res,
+   "<h1>Biggest Title</h1>\n<p>Some text...</p>\n<h2>Head One</h2>\n<p>...should now be Head Two!</p>\n",
+   "POD to HTML -> head0_mode"
   );
 
 ########

@@ -144,7 +144,26 @@ sub command {
         $expansion = _html_enc($expansion);
 
         # Now we just need to print the text with the matching HTML tag
-        if ($command eq 'head1') {
+        if ($command eq 'head0') {
+            # head0 gets only printed if the option is set!
+            # (head0 is not official POD standard)
+            if (exists $parser->{EBook_MOBI_Pod2Mhtml_head0_mode}
+              and $parser->{EBook_MOBI_Pod2Mhtml_head0_mode}) {
+                # before every head1 we insert a "mobi-pagebreak"
+                # but not before the first one!
+                if (exists $parser->{EBook_MOBI_Pod2Mhtml_firstH1passed} and
+                    exists $parser->{EBook_MOBI_Pod2Mhtml_pages} and
+                           $parser->{EBook_MOBI_Pod2Mhtml_pages}) {
+                    print $out_fh '<mbp:pagebreak />'       . "\n";
+                }
+                else {
+                    $parser->{EBook_MOBI_Pod2Mhtml_firstH1passed} = 1;
+                }
+
+                print $out_fh '<h1>' . $expansion . '</h1>' . "\n"
+            }
+        }
+        elsif ($command eq 'head1') {
             # before every head1 we insert a "mobi-pagebreak"
             # but not before the first one!
             if (exists $parser->{EBook_MOBI_Pod2Mhtml_firstH1passed} and
@@ -155,16 +174,45 @@ sub command {
             else {
                 $parser->{EBook_MOBI_Pod2Mhtml_firstH1passed} = 1;
             }
-            print $out_fh '<h1>' . $expansion . '</h1>' . "\n"
+
+            # we need to check to which level we translate the headings...
+            if (exists $parser->{EBook_MOBI_Pod2Mhtml_head0_mode}
+              and $parser->{EBook_MOBI_Pod2Mhtml_head0_mode}) {
+                print $out_fh '<h2>' . $expansion . '</h2>' . "\n"
+            }
+            else {
+                print $out_fh '<h1>' . $expansion . '</h1>' . "\n"
+            }
         }
         elsif ($command eq 'head2') {
-            print $out_fh '<h2>' . $expansion . '</h2>' . "\n"
+            # we need to check to which level we translate the headings...
+            if (exists $parser->{EBook_MOBI_Pod2Mhtml_head0_mode}
+              and $parser->{EBook_MOBI_Pod2Mhtml_head0_mode}) {
+                print $out_fh '<h3>' . $expansion . '</h3>' . "\n"
+            }
+            else {
+                print $out_fh '<h2>' . $expansion . '</h2>' . "\n"
+            }
         }
         elsif ($command eq 'head3') {
-            print $out_fh '<h3>' . $expansion . '</h3>' . "\n"
+            # we need to check to which level we translate the headings...
+            if (exists $parser->{EBook_MOBI_Pod2Mhtml_head0_mode}
+              and $parser->{EBook_MOBI_Pod2Mhtml_head0_mode}) {
+                print $out_fh '<h4>' . $expansion . '</h4>' . "\n"
+            }
+            else {
+                print $out_fh '<h3>' . $expansion . '</h3>' . "\n"
+            }
         }
         elsif ($command eq 'head4') {
-            print $out_fh '<h4>' . $expansion . '</h4>' . "\n"
+            # we need to check to which level we translate the headings...
+            if (exists $parser->{EBook_MOBI_Pod2Mhtml_head0_mode}
+              and $parser->{EBook_MOBI_Pod2Mhtml_head0_mode}) {
+                print $out_fh '<h5>' . $expansion . '</h5>' . "\n"
+            }
+            else {
+                print $out_fh '<h4>' . $expansion . '</h4>' . "\n"
+            }
         }
         # ITEM: the lists items
         elsif ($command eq 'item') {
@@ -346,6 +394,12 @@ sub pagemode {
     $self->{EBook_MOBI_Pod2Mhtml_pages} = $boolean;
 }
 
+sub head0_mode {
+    my ($self, $boolean) = @_;
+
+    $self->{EBook_MOBI_Pod2Mhtml_head0_mode} = $boolean;
+}
+
 sub debug_on {
     my ($self, $ref_to_debug_sub) = @_; 
 
@@ -460,6 +514,34 @@ This means: The resulting eBook will start each head1 chapter at a new page.
 
 Default is to not add any pagebreak.
 
+=head2 head0_mode
+
+Pass any true value to enable 'head0_mode'.
+The effect will be, that you are allowed to use a '=head0' command in your POD.
+
+  $p2h->head0_mode(1);
+
+Pod can now look like this:
+
+  =head0 Module EBook::MOBI
+  
+  =head1 NAME
+
+  =head1 SYNOPSIS
+
+  =head0 Module EBook::MOBI::Pod2Mhtml
+
+  =head1 NAME
+
+  =head1 SYNOPSIS
+
+  =cut
+
+This feature is useful if you want to have the documentation of several modules in Perl in one eBook.
+You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
+
+Default is to ignore any '=head0' command.
+
 =head2 html_body
 
 Pass any true value to enable 'html_body'.
@@ -472,11 +554,15 @@ you then will just get HTML markup which is not encapsulated in a body tag.
 
 Default is to not encapsulate in a body tag.
 
-=head2 set_publisher
+=head2 debug_on
 
 You can just ignore this method if you are not interested in debuging!
 
-Pass a reference to an object which provides a method named debug() and all the debug-output will be written there if the $DEBUG variable is true.
+Pass a reference to a debug subroutine and enable debug messages.
+
+=head2 debug_off
+
+Stop debug messages and erease the the reference to the subroutine.
 
 =head1 COPYRIGHT & LICENSE
 
