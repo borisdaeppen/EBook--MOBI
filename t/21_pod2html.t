@@ -9,7 +9,7 @@ use File::Temp qw(tempfile);
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 14;
+use Test::More tests => 18;
 
 ###########################
 # General module tests... #
@@ -23,7 +23,11 @@ my $obj = $module->new();
 isa_ok($obj, $module);
 isa_ok($obj, 'Pod::Parser');
 
-can_ok($obj, qw(parse_from_filehandle _nbsp _html_enc _debug html_body pagemode));
+can_ok($obj, 'html_body');
+can_ok($obj, 'pagemode');
+can_ok($obj, 'head0_mode');
+can_ok($obj, 'debug_on');
+can_ok($obj, 'debug_off');
 
 ################################
 # We define some parsing input #

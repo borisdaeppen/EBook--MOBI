@@ -6,7 +6,7 @@ use warnings;
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 9;
+use Test::More tests => 23;
 
 ###########################
 # General module tests... #
@@ -19,7 +19,21 @@ my $obj = $module->new();
 
 isa_ok($obj, $module);
 
-can_ok($obj, qw(set_title set_author set_filename add_mhtml_content add_pod_content add_pagebreak add_toc_once make save print_mhtml));
+can_ok($obj, 'new');
+can_ok($obj, 'reset');
+can_ok($obj, 'debug_on');
+can_ok($obj, 'debug_off');
+can_ok($obj, 'set_title');
+can_ok($obj, 'set_author');
+can_ok($obj, 'set_filename');
+can_ok($obj, 'set_encoding');
+can_ok($obj, 'add_mhtml_content');
+can_ok($obj, 'add_pod_content');
+can_ok($obj, 'add_pagebreak');
+can_ok($obj, 'add_toc_once');
+can_ok($obj, 'make');
+can_ok($obj, 'print_mhtml');
+can_ok($obj, 'save');
 
 ################################
 # We define some parsing input #

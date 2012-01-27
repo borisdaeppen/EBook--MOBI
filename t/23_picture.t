@@ -10,7 +10,7 @@ use Image::Size;
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 5;
+use Test::More tests => 8;
 
 ###########################
 # General module tests... #
@@ -23,7 +23,10 @@ my $obj = $module->new();
 
 isa_ok($obj, $module);
 
-can_ok($obj, qw(rescale_dimensions));
+can_ok($obj, 'new');
+can_ok($obj, 'debug_on');
+can_ok($obj, 'debug_off');
+can_ok($obj, 'rescale_dimensions');
 
 # we generate a random image
 my ($fh,$f_name) = tempfile();
