@@ -26,6 +26,8 @@ use strict;
 
 package EBook::MOBI::Palm::Doc;
 
+our $VERSION = 2011.11.26;
+
 sub _parse_headerrec($) {
 	my $record = shift;
 	return undef unless exists $record->{'data'};

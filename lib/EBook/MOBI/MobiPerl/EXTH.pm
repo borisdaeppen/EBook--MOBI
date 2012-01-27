@@ -22,6 +22,8 @@ use lib "$RealBin";
 
 use strict;
 
+our $VERSION = 2011.11.26;
+
 # 400-499 application binary
 # 500-599 application string
 

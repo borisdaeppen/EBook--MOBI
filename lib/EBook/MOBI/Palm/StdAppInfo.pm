@@ -75,9 +75,9 @@ where:
 
 C<@categories> is an array of references-to-hash:
 
-=item C<$cat = $categories[0];>
-
 =over 4
+
+=item C<$cat = $categories[0];>
 
 =item C<$cat-E<gt>{name}>
 

@@ -20,6 +20,8 @@ package EBook::MOBI::MobiPerl::Util;
 
 use strict;
 
+our $VERSION = 2011.11.26;
+
 use GD;
 use Image::BMP;
 use Image::Size;
