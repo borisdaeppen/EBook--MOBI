@@ -474,8 +474,7 @@ __END__
 
 EBook::MOBI::Pod2Mhtml - Create HTML, flavoured for the MOBI format, out of POD.
 
-This module extends L<Pod::Parser> for parsing capabilities.
-The module L<HTML::Entities> is used to translate chars to HTML entities.
+This module extends L<Pod::Parser> for parsing capabilities. The module L<HTML::Entities> is used to translate chars to HTML entities.
 
 =head1 SYNOPSIS
 
@@ -492,11 +491,9 @@ The module L<HTML::Entities> is used to translate chars to HTML entities.
 
 =head2 parse_from_filehandle
 
-This is the method you need to call, if you want this module to be of any help for you.
-It will take your data in the POD format and return it in special flavoured HTML, which can be then further used for the MOBI format.
+This is the method you need to call, if you want this module to be of any help for you. It will take your data in the POD format and return it in special flavoured HTML, which can be then further used for the MOBI format.
 
-Hand over two file handles or Objects of L<IO::String>.
-The first handle points to your POD, the second waits to receive the result.
+Hand over two file handles or Objects of L<IO::String>. The first handle points to your POD, the second waits to receive the result.
 
   # $pod_h and $html_out_h are file handles
   # or IO::String objects
@@ -506,9 +503,7 @@ The first handle points to your POD, the second waits to receive the result.
 
 =head2 pagemode
 
-Pass any true value to enable 'pagemode'.
-The effect will be, that before every - but the first - '=head1' there will be a peagebreak inserted.
-This means: The resulting eBook will start each head1 chapter at a new page.
+Pass any true value to enable 'pagemode'. The effect will be, that before every - but the first - '=head1' there will be a peagebreak inserted. This means: The resulting eBook will start each head1 chapter at a new page.
 
   $p2h->pagemode(1);
 
@@ -516,8 +511,7 @@ Default is to not add any pagebreak.
 
 =head2 head0_mode
 
-Pass any true value to enable 'head0_mode'.
-The effect will be, that you are allowed to use a '=head0' command in your POD.
+Pass any true value to enable 'head0_mode'. The effect will be, that you are allowed to use a '=head0' command in your POD.
 
   $p2h->head0_mode(1);
 
@@ -537,18 +531,13 @@ Pod can now look like this:
 
   =cut
 
-This feature is useful if you want to have the documentation of several modules in Perl in one eBook.
-You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
+This feature is useful if you want to have the documentation of several modules in Perl in one eBook. You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
 
 Default is to ignore any '=head0' command.
 
 =head2 html_body
 
-Pass any true value to enable 'html_body'.
-If set, parsed content will be encapsulated in a HTML body tag.
-You may want this if you parse all data at once.
-But if there is more to add, you should not use this mode,
-you then will just get HTML markup which is not encapsulated in a body tag.
+Pass any true value to enable 'html_body'. If set, parsed content will be encapsulated in a HTML body tag. You may want this if you parse all data at once. But if there is more to add, you should not use this mode, you then will just get HTML markup which is not encapsulated in a body tag.
 
   $p2h->html_body(1);
 
@@ -562,14 +551,13 @@ Pass a reference to a debug subroutine and enable debug messages.
 
 =head2 debug_off
 
-Stop debug messages and erease the the reference to the subroutine.
+Stop debug messages and erease the reference to the subroutine.
 
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2011 Boris Däppen, all rights reserved.
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms of Artistic License 2.0.
+This program is free software; you can redistribute it and/or modify it under the same terms of Artistic License 2.0.
 
 =head1 AUTHOR
 

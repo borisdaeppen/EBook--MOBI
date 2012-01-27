@@ -144,13 +144,11 @@ EBook::MOBI::Picture - Make sure that pictures cope with the MOBI standards.
 
 =head2 rescale_dimensions
 
-According to my own research at the web, it is a good idea to have a maximum size for images of 520 x 622.
-And this is what this method does, it ensures that this maximum is kept.
+According to my own research at the web, it is a good idea to have a maximum size for images of 520 x 622. And this is what this method does, it ensures that this maximum is kept.
 
-Pass a path to an image as the first argument, you will then get the path of a rescaled image back. The image is only rescaled if necessary.
+Pass a path to an image as the first argument, you will then get back the path of a rescaled image. The image is only rescaled if necessary.
 
-Attention: All pictures, no matter what size will be converted to JPG.
-In my tests, the Kindle-Reader failed to display PNG, that is why I convert everything - to go safe.
+Attention: All pictures, no matter what size will be converted to JPG. In my tests, the Kindle-Reader failed to display PNG, that is why I convert everything - to go safe.
 
 =head2 debug_on
 
@@ -160,7 +158,7 @@ Pass a reference to a debug subroutine and enable debug messages.
 
 =head2 debug_off
 
-Stop debug messages and erease the the reference to the subroutine.
+Stop debug messages and erease the reference to the subroutine.
 
 =head1 TODO
 
@@ -170,8 +168,7 @@ A method to 'clean up' and also to change the maximum values would be nice.
 
 Copyright 2011 Boris Däppen, all rights reserved.
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms of Artistic License 2.0.
+This program is free software; you can redistribute it and/or modify it under the same terms of Artistic License 2.0.
 
 =head1 AUTHOR
 

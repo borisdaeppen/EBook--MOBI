@@ -277,14 +277,11 @@ __END__
 
 EBook::MOBI - create an eBook in the MOBI format - out of POD formatted content.
 
-You are at the right place here if you want to create an eBook in the so called MOBI format (somethimes also called PRC format).
-You are expecially at the right place if you have your books content available in the POD format.
-Because this is, what this code does best.
+You are at the right place here if you want to create an eBook in the so called MOBI format (somethimes also called PRC format). You are expecially at the right place if you have your books content available in the POD format. Because this is, what this code does best.
 
 =head1 SYNOPSIS
 
-If you plan to create a typical eBook you probably will need all of the methods provided by this class.
-So it might be a good idea to read all the descriptions in the methods section, and also have a look at this example here:
+If you plan to create a typical eBook you probably will need all of the methods provided by this class. So it might be a good idea to read all the descriptions in the methods section, and also have a look at this example here:
 
   # Create an object of a book
   use EBook::MOBI;
@@ -325,57 +322,40 @@ So it might be a good idea to read all the descriptions in the methods section, 
 
 =head2 set_title
 
-Give a string which will appear in the meta data of the format.
-This will be used e.g. by eBook-readers to determine the books name.
+Give a string which will appear in the meta data of the format. This will be used e.g. by eBook-readers to determine the books name.
 
 =head2 set_author
 
-Give a string which will appear in the meta data of the format.
-This will be used e.g. by eBook-readers to determine the books author.
+Give a string which will appear in the meta data of the format. This will be used e.g. by eBook-readers to determine the books author.
 
 =head2 set_filename
 
-The book will be stored under the name and location you pass here.
-When calling the save() method the file will be created.
+The book will be stored under the name and location you pass here. When calling the save() method the file will be created.
 
-If you don't use this method, the default name will be 'book'.
-All filenames you give and also the default one will have the appendix '.mobi'.
+If you don't use this method, the default name will be 'book'. All filenames you give and also the default one will have the appendix '.mobi'.
 
 =head2 set_encoding
 
-You can say what kind of encoding you would like to use.
-But be aware, that this feature is highly untested and implemented in
-funny ways. However utf-8 and western encodings should work.
+You can say what kind of encoding you would like to use. But be aware, that this feature is highly untested and implemented in funny ways. However utf-8 and western encodings should work.
 
 If you don't set anything here, 'utf-8' will be default.
 
 =head2 add_mhtml_content
 
-'mhtml' stands for mobi-html, which means: it is actually HTML but some
-things are different.
-I invented this term myself, so it is probably not a good idea to search the web or ask other people about it.
-If you are looking for more information about this format you might search the web for 'mobipocket file format' or something similar.
+'mhtml' stands for mobi-html, which means: it is actually HTML but some things are different. I invented this term myself, so it is probably not a good idea to search the web or ask other people about it. If you are looking for more information about this format you might search the web for 'mobipocket file format' or something similar.
 
-If you stick to the most basic HTML tags it should be perfect mhtml
-'compatible'. This way you can add your own content directly.
-If this is to tricky, have a look at the add_pod_content() method.
+If you stick to the most basic HTML tags it should be perfect mhtml 'compatible'. This way you can add your own content directly. If this is to tricky, have a look at the add_pod_content() method.
 
   $book->add_mhtml_content(
       " <h1>This is my Book</h1>
        <p>Read my wisdome.</p>"
   );
 
-If you indent the 'h1' tag with any whitespace, it will not appear in the
-TOC. This may be usefull if you want to design a title page.
+If you indent the 'h1' tag with any whitespace, it will not appear in the TOC. This may be usefull if you want to design a title page.
 
 =head2 add_pod_content
 
-Perls POD format is very simple to use.
-So it might be a good idea to write your content in POD.
-If you did so, you can use this method to put your content into the book.
-Your POD will automatically be parsed and transformed to what I call
-'mhtml' format.
-This means, your POD content will just look great in the eBook.
+Perls POD format is very simple to use. So it might be a good idea to write your content in POD. If you did so, you can use this method to put your content into the book. Your POD will automatically be parsed and transformed to what I call 'mhtml' format. This means, your POD content will just look great in the eBook.
 
   $book->add_pod_content($pod, 'pagemode', 'head0_mode');
 
@@ -387,8 +367,7 @@ Default is to not insert pagebreak.
 
 =head3 head0_mode
 
-Pass any true value as the third argument to enable 'head0_mode'.
-The effect will be, that you are allowed to use a '=head0' command in your POD.
+Pass any true value as the third argument to enable 'head0_mode'. The effect will be, that you are allowed to use a '=head0' command in your POD.
 
   $book->head0_mode(1);
   $book->add_pod_content('=head0 Module EBook::MOBI
@@ -405,8 +384,7 @@ The effect will be, that you are allowed to use a '=head0' command in your POD.
 
   =cut', 0, 1);
 
-This feature is useful if you want to have the documentation of several modules in Perl in one eBook.
-You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
+This feature is useful if you want to have the documentation of several modules in Perl in one eBook. You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
 
 Default is to ignore any '=head0' command.
 
@@ -418,8 +396,7 @@ If you want to add images you can use an unofficial '=image' syntax in your POD.
 
   =image /path/to/image.jpg fig1: description which will be the caption.
 
-The image needs to exist at the path which you define here.
-When you call the save() method, those images will be read from this place and stored into the eBook-file.
+The image needs to exist at the path which you define here. When you call the save() method, those images will be read from this place and stored into the eBook-file.
 
 =head2 add_pagebreak
 
@@ -427,27 +404,20 @@ Use this method to seperate content and give some structure to your book.
 
 =head2 add_toc_once
 
-Use this method to place a table of contents into your book.
-You will B<need to> call the make() method later, B<after> you added all your content to the book.
-This is, because we need all the content - to be able to calculate the
+Use this method to place a table of contents into your book. You will B<need to> call the make() method later, B<after> you added all your content to the book. This is, because we need all the content - to be able to calculate the
 references where the TOC is pointing to.
 
-This method can only be called once.
-If you call it twice, the second call will not do anything.
+This method can only be called once. If you call it twice, the second call will not do anything.
 
 =head2 make
 
-You need to call this one before saving, especially if you have used the
-add_toc_once() method.
-This will calculate the references, pointing from the TOC into the content.
+You need to call this one before saving, especially if you have used the add_toc_once() method. This will calculate the references, pointing from the TOC into the content.
 
 =head2 print_mhtml
 
 If you are curious how the mobi-specific HTML looks like, take a look!
 
-If you call the method it will print to standard output.
-You can change this behaviour by passing any true argument.
-The content will then be returned, so that you can store it in a variable.
+If you call the method it will print to standard output. You can change this behaviour by passing any true argument. The content will then be returned, so that you can store it in a variable.
 
   # print to stdout
   $book->print_mhtml();
@@ -457,16 +427,13 @@ The content will then be returned, so that you can store it in a variable.
 
 =head2 save
 
-Put the whole thing together as an eBook.
-This will create a file, with the name and location you gave with set_filename().
+Put the whole thing together as an eBook. This will create a file, with the name and location you gave with set_filename().
 
-In this process it will also read images and store them into the eBook.
-So it is important, that the images are readable at the path you provided in your POD or mhtml syntax.
+In this process it will also read images and store them into the eBook. So it is important, that the images are readable at the path you provided in your POD or mhtml syntax.
 
 =head2 reset
 
-Reset the object, so that all the content is purged.
-Helpful if you like to make a new book, but are to lazy to create a new object. (e.g. for testing)
+Reset the object, so that all the content is purged. Helpful if you like to make a new book, but are to lazy to create a new object. (e.g. for testing)
 
 =head2 debug_on
 
@@ -476,14 +443,13 @@ Pass a reference to a debug subroutine and enable debug messages.
 
 =head2 debug_off
 
-Stop debug messages and erease the the reference to the subroutine.
+Stop debug messages and erease the reference to the subroutine.
 
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2012 Boris Däppen, all rights reserved.
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms of Artistic License 2.0.
+This program is free software; you can redistribute it and/or modify it under the same terms of Artistic License 2.0.
 
 =head1 AUTHOR
 
