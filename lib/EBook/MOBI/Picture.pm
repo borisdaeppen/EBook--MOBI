@@ -74,6 +74,8 @@ sub rescale_dimensions {
     my $width = $image->width();
     my $height= $image->height();
 
+    my $outfilename = 'no name set';
+
     # Only resize the image if it is bigger than max
     if ($width > $self->{max_width} or $height > $self->{max_height}) {
 
@@ -81,7 +83,7 @@ sub rescale_dimensions {
 
         # We rename the out-file so that we don't destroy the original
         # picture by overwriting it with the resized version
-        my $outfilename = $path . $name . '-mobi_resized.jpg';
+        $outfilename = $path . $name . '-mobi_resized';
 
         #copy ($image_path, $outfilename);
         $self->_debug(  "Image $image_path is of size $width"."x$height"
@@ -90,15 +92,7 @@ sub rescale_dimensions {
                       );
 
         # Resize the image... proportions will stay the same
-        my $gd = $resize->resize($self->{max_width}, $self->{max_height});
-
-        # Write the file as JPG
-        open(my $FH, ">$outfilename");
-        print $FH $gd->jpeg();
-        close($FH);
-
-        # this is so that return returns the right value
-        $image_path = $outfilename;
+        $image = $resize->resize($self->{max_width}, $self->{max_height});
     }
     
     # If the file is below max width/height we dont to anything
@@ -110,17 +104,31 @@ sub rescale_dimensions {
 
         # BUG: Seems like Kindle Reader can't display PNG in my tests...
         # SO I CONVERT EVERYTHING TO JPEG
-        my $outfilename = $path . $name . '-mobi.jpg';
-        # Write the file as JPG
-        open(my $FH, ">$outfilename");
-        print $FH $image->jpeg();
-        close($FH);
-        # this is so that return returns the right value
-        $image_path = $outfilename;
+        $outfilename = $path . $name . '-mobi';
     }
 
+    # Write the file as JPG or GIF
+    # PNG fails on the Kindle Reader!
+    my $FH;
+    if ($suffix eq '.png') {
+        $outfilename = "$outfilename.gif";
+        open($FH, ">$outfilename");
+    my $white = $image->colorAllocate(255,255,255);
+    # make the background transparent and interlaced
+    $image->transparent($white);
+    $image->interlaced('true');
+        print $FH $image->gif();
+    }
+    else {
+        $outfilename = "$outfilename.jpg";
+        open($FH, ">$outfilename");
+
+        print $FH $image->jpeg();
+    }
+    close($FH);
+
     # return path of the picture with the valid size
-    return $image_path;
+    return $outfilename;
 }
 
 1;
