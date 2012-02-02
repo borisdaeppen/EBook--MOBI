@@ -1,43 +1,42 @@
 #!/usr/bin/perl
 
+use strict;
+use warnings;
+
 use EBook::MOBI;
+use GD::Simple;
 
 my $someText = '';
-for (1..100) {
+for (1..500) {
     $someText .= 'Hello World! This is just a test. '
 }
 
-my $pod = <<END;
+my $pod = '';
+my @image_paths = ();
+my $img_path = '';
 
-=head1 Some POD
+for (my $i=0;$i<50;$i++) {
+    $img_path = "./example/img/img_$i.jpg";
+    push (@image_paths, $img_path);
 
-$someText
+    $pod .= "=head1 Title $i\n\nThis picture should have the same number as the title...\n\n";
+    $pod .= "=image $img_path Pic number $i\n\n$someText\n\n";
 
-=image ./example/img/camel.jpg Pic one
+    my $im = GD::Simple->new(200, 80);
+    $im->fgcolor('black');
+    $im->bgcolor('yellow');
+    $im->moveTo(20,40);
+    $im->font('Times:italic');
+    $im->fontsize(18);
+    $im->string("Nr. $i"); 
 
-$someText
+    open(my $PICTURE, ">$img_path") or die("Cannot open file for writing");
+    binmode $PICTURE;
+    print $PICTURE $im->jpeg;
+    close $PICTURE;
+}
 
-=image ./example/img/camel_big.jpg Pic two
-
-$someText
-
-=image ./example/img/camel.jpg Pic one
-
-$someText
-
-=image ./example/img/camel_big.jpg Pic two
-
-$someText
-
-=image ./example/img/camel.jpg Pic one
-
-$someText
-
-=image ./example/img/camel_big.jpg Pic two
-
-$someText
-
-END
+$pod .= "=cut\n";
 
 my $book = EBook::MOBI->new();
 
@@ -64,6 +63,12 @@ $book->add_pagebreak();
 $book->add_pod_content($pod, 'pagemode');
 
 $book->make();
-$book->print_mhtml();
+#$book->print_mhtml();
 $book->save();
 
+print "\n\neBook done... cleaning up...\n\n";
+
+foreach my $pic (@image_paths) {
+    print "deleting $pic\n";
+    unlink $pic;
+}
