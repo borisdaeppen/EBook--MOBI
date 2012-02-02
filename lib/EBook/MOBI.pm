@@ -20,7 +20,7 @@ sub new {
     my $ref = { html_data => '',
                 html_toc  => '',
 
-                filename  => 'book',
+                filename  => 'book.mobi',
                 title     => 'This Book has no Title',
                 author    => 'This Book has no Author',
 
@@ -288,7 +288,7 @@ If you plan to create a typical eBook you probably will need all of the methods 
   my $book = EBook::MOBI->new();
 
   # give some meta information about this book
-  $book->set_filename('./data/my_ebook');
+  $book->set_filename('./data/my_ebook.mobi');
   $book->set_title   ('Read my Wisdome');
   $book->set_author  ('Bam Bam');
   $book->set_encoding('utf-8');
@@ -332,7 +332,7 @@ Give a string which will appear in the meta data of the format. This will be use
 
 The book will be stored under the name and location you pass here. When calling the save() method the file will be created.
 
-If you don't use this method, the default name will be 'book'. All filenames you give and also the default one will have the appendix '.mobi'.
+If you don't use this method, the default name will be 'book.mobi'.
 
 =head2 set_encoding
 
