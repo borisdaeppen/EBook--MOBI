@@ -346,7 +346,7 @@ sub textblock {
     $expansion = _html_enc($expansion);
 
     if ($is_list) {
-        print $out_fh $expansion;
+        print $out_fh "<blockquote>$expansion</blockquote>\n";
     }
     else {
         # that's it. we're done!
