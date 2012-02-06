@@ -47,9 +47,9 @@ sub end_input {
     $parser->_debug('...end of POD reached');
 
     # at the end of file we should not be in listcontext anymore
-    if($parser->{EBook_MOBI_Pod2Mhtml_listcontext}) {
-        croak "POD parsing error. Did you forget '=back' at end of list?";
-    }
+    #if($parser->{EBook_MOBI_Pod2Mhtml_listcontext}) {
+        #croak "POD parsing error. Did you forget '=back' at end of list?";
+    #}
 
     if (exists $parser->{EBook_MOBI_Pod2Mhtml_body}
       and $parser->{EBook_MOBI_Pod2Mhtml_body}) {
@@ -106,27 +106,63 @@ sub command {
         # unordered list! So we just set a global variable to 'begin',
         # the first item call can then know that it is the first item
         # and that it defines the rest of the list type.
-        $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 'begin';
+
+        if (exists $parser->{EBook_MOBI_Pod2Mhtml_list}) {
+            # if we reach here, this means that this is a nested list
+            $parser->{EBook_MOBI_Pod2Mhtml_listlvl}++;
+        }
+        else {
+            $parser->{EBook_MOBI_Pod2Mhtml_listlvl} = 0;
+        }
+
+
+        push @{$parser->{EBook_MOBI_Pod2Mhtml_list}}
+             , {
+                 type    => ''     ,
+                 items   => 0      ,
+                 state   => 'over' ,
+               };
+
+        #print "DEBUG: over ";
+        #print "lvl " . $parser->{EBook_MOBI_Pod2Mhtml_listlvl} ."\n";
     }
     # BACK: ends the listcontext
     elsif ($command eq 'back') {
 
+        my $lvl = $parser->{EBook_MOBI_Pod2Mhtml_listlvl};
+
+        #print "DEBUG: back ";
+        #print "type " . $parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{type} . "\n";
+
         # print end-tag according to the lists type
-        if ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'ul') {
+        if ($parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{type} eq 'ul') {
             print $out_fh '</li>' . "\n"; # close last item
             print $out_fh '</ul>' . "\n";
         }
-        elsif ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'ol') {
+        elsif ($parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{type} eq 'ol') {
             print $out_fh '</li>' . "\n"; # close last item
             print $out_fh '</ol>' . "\n";
+        }
+        elsif
+          ($parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{type} eq 'begin') {
+            # list is processed
+            # there where no items...
         }
         else {
             croak 'POD parsing error. Undefined listcontext:'
                   . $parser->{EBook_MOBI_Pod2Mhtml_listcontext};
         }
 
-        # Set listcontext to zero
-        $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 0;
+        # DELETE if list is finish
+        if ($parser->{EBook_MOBI_Pod2Mhtml_listlvl} == 0) {
+            #print "DEBUG: deleting list!\n";
+            delete $parser->{EBook_MOBI_Pod2Mhtml_listlvl};
+            delete $parser->{EBook_MOBI_Pod2Mhtml_list};
+        }
+        else {
+            $parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{state} = 'back';
+            $parser->{EBook_MOBI_Pod2Mhtml_listlvl}--;
+        }
     }
     # CUT: end of POD
     elsif ($command eq 'cut') {
@@ -220,37 +256,55 @@ sub command {
             # If we are still in listcontext 'begin' this means that this is
             # the first item of the list, which will be used to figure out
             # the type of the list.
-            if ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'begin') {
+            my $lvl = $parser->{EBook_MOBI_Pod2Mhtml_listlvl};
+
+            $parser->{EBook_MOBI_Pod2Mhtml_list}
+                   ->[$lvl]
+                   ->{items}++;
+
+            #print "DEBUG: item lvl $lvl no." .
+          #$parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{items}
+            #. "\n";
+
+            if ($parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{items} == 1){
+
+                # if we are already in a list...
+                #if ($parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{state}
+                    #eq 'over') {
+                    ## we need to close the last item!
+                    #print $out_fh '</li>' . "\n";
+                #}
 
                 # is there a digit at first, if yes this is an ordered list
                 if ($expansion =~ /^\s*\d+\s*(.*)$/) {
                     $expansion = $1;
-                    $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 'ol';
+                    $parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]
+                           ->{type} = 'ol';
                     print $out_fh '<ol>' . "\n";
                 }
                 # is there a '*' at first, if yes this is an unordered list
                 elsif ($expansion =~ /^\s*\*{1}\s*(.*)$/) {
                     $expansion = $1;
-                    $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 'ul';
+                    $parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]
+                           ->{type} = 'ul';
                     print $out_fh '<ul>' . "\n";
                 }
                 # are there only prinable chars? We default to unordered
                 elsif ($expansion =~ /^[[:print:]]+$/) {
-                    $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 'ul';
+                    $parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]
+                           ->{type} = 'ul';
                     print $out_fh '<ul>' . "\n";
                     # do nothing
                 }
                 # The lists text may be in a normal text section...
                 # we default to unordered
                 else {
-                    $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 'ul';
+                    $parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]
+                           ->{type} = 'ul';
                     print $out_fh '<ul>' . "\n";
                     #croak 'This string does not seem to fit into a list: '
                           #. $expansion;
                 }
-
-                # no matter what: first item starts with content now!
-                print $out_fh '<li>' . $expansion;
             }
 
             # if it is not the first item we save the checks for list-type
@@ -259,22 +313,25 @@ sub command {
                 # but first we need to close the last item!
                 print $out_fh '</li>' . "\n";
 
+                my $type =
+                   $parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{type};
+
                 # then we check the type and extract the content
-                if ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'ol') {
+                if ($type eq 'ol') {
                     if ($expansion =~ /^\s*\d+\s*(.*)$/) {
                         $expansion = $1;
                     }
                 }
-                if ($parser->{EBook_MOBI_Pod2Mhtml_listcontext} eq 'ul') {
+                if ($type eq 'ul') {
                     if ($expansion =~ /^\s*\*{1}\s*(.*)$/) {
                         $expansion = $1;
                     }
                 }
-
-                # we print the item... but we don't close it!
-                # it get's closed by the next item or the =back call
-                print $out_fh '<li>' . $expansion;
             }
+
+            # we print the item... but we don't close it!
+            # it get's closed by the next item or the =back call
+            print $out_fh '<li>' . $expansion;
         }
     }
 }
@@ -332,8 +389,10 @@ sub textblock {
     # happen. It is only when the text is separated with newline.
     # Ok... we need to check here if we are in a list.. and then do some
     # stuffe to handle that case.
+    my $lvl = $parser->{EBook_MOBI_Pod2Mhtml_listlvl};
     my $is_list = 0;
-    if ($parser->{EBook_MOBI_Pod2Mhtml_listcontext}) {
+    if (exists $parser->{EBook_MOBI_Pod2Mhtml_list}
+        and $parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{items} > 0) {
         $is_list = 1;;
     }
     # ok, that's it... the rest will be handled at the output
@@ -345,12 +404,14 @@ sub textblock {
     # and translate special chars to HTML
     $expansion = _html_enc($expansion);
 
-    if ($is_list) {
-        print $out_fh "<blockquote>$expansion</blockquote>\n";
+    if (not exists $parser->{EBook_MOBI_Pod2Mhtml_list}) {
+        print $out_fh '<p>' . $expansion . '</p>' . "\n";
+    }
+    elsif ($is_list) {
+        print $out_fh $expansion;
     }
     else {
-        # that's it. we're done!
-        print $out_fh '<p>' . $expansion . '</p>' . "\n";
+        print $out_fh "<blockquote>$expansion</blockquote>\n";
     }
 }
 
