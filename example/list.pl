@@ -4,7 +4,37 @@ use EBook::MOBI;
 
 my $pod = <<END;
 
-=head1 A List
+=head1 Content as Command
+
+=over
+
+=item * First item.
+
+=item * Second item.
+
+=item * Third item.
+
+=back
+
+=head1 Content as Textblock
+
+=over
+
+=item
+
+First item.
+
+=item
+
+Second item.
+
+=item
+
+Third item.
+
+=back
+
+=head1 Content as Textblock with *
 
 =over
 
@@ -22,7 +52,7 @@ Third item.
 
 =back
 
-=head1 Another List
+=head1 Content mixed as Command and Textblock
 
 =over
 
@@ -30,7 +60,68 @@ Third item.
 
 =item * Second item.
 
+With additional Text.
+
 =item * Third item.
+
+With additional Text.
+With additional Text.
+
+=back
+
+=head1 Nested List
+
+=over
+
+=item * First item.
+
+=over
+
+=item 1 First item.
+
+=item 2 Second item.
+
+=item 3 Third item.
+
+=back
+
+=item * Second item.
+
+=item * Third item.
+
+=back
+
+=head1 No Items (Blockquote)
+
+=over
+
+First item.
+
+Second item.
+
+Third item.
+
+=back
+
+=head1 Nested Blockquote
+
+=over
+
+First item.
+
+Second item.
+
+=over
+
+First.
+
+Second.
+
+Third.
+
+=back
+
+Third item.
 
 =back
 
