@@ -125,6 +125,122 @@ Third item.
 
 =back
 
+=head1 Nested List of Depth 5 !!!
+
+=over
+
+=item * First item.
+
+=item * First item.
+
+=item * First item.
+
+=over
+
+=item 1 One.
+
+=item 2 Two.
+
+=over
+
+=item * A
+
+=over
+
+=item * First item.
+
+=item * First item.
+
+=item * First item.
+
+=over
+
+=item 1 One.
+
+=item 2 Two.
+
+=over
+
+=item * A
+
+=item * B
+
+=item * C
+
+=back
+
+=item 3 Three.
+
+=back
+
+=item * Second item.
+
+=item * Third item.
+
+=back
+
+=item * B
+
+=item * C
+
+=back
+
+=item 3 Three.
+
+=back
+
+=item * Second item.
+
+=item * Third item.
+
+=back
+
+=head1 Nested List with Blockquote
+
+=over
+
+=item 1 One.
+
+=item 2 Two.
+
+=over
+
+A
+
+B
+
+C
+
+=back
+
+=item 3 Three.
+
+=back
+
+=cut
+
+=head1 Nested Blockquote with List
+
+=over
+
+One.
+
+Two.
+
+=over
+
+=item * A
+
+=item * B
+
+=item * C
+
+=back
+
+Three.
+
+=back
+
 =cut
 
 END

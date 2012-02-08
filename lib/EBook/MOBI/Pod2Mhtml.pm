@@ -31,6 +31,7 @@ sub begin_input {
 
     # make sure that this variable is set to 0 at beginning
     $parser->{EBook_MOBI_Pod2Mhtml_listcontext} = 0;
+    $parser->{EBook_MOBI_Pod2Mhtml_listjustwentback} = 0;
 
     if (exists $parser->{EBook_MOBI_Pod2Mhtml_body}
       and $parser->{EBook_MOBI_Pod2Mhtml_body}) {
@@ -122,18 +123,13 @@ sub command {
                  items   => 0      ,
                  state   => 'over' ,
                  contentInCmd => 1 ,
+                 blockquotes  => 0 ,
                };
-
-        #print "DEBUG: over ";
-        #print "lvl " . $parser->{EBook_MOBI_Pod2Mhtml_listlvl} ."\n";
     }
     # BACK: ends the listcontext
     elsif ($command eq 'back') {
 
         my $lvl = $parser->{EBook_MOBI_Pod2Mhtml_listlvl};
-
-        #print "DEBUG: back ";
-        #print "type " . $parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{type} . "\n";
 
         # print end-tag according to the lists type
         if ($parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{type} eq 'ul') {
@@ -157,9 +153,9 @@ sub command {
 
         # DELETE if list is finish
         if ($parser->{EBook_MOBI_Pod2Mhtml_listlvl} == 0) {
-            #print "DEBUG: deleting list!\n";
             delete $parser->{EBook_MOBI_Pod2Mhtml_listlvl};
             delete $parser->{EBook_MOBI_Pod2Mhtml_list};
+            delete $parser->{EBook_MOBI_Pod2Mhtml_listjustwentback};
         }
         else {
             $parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{state} = 'back';
@@ -266,8 +262,8 @@ sub command {
                    ->{items}++;
 
             #print "DEBUG: item lvl $lvl no." .
-          #$parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{items}
-            #. "\n";
+                #$parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{items}
+                #. "\n";
 
             if ($parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{items} == 1){
 
@@ -460,6 +456,13 @@ sub textblock {
 
         # we set the listtype
         $parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{type} = 'blockquote';
+        $parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{blockquotes}++;
+
+        if ($parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl]->{blockquotes} == 1
+            and $lvl > 0
+            and $parser->{EBook_MOBI_Pod2Mhtml_list}->[$lvl-1]->{items} > 0) {
+            print $out_fh "</li>\n";
+        }
 
         # we do some pseudo-indenting
         # TODO: more nice would be real nesting...
