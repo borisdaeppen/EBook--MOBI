@@ -783,3 +783,16 @@ sub remove_java_script {
 
 
 return 1;
+
+__END__
+
+=head1 NAME
+
+EBook::MOBI::MobiPerl::Util
+
+=head1 INFO
+
+For information about this code, please visit L<https://dev.mobileread.com/trac/mobiperl>
+
+=cut
+

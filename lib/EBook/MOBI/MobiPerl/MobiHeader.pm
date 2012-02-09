@@ -843,3 +843,16 @@ sub get_booktype_desc {
 
 
 return 1;
+
+__END__
+
+=head1 NAME
+
+EBook::MOBI::MobiPerl::MobiHeader
+
+=head1 INFO
+
+For information about this code, please visit L<https://dev.mobileread.com/trac/mobiperl>
+
+=cut
+
