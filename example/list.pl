@@ -217,8 +217,6 @@ C
 
 =back
 
-=cut
-
 =head1 Nested Blockquote with List
 
 =over
