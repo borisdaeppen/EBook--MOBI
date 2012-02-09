@@ -7,7 +7,6 @@ use Image::Resize;
 use File::Basename;
 
 our $VERSION = 0.1;
-our $DEBUG   = 0;
 
 # Constructor of this class
 sub new {
@@ -22,8 +21,6 @@ sub new {
 
     bless($ref, $self);
 
-    $self->_debug('Tests with PNG on the Kindle-Reader failed. So all poictures get converted to JPG!');
-
     return $ref;
 }
 
@@ -31,9 +28,10 @@ sub debug_on {
     my ($self, $ref_to_debug_sub) = @_; 
 
     $self->{ref_to_debug_sub} = $ref_to_debug_sub;
-    $DEBUG = 1;
     
     &{$ref_to_debug_sub}('DEBUG mode on');
+
+    $self->_debug('Tests with PNG on the Kindle-Reader failed. So all poictures get converted to JPG!');
 }
 
 sub debug_off {
@@ -42,7 +40,6 @@ sub debug_off {
     if ($self->{ref_to_debug_sub}) {
         &{$self->{ref_to_debug_sub}}('DEBUG mode off');
         $self->{ref_to_debug_sub} = 0;
-        $DEBUG = 0;
     }
 }
 
@@ -50,13 +47,8 @@ sub debug_off {
 sub _debug {
     my ($self,$msg) = @_; 
 
-    if($DEBUG) {
-        if ($self->{ref_to_debug_sub}) {
-            &{$self->{ref_to_debug_sub}}($msg);
-        }   
-        else {
-            print "DEBUG: $msg\n";
-        }   
+    if ($self->{ref_to_debug_sub}) {
+        &{$self->{ref_to_debug_sub}}($msg);
     }   
 }
 

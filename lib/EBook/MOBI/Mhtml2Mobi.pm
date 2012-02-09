@@ -42,7 +42,6 @@ use constant DOC_COMPRESSED => scalar 2;
 use constant DOC_RECSIZE => scalar 4096;
 
 our $VERSION = 0.1;
-our $DEBUG   = 0;
 
 # Constructor of this class
 sub new {
@@ -60,9 +59,10 @@ sub debug_on {
     my ($self, $ref_to_debug_sub) = @_; 
 
     $self->{ref_to_debug_sub} = $ref_to_debug_sub;
-    $DEBUG = 1;
     
     &$ref_to_debug_sub('DEBUG mode on');
+
+    $self->{mobi_pic}->debug_on($ref_to_debug_sub);
 }
 
 sub debug_off {
@@ -71,7 +71,8 @@ sub debug_off {
     if ($self->{ref_to_debug_sub}) {
         &{$self->{ref_to_debug_sub}}('DEBUG mode off');
         $self->{ref_to_debug_sub} = 0;
-        $DEBUG = 0;
+
+        $self->{mobi_pic}->debug_off();
     }   
 }
 
@@ -79,14 +80,9 @@ sub debug_off {
 sub _debug {
     my ($self,$msg) = @_; 
 
-    if($DEBUG) {
-        if ($self->{ref_to_debug_sub}) {
-            &{$self->{ref_to_debug_sub}}($msg);
-        }   
-        else {
-            print "DEBUG: $msg\n";
-        }   
-    }
+    if ($self->{ref_to_debug_sub}) {
+        &{$self->{ref_to_debug_sub}}($msg);
+    }   
 }
 
 # This method does the job!
@@ -98,10 +94,6 @@ sub pack {
         $author,    # author of the eBook
         $title      # title of the eBook
        ) = @_;
-
-    if($DEBUG) {
-        $self->{mobi_pic}->debug_on($self->{ref_to_debug_sub});
-    }
 
     # un-comment if you need to see all the HTML
     #print "\n--HTML--\n$html\n--HTML--\n";

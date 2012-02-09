@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 our $VERSION = 0.1;
-our $DEBUG   = 0;
 
 # needed CPAN stuff
 use IO::String;
@@ -51,7 +50,6 @@ sub debug_on {
     my ($self, $ref_to_debug_sub) = @_;
 
     $self->{ref_to_debug_sub} = $ref_to_debug_sub;
-    $DEBUG = 1;
     
     &$ref_to_debug_sub('DEBUG mode on');
 }
@@ -62,7 +60,6 @@ sub debug_off {
     if ($self->{ref_to_debug_sub}) {
         &{$self->{ref_to_debug_sub}}('DEBUG mode off');
         $self->{ref_to_debug_sub} = 0;
-        $DEBUG = 0;
     }
 }
 
@@ -70,13 +67,8 @@ sub debug_off {
 sub _debug {
     my ($self,$msg) = @_;
 
-    if($DEBUG) {
-        if ($self->{ref_to_debug_sub}) {
-            &{$self->{ref_to_debug_sub}}($msg);
-        }
-        else {
-            print "DEBUG: $msg\n";
-        }
+    if ($self->{ref_to_debug_sub}) {
+        &{$self->{ref_to_debug_sub}}($msg);
     }
 }
 
@@ -118,7 +110,8 @@ sub add_pod_content {
     my $parser = EBook::MOBI::Pod2Mhtml->new();
 
     # pass some settings
-    $parser->debug_on($self->{ref_to_debug_sub}) if ($DEBUG);
+    $parser->debug_on($self->{ref_to_debug_sub})
+        if ($self->{ref_to_debug_sub});
     $parser->pagemode($pagemode);
     $parser->head0_mode($head0_mode);
 
@@ -193,7 +186,8 @@ sub save {
     my ($self) = @_;
 
     my $mobi = EBook::MOBI::Mhtml2Mobi->new();
-    $mobi->debug_on($self->{ref_to_debug_sub}) if ($DEBUG);
+    $mobi->debug_on($self->{ref_to_debug_sub})
+        if ($self->{ref_to_debug_sub});
 
     $mobi->pack(    $self->{html_data},
                     $self->{filename},

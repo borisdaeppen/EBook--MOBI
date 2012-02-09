@@ -7,7 +7,6 @@ use Pod::Parser;
 our @ISA = qw(Pod::Parser);
 
 our $VERSION = 0.1;
-our $DEBUG   = 0;
 
 use Text::Trim;
 use HTML::Entities;
@@ -530,7 +529,6 @@ sub debug_on {
     my ($self, $ref_to_debug_sub) = @_; 
 
     $self->{ref_to_debug_sub} = $ref_to_debug_sub;
-    $DEBUG = 1;
     
     &$ref_to_debug_sub('DEBUG mode on');
 }
@@ -541,7 +539,6 @@ sub debug_off {
     if ($self->{ref_to_debug_sub}) {
         &{$self->{ref_to_debug_sub}}('DEBUG mode off');
         $self->{ref_to_debug_sub} = 0;
-        $DEBUG = 0;
     }
 }
 
@@ -549,13 +546,8 @@ sub debug_off {
 sub _debug {
     my ($self,$msg) = @_; 
 
-    if($DEBUG) {
-        if ($self->{ref_to_debug_sub}) {
-            &{$self->{ref_to_debug_sub}}($msg);
-        }   
-        else {
-            print "DEBUG: $msg\n";
-        }   
+    if ($self->{ref_to_debug_sub}) {
+        &{$self->{ref_to_debug_sub}}($msg);
     }   
 }
 
