@@ -142,6 +142,12 @@ EBook::MOBI::Picture - Make sure that pictures cope with the MOBI standards.
 
 =head1 METHODS
 
+=head2 new
+
+The code is meant to be used in object oriented style, so you are asked to create an object before using.
+
+  my $p = EBook::MOBI::Picture->new();
+
 =head2 rescale_dimensions
 
 According to my own research at the web, it is a good idea to have a maximum size for images of 520 x 622. And this is what this method does, it ensures that this maximum is kept.

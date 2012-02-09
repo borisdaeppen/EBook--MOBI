@@ -679,6 +679,32 @@ Pass a reference to a debug subroutine and enable debug messages.
 
 Stop debug messages and erease the reference to the subroutine.
 
+=head2 INHERITED INTERNAL METHODS
+
+=head3 begin_input
+
+Inherited from L<Pod::Parser>. Gets called when POD-input starts.
+
+=head3 command
+
+Inherited from L<Pod::Parser>. Gets called when a command is found.
+
+=head3 end_input
+
+Inherited from L<Pod::Parser>. Gets called when POD-input ends.
+
+=head3 interior_sequence
+
+Inherited from L<Pod::Parser>. Gets called for inline replacements..
+
+=head3 textblock
+
+Inherited from L<Pod::Parser>. Gets called for text sections.
+
+=head3 verbatim
+
+Inherited from L<Pod::Parser>. Gets called for code sections..
+
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2011 Boris Däppen, all rights reserved.
