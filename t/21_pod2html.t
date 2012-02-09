@@ -9,7 +9,7 @@ use File::Temp qw(tempfile);
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 18;
+use Test::More tests => 28;
 
 ###########################
 # General module tests... #
@@ -160,6 +160,417 @@ $html_out{lists_breakline} = <<'HEREDOC';
 <li>5</li>
 <li>normal list with number as first item</li>
 </ul>
+</body>
+HEREDOC
+
+$pod_input{lists_contentInCommand} = <<'HEREDOC';
+=head1 Content in Command
+
+=over
+
+=item * First item.
+
+=item * Second item.
+
+=item * Third item.
+
+=back
+HEREDOC
+
+$html_out{lists_contentInCommand} = <<'HEREDOC';
+<body>
+<h1>Content in Command</h1>
+<ul>
+<li>First item.</li>
+<li>Second item.</li>
+<li>Third item.</li>
+</ul>
+</body>
+HEREDOC
+
+$pod_input{lists_contentInTextblock} = <<'HEREDOC';
+=head1 Content in Textblock
+
+=over
+
+=item
+
+First item.
+
+=item
+
+Second item.
+
+=item
+
+Third item.
+
+=back
+HEREDOC
+
+$html_out{lists_contentInTextblock} = <<'HEREDOC';
+<body>
+<h1>Content in Textblock</h1>
+<ul>
+<li>First item.</li>
+<li>Second item.</li>
+<li>Third item.</li>
+</ul>
+</body>
+HEREDOC
+
+$pod_input{lists_contentInTextblock2} = <<'HEREDOC';
+=head1 Content as Textblock with *
+
+=over
+
+=item *
+
+First item.
+
+=item *
+
+Second item.
+
+=item *
+
+Third item.
+
+=back
+HEREDOC
+
+$html_out{lists_contentInTextblock2} = <<'HEREDOC';
+<body>
+<h1>Content as Textblock with *</h1>
+<ul>
+<li>First item.</li>
+<li>Second item.</li>
+<li>Third item.</li>
+</ul>
+</body>
+HEREDOC
+
+$pod_input{lists_contentMixed} = <<'HEREDOC';
+=head1 Content mixed as Command and Textblock
+
+=over
+
+=item * First item.
+
+=item * Second item.
+
+With additional Text.
+
+=item * Third item.
+
+With additional Text.
+With additional Text.
+
+=back
+HEREDOC
+
+$html_out{lists_contentMixed} = <<'HEREDOC';
+<body>
+<h1>Content mixed as Command and Textblock</h1>
+<ul>
+<li>First item.</li>
+<li>Second item.<br />With additional Text.</li>
+<li>Third item.<br />With additional Text.
+With additional Text.</li>
+</ul>
+</body>
+HEREDOC
+
+$pod_input{lists_nested} = <<'HEREDOC';
+=head1 Nested List
+
+=over
+
+=item * First item.
+
+=over
+
+=item 1 First item.
+
+=item 2 Second item.
+
+=item 3 Third item.
+
+=back
+
+=item * Second item.
+
+=item * Third item.
+
+=back
+HEREDOC
+
+$html_out{lists_nested} = <<'HEREDOC';
+<body>
+<h1>Nested List</h1>
+<ul>
+<li>First item.</li>
+<ol>
+<li>First item.</li>
+<li>Second item.</li>
+<li>Third item.</li>
+</ol>
+<li>Second item.</li>
+<li>Third item.</li>
+</ul>
+</body>
+HEREDOC
+
+$pod_input{lists_noItems} = <<'HEREDOC';
+=head1 No Items (Blockquote)
+
+=over
+
+First item.
+
+Second item.
+
+Third item.
+
+=back
+HEREDOC
+
+$html_out{lists_noItems} = <<'HEREDOC';
+<body>
+<h1>No Items (Blockquote)</h1>
+<blockquote>First item.</blockquote>
+<blockquote>Second item.</blockquote>
+<blockquote>Third item.</blockquote>
+</body>
+HEREDOC
+
+$pod_input{lists_noItemsNested} = <<'HEREDOC';
+=head1 Nested Blockquote
+
+=over
+
+First item.
+
+Second item.
+
+=over
+
+First.
+
+Second.
+
+Third.
+
+=back
+
+Third item.
+
+=back
+HEREDOC
+
+$html_out{lists_noItemsNested} = <<'HEREDOC';
+<body>
+<h1>Nested Blockquote</h1>
+<blockquote>First item.</blockquote>
+<blockquote>Second item.</blockquote>
+<blockquote><blockquote>First.</blockquote>
+</blockquote>
+<blockquote><blockquote>Second.</blockquote>
+</blockquote>
+<blockquote><blockquote>Third.</blockquote>
+</blockquote>
+<blockquote>Third item.</blockquote>
+</body>
+HEREDOC
+
+$pod_input{lists_deepNested} = <<'HEREDOC';
+=head1 Nested List of Depth 5 !!!
+
+=over
+
+=item * First item.
+
+=item * First item.
+
+=item * First item.
+
+=over
+
+=item 1 One.
+
+=item 2 Two.
+
+=over
+
+=item * A
+
+=over
+
+=item * First item.
+
+=item * First item.
+
+=item * First item.
+
+=over
+
+=item 1 One.
+
+=item 2 Two.
+
+=over
+
+=item * A
+
+=item * B
+
+=item * C
+
+=back
+
+=item 3 Three.
+
+=back
+
+=item * Second item.
+
+=item * Third item.
+
+=back
+
+=item * B
+
+=item * C
+
+=back
+
+=item 3 Three.
+
+=back
+
+=item * Second item.
+
+=item * Third item.
+
+=back
+HEREDOC
+
+$html_out{lists_deepNested} = <<'HEREDOC';
+<body>
+<h1>Nested List of Depth 5 !!!</h1>
+<ul>
+<li>First item.</li>
+<li>First item.</li>
+<li>First item.</li>
+<ol>
+<li>One.</li>
+<li>Two.</li>
+<ul>
+<li>A</li>
+<ul>
+<li>First item.</li>
+<li>First item.</li>
+<li>First item.</li>
+<ol>
+<li>One.</li>
+<li>Two.</li>
+<ul>
+<li>A</li>
+<li>B</li>
+<li>C</li>
+</ul>
+<li>Three.</li>
+</ol>
+<li>Second item.</li>
+<li>Third item.</li>
+</ul>
+<li>B</li>
+<li>C</li>
+</ul>
+<li>Three.</li>
+</ol>
+<li>Second item.</li>
+<li>Third item.</li>
+</ul>
+</body>
+HEREDOC
+
+$pod_input{lists_nestedMixed1} = <<'HEREDOC';
+=head1 Nested List with Blockquote
+
+=over
+
+=item 1 One.
+
+=item 2 Two.
+
+=over
+
+A
+
+B
+
+C
+
+=back
+
+=item 3 Three.
+
+=back
+HEREDOC
+
+$html_out{lists_nestedMixed1} = <<'HEREDOC';
+<body>
+<h1>Nested List with Blockquote</h1>
+<ol>
+<li>One.</li>
+<li>Two.</li>
+<blockquote><blockquote>A</blockquote>
+</blockquote>
+<blockquote><blockquote>B</blockquote>
+</blockquote>
+<blockquote><blockquote>C</blockquote>
+</blockquote>
+<li>Three.</li>
+</ol>
+</body>
+HEREDOC
+
+$pod_input{lists_nestedMixed2} = <<'HEREDOC';
+=head1 Nested Blockquote with List
+
+=over
+
+One.
+
+Two.
+
+=over
+
+=item * A
+
+=item * B
+
+=item * C
+
+=back
+
+Three.
+
+=back
+HEREDOC
+
+$html_out{lists_nestedMixed2} = <<'HEREDOC';
+<body>
+<h1>Nested Blockquote with List</h1>
+<blockquote>One.</blockquote>
+<blockquote>Two.</blockquote>
+<ul>
+<li>A</li>
+<li>B</li>
+<li>C</li>
+</ul>
+<blockquote>Three.</blockquote>
 </body>
 HEREDOC
 
