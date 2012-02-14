@@ -364,7 +364,7 @@ Default is to not insert pagebreak.
 Pass any true value as the third argument to enable 'head0_mode'. The effect will be, that you are allowed to use a '=head0' command in your POD.
 
   $book->head0_mode(1);
-  $book->add_pod_content('=head0 Module EBook::MOBI
+  $book->add_pod_content("=head0 Module EBook::MOBI
   
   =head1 NAME
 
@@ -376,7 +376,7 @@ Pass any true value as the third argument to enable 'head0_mode'. The effect wil
 
   =head1 SYNOPSIS
 
-  =cut', 0, 1);
+  =cut", 0, 1);
 
 This feature is useful if you want to have the documentation of several modules in Perl in one eBook. You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
 
