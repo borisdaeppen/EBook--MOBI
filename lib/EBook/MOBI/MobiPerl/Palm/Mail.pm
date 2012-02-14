@@ -9,15 +9,15 @@
 # $Id: Mail.pm,v 1.16 2002/11/07 14:11:59 arensb Exp $
 
 use strict;
-package EBook::MOBI::Palm::Mail;
-use EBook::MOBI::Palm::Raw();
-use EBook::MOBI::Palm::StdAppInfo();
+package EBook::MOBI::MobiPerl::Palm::Mail;
+use EBook::MOBI::MobiPerl::Palm::Raw();
+use EBook::MOBI::MobiPerl::Palm::StdAppInfo();
 use vars qw( $VERSION @ISA );
 
 # One liner, to allow MakeMaker to work.
 $VERSION = do { my @r = (q$Revision: 1.16 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
-@ISA = qw( EBook::MOBI::Palm::StdAppInfo EBook::MOBI::Palm::Raw );
+@ISA = qw( EBook::MOBI::MobiPerl::Palm::StdAppInfo EBook::MOBI::MobiPerl::Palm::Raw );
 
 =head1 NAME
 

@@ -21,7 +21,7 @@
 # for details.
 
 use strict;
-package EBook::MOBI::Palm::PDB;
+package EBook::MOBI::MobiPerl::Palm::PDB;
 use vars qw( $VERSION %PDBHandlers %PRCHandlers );
 
 # One liner, to allow MakeMaker to work.

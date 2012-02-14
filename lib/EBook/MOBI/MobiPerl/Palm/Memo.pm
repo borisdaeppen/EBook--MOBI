@@ -9,15 +9,15 @@
 # $Id: Memo.pm,v 1.13 2002/11/07 14:12:05 arensb Exp $
 
 use strict;
-package EBook::MOBI::Palm::Memo;
-use EBook::MOBI::Palm::Raw();
-use EBook::MOBI::Palm::StdAppInfo();
+package EBook::MOBI::MobiPerl::Palm::Memo;
+use EBook::MOBI::MobiPerl::Palm::Raw();
+use EBook::MOBI::MobiPerl::Palm::StdAppInfo();
 use vars qw( $VERSION @ISA );
 
 # One liner, to allow MakeMaker to work.
 $VERSION = do { my @r = (q$Revision: 1.13 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
-@ISA = qw( EBook::MOBI::Palm::StdAppInfo EBook::MOBI::Palm::Raw );
+@ISA = qw( EBook::MOBI::MobiPerl::Palm::StdAppInfo EBook::MOBI::MobiPerl::Palm::Raw );
 
 =head1 NAME
 

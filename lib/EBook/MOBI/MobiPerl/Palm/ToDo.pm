@@ -12,16 +12,16 @@
 # of "unfiled"
 
 use strict;
-package EBook::MOBI::Palm::ToDo;
-use EBook::MOBI::Palm::Raw();
-use EBook::MOBI::Palm::StdAppInfo();
+package EBook::MOBI::MobiPerl::Palm::ToDo;
+use EBook::MOBI::MobiPerl::Palm::Raw();
+use EBook::MOBI::MobiPerl::Palm::StdAppInfo();
 
 use vars qw( $VERSION @ISA );
 
 # One liner, to allow MakeMaker to work.
 $VERSION = do { my @r = (q$Revision: 1.12 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
-@ISA = qw( Palm::StdAppInfo Palm::Raw );
+@ISA = qw( EBook::MOBI::MobiPerl::Palm::StdAppInfo EBook::MOBI::MobiPerl::Palm::Raw );
 
 =head1 NAME
 

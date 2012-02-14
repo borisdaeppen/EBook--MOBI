@@ -9,8 +9,8 @@
 # $Id: StdAppInfo.pm,v 1.19 2002/11/07 14:27:28 arensb Exp $
 
 use strict;
-package EBook::MOBI::Palm::StdAppInfo;
-use EBook::MOBI::Palm::Raw();
+package EBook::MOBI::MobiPerl::Palm::StdAppInfo;
+use EBook::MOBI::MobiPerl::Palm::Raw();
 
 # Don't harass me about these variables
 use vars qw( $VERSION @ISA $error );
@@ -19,7 +19,7 @@ use vars qw( $VERSION @ISA $error );
 # One liner, to allow MakeMaker to work.
 $VERSION = do { my @r = (q$Revision: 1.19 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
-@ISA = qw( EBook::MOBI::Palm::Raw );
+@ISA = qw( EBook::MOBI::MobiPerl::Palm::Raw );
 
 =head1 NAME
 

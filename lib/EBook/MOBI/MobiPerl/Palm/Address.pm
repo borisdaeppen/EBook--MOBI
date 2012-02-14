@@ -9,9 +9,9 @@
 # $Id: Address.pm,v 1.19 2002/11/07 14:11:42 arensb Exp $
 
 use strict;
-package EBook::MOBI::Palm::Address;
-use EBook::MOBI::Palm::Raw();
-use EBook::MOBI::Palm::StdAppInfo();
+package EBook::MOBI::MobiPerl::Palm::Address;
+use EBook::MOBI::MobiPerl::Palm::Raw();
+use EBook::MOBI::MobiPerl::Palm::StdAppInfo();
 
 use vars qw( $VERSION @ISA
 	$numFieldLabels $addrLabelLength @phoneLabels @countries
@@ -20,7 +20,7 @@ use vars qw( $VERSION @ISA
 # One liner, to allow MakeMaker to work.
 $VERSION = do { my @r = (q$Revision: 1.19 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
-@ISA = qw( EBook::MOBI::Palm::StdAppInfo EBook::MOBI::Palm::Raw );
+@ISA = qw( EBook::MOBI::MobiPerl::Palm::StdAppInfo EBook::MOBI::MobiPerl::Palm::Raw );
 
 # AddressDB records are quite flexible and customizable, and therefore
 # a pain in the ass to deal with correctly.

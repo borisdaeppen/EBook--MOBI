@@ -8,15 +8,15 @@
 
 use strict;
 
-package EBook::MOBI::Palm::Doc;
+package EBook::MOBI::MobiPerl::Palm::Doc;
 
-use EBook::MOBI::Palm::PDB;
-use EBook::MOBI::Palm::Raw();
+use EBook::MOBI::MobiPerl::Palm::PDB;
+use EBook::MOBI::MobiPerl::Palm::Raw();
 use vars qw( $VERSION @ISA );
 
 $VERSION = do { my @r = (q$Revision: 1.19 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
-@ISA = qw( EBook::MOBI::Palm::Raw );
+@ISA = qw( EBook::MOBI::MobiPerl::Palm::Raw );
 
 use constant DOC_UNCOMPRESSED => scalar 1;
 use constant DOC_COMPRESSED => scalar 2;
@@ -65,10 +65,10 @@ Convert an HTML file to a .prc:
 
 sub import
 {
-	&EBook::MOBI::Palm::PDB::RegisterPDBHandlers( __PACKAGE__, [ "REAd", "TEXt" ], );
-	&EBook::MOBI::Palm::PDB::RegisterPRCHandlers( __PACKAGE__, [ "REAd", "TEXt" ], );
-	&EBook::MOBI::Palm::PDB::RegisterPDBHandlers( __PACKAGE__, [ "MOBI", "BOOK" ], );
-	&EBook::MOBI::Palm::PDB::RegisterPRCHandlers( __PACKAGE__, [ "MOBI", "BOOK" ], );
+	&EBook::MOBI::MobiPerl::Palm::PDB::RegisterPDBHandlers( __PACKAGE__, [ "REAd", "TEXt" ], );
+	&EBook::MOBI::MobiPerl::Palm::PDB::RegisterPRCHandlers( __PACKAGE__, [ "REAd", "TEXt" ], );
+	&EBook::MOBI::MobiPerl::Palm::PDB::RegisterPDBHandlers( __PACKAGE__, [ "MOBI", "BOOK" ], );
+	&EBook::MOBI::MobiPerl::Palm::PDB::RegisterPRCHandlers( __PACKAGE__, [ "MOBI", "BOOK" ], );
 }
 
 =head2 new
