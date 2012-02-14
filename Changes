@@ -1,0 +1,11 @@
+Changes for EBook::MOBI
+
+* 0.2
+
+- Fixed error on test for POD coverage
+- Moved Palm code into MobiPerl namespace
+- Fixed minor issues
+
+* 0.1   2012-02-11
+
+- Initial release to CPAN
