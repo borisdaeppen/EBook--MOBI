@@ -6,7 +6,7 @@ use warnings;
 use Image::Resize;
 use File::Basename;
 
-our $VERSION = 0.1;
+our $VERSION = 0.2;
 
 # Constructor of this class
 sub new {

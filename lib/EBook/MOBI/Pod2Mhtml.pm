@@ -6,7 +6,7 @@ use warnings;
 use Pod::Parser;
 our @ISA = qw(Pod::Parser);
 
-our $VERSION = 0.1;
+our $VERSION = 0.2;
 
 use Text::Trim;
 use HTML::Entities;

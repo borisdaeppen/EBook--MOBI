@@ -1,6 +1,6 @@
 Changes for EBook::MOBI
 
-* 0.2
+* 0.2   2012-02-15
 
 - Fixed error on test for POD coverage
 - Moved Palm code into MobiPerl namespace
