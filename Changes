@@ -1,5 +1,10 @@
 Changes for EBook::MOBI
 
+* 0.3   2012-02-16
+
+- Fixed Prereqs
+- Polished some POD
+
 * 0.2   2012-02-15
 
 - Fixed error on test for POD coverage

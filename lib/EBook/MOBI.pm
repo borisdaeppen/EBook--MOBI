@@ -3,7 +3,7 @@ package EBook::MOBI;
 use strict;
 use warnings;
 
-our $VERSION = 0.2;
+our $VERSION = 0.3;
 
 # needed CPAN stuff
 use IO::String;
@@ -364,7 +364,9 @@ Default is to not insert pagebreak.
 Pass any true value as the third argument to enable 'head0_mode'. The effect will be, that you are allowed to use a '=head0' command in your POD.
 
   $book->head0_mode(1);
-  $book->add_pod_content("=head0 Module EBook::MOBI
+  $book->add_pod_content(
+
+  '=head0 Module EBook::MOBI
   
   =head1 NAME
 
@@ -376,7 +378,9 @@ Pass any true value as the third argument to enable 'head0_mode'. The effect wil
 
   =head1 SYNOPSIS
 
-  =cut", 0, 1);
+  =cut'
+  
+  , 0, 1);
 
 This feature is useful if you want to have the documentation of several modules in Perl in one eBook. You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
 
@@ -438,6 +442,20 @@ Pass a reference to a debug subroutine and enable debug messages.
 =head2 debug_off
 
 Stop debug messages and erease the reference to the subroutine.
+
+=head1 SEE ALSO
+
+=over
+
+=item * L<EBook::MOBI::Pod2Mhtml> - see how the POD becomes MHTML.
+
+=item * L<EBook::MOBI::Mhtml2Mobi> - look up what I mean by saying MHTML, and how the code from MobiPerl is doing it's job.
+
+=item * L<EBook::MOBI::Picture> - see how bad I manage your images.
+
+=item * Everything in the namespace C<EBook::MOBI::MobiPerl> is coming from MobiPerl. For information about this code, please visit L<https://dev.mobileread.com/trac/mobiperl>
+
+=back
 
 =head1 COPYRIGHT & LICENSE
 
