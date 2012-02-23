@@ -26,6 +26,7 @@ use strict;
 use warnings;
 use File::Basename;
 use File::Spec;
+use Carp;
 
 # Use some project library
 use EBook::MOBI::Picture;
@@ -41,7 +42,7 @@ use constant DOC_UNCOMPRESSED => scalar 1;
 use constant DOC_COMPRESSED => scalar 2;
 use constant DOC_RECSIZE => scalar 4096;
 
-our $VERSION = 0.2;
+our $VERSION = 0.4;
 
 # Constructor of this class
 sub new {
@@ -215,6 +216,8 @@ sub pack {
 sub _gather_IMG_ref {
     my ($self,$html) = @_;
 
+    my @err_img = (); # var for images that can't be found
+
     # process line by line
     my @lines = split /\n/, $html;
     foreach my $line (@lines) {
@@ -222,10 +225,23 @@ sub _gather_IMG_ref {
         if ($line =~ m/.*<img.*\ssrc=["'](\S*)["']\s.*>/g) {
             my $img_path = $1;
 
+            # Is the image existing and readable? If not, push on array
+            unless ( -e $img_path and -r $img_path ) {
+                push @err_img, $img_path;
+            }
+
             # if we found a path, we add it to a classwide array
             push (@{$self->{picture_paths}}, $img_path);
         }
     }
+
+    # after processing the images... if we found errors we croak!
+    if (@err_img >= 1) {
+        my $err_list = join ("\n  ", @err_img);
+        croak "Could not find this images:\n  $err_list\n"
+        . "Aborting! Please make sure that all images are accessible.\n";
+    }
+
 }
 
 1;
