@@ -151,7 +151,7 @@ sub command {
             # there where no items...
         }
         else {
-            croak 'POD parsing error. Undefined listcontext: '
+            carp 'POD parsing error. Undefined listcontext: '
                   . $parser->{+P . 'listcontext'};
         }
 
