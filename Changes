@@ -1,20 +1,25 @@
 Changes for EBook::MOBI
 
-* 0.4   2012-02-23
+0.41  2012-04-18
 
-- Croaks nicely if images are missing
+    - stop spamming /tmp
+    - don't die in list-error
 
-* 0.3   2012-02-16
+0.4   2012-02-23
 
-- Fixed Prereqs
-- Polished some POD
+    - Croaks nicely if images are missing
 
-* 0.2   2012-02-15
+0.3   2012-02-16
 
-- Fixed error on test for POD coverage
-- Moved Palm code into MobiPerl namespace
-- Fixed minor issues
+    - Fixed Prereqs
+    - Polished some POD
 
-* 0.1   2012-02-11
+0.2   2012-02-15
 
-- Initial release to CPAN
+    - Fixed error on test for POD coverage
+    - Moved Palm code into MobiPerl namespace
+    - Fixed minor issues
+
+0.1   2012-02-11
+
+    - Initial release to CPAN

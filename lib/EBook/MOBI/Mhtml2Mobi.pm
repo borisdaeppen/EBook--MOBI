@@ -42,7 +42,7 @@ use constant DOC_UNCOMPRESSED => scalar 1;
 use constant DOC_COMPRESSED => scalar 2;
 use constant DOC_RECSIZE => scalar 4096;
 
-our $VERSION = 0.4;
+our $VERSION = 0.41;
 
 # Constructor of this class
 sub new {
