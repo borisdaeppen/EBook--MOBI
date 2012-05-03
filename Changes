@@ -1,6 +1,6 @@
 Changes for EBook::MOBI
 
-0.??  ???
+0.42  2012-05-03
     - we get decoded pod, so we have to ensure to write the file with
       correct encoding
 
