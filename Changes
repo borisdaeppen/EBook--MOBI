@@ -1,5 +1,9 @@
 Changes for EBook::MOBI
 
+0.??  ???
+    - we get decoded pod, so we have to ensure to write the file with
+      correct encoding
+
 0.41  2012-04-18
 
     - stop spamming /tmp
