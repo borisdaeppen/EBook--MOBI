@@ -3,7 +3,7 @@ package EBook::MOBI;
 use strict;
 use warnings;
 
-our $VERSION = 0.42;
+our $VERSION = 0.43;
 
 # needed CPAN stuff
 use IO::String;
@@ -23,7 +23,7 @@ sub new {
                 title     => 'This Book has no Title',
                 author    => 'This Book has no Author',
 
-                encoding  => 'utf-8',
+                encoding  => ':encoding(UTF-8)',
 
                 CONST     => '6_--TOC-_thisStringShouldNeverOccurInInput',
             };
@@ -41,7 +41,7 @@ sub reset {
     $self->{title    } = 'This Book has no Title',
     $self->{author   } = 'This Book has no Author',
 
-    $self->{encoding } = 'utf-8',
+    $self->{encoding } = ':encoding(UTF-8)',
 
     $self->{CONST    } = '6_--TOC-_thisStringShouldNeverOccurInInput',
 }
@@ -122,10 +122,10 @@ sub add_pod_content {
     # We do this trick so that we have UTF8
     # It seems like this is working after all...
     my ($fh,$f_name) = tempfile();
-    binmode $fh, ":encoding(" . $self->{encoding} . ")";
+    binmode $fh, $self->{encoding};
     print $fh $pod;
     close $fh;
-    open my $pod_handle, "<:encoding($self->{encoding})", $f_name;
+    open my $pod_handle, "<$self->{encoding}", $f_name;
 
     # OUTPUT:
     # We create this IO-object because Pod::Parser does not provide
@@ -286,7 +286,7 @@ If you plan to create a typical eBook you probably will need all of the methods 
   $book->set_filename('./data/my_ebook.mobi');
   $book->set_title   ('Read my Wisdome');
   $book->set_author  ('Bam Bam');
-  $book->set_encoding('utf-8');
+  $book->set_encoding(':encoding(UTF-8)');
 
   # lets create our own title page!
   $book->add_mhtml_content(
@@ -331,9 +331,8 @@ If you don't use this method, the default name will be 'book.mobi'.
 
 =head2 set_encoding
 
-You can say what kind of encoding you would like to use. But be aware, that this feature is highly untested and implemented in funny ways. However utf-8 and western encodings should work.
-
-If you don't set anything here, 'utf-8' will be default.
+If you don't set anything here, C<:encoding(UTF-8)> will be default.
+Please see L<http://perldoc.perl.org/functions/binmode.html> for the syntax of your encoding keyword.
 
 =head2 add_mhtml_content
 
