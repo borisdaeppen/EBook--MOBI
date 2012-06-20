@@ -1,5 +1,8 @@
 Changes for EBook::MOBI
 
+0.45  2012-06-20
+    - remove test-bug in version check in 0.44
+
 0.44  2012-06-20
     - better support for the L<> in POD
 
