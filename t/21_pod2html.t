@@ -9,7 +9,7 @@ use File::Temp qw(tempfile);
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 28;
+use Test::More tests => 29;
 
 ###########################
 # General module tests... #
@@ -619,7 +619,7 @@ HEREDOC
 $pod_input{angle_bracket} = <<'HEREDOC';
 =head4 ANGLE BRACKET
 
-HTML chars::
+HTML chars:
 <html> &nbsp; </html>
 
 POD markup:
@@ -631,7 +631,7 @@ HEREDOC
 $html_out{angle_bracket} = <<'HEREDOC';
 <body>
 <h4>ANGLE BRACKET</h4>
-<p>HTML chars::
+<p>HTML chars:
 &lt;html&gt; &amp;nbsp; &lt;/html&gt;</p>
 <p>POD markup:
 <b>BOLD</b> <code>CODE</code> <code>FILE</code> <i>ITALIC</i> &nbsp; <a href='perl.org'>perl.org</a></p>
@@ -689,6 +689,49 @@ $html_out{pagebreak} = <<'HEREDOC';
 <mbp:pagebreak />
 <h1>Here should be a break</h1>
 <p>Text2</p>
+</body>
+HEREDOC
+
+# 9
+$pod_input{inline_links} = <<'HEREDOC';
+=head1 Inline Links
+
+Link 1 L<Module>
+
+Link 2 L<Module/Chapter>
+
+Link 3 L<Name|Module>
+
+Link 4 L<Name|Module/Chapter>
+
+Link 5 L<Name|/Chapter>
+
+Link 6 L</Chapter>
+
+Link 7 L<http://perl.org>
+
+Link 8 L<perl.org>
+
+Link 9 L<Perl|http://perl.org>
+
+Link 10 L<Perl|perl.org>
+
+=cut
+HEREDOC
+
+$html_out{inline_links} = <<'HEREDOC';
+<body>
+<h1>Inline Links</h1>
+<p>Link 1 <a href='https://metacpan.org/module/Module'>Module</a></p>
+<p>Link 2 <a href='https://metacpan.org/module/Module#Chapter'>Module/Chapter</a></p>
+<p>Link 3 <a href='https://metacpan.org/module/Module'>Name</a></p>
+<p>Link 4 <a href='https://metacpan.org/module/Module#Chapter'>Name</a></p>
+<p>Link 5 Name (Chapter)</p>
+<p>Link 6 "Chapter"</p>
+<p>Link 7 <a href='http://perl.org'>http://perl.org</a></p>
+<p>Link 8 <a href='perl.org'>perl.org</a></p>
+<p>Link 9 <a href='http://perl.org'>Perl</a></p>
+<p>Link 10 <a href='perl.org'>Perl</a></p>
 </body>
 HEREDOC
 

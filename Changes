@@ -1,5 +1,8 @@
 Changes for EBook::MOBI
 
+0.44  2012-06-20
+    - better support for the L<> in POD
+
 0.43  2012-05-29
     - encoding is now binmode syntax
 

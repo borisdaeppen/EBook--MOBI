@@ -6,8 +6,6 @@ use warnings;
 use Pod::Parser;
 our @ISA = qw(Pod::Parser);
 
-our $VERSION = 0.41;
-
 use Text::Trim;
 use HTML::Entities;
 use Carp;
@@ -18,7 +16,9 @@ use constant { GT  => '1_qpdhcn_thisStringShouldNeverOccurInInput',
                LT  => '2_udtcqk_thisStringShouldNeverOccurInInput',
                AMP => '3_pegjyq_thisStringShouldNeverOccurInInput',
                COL => '4_jdkmso_thisStringShouldNeverOccurInInput',
-               QUO => '5_wuehlo_thisStringShouldNeverOccurInInput'};
+               QUO => '5_wuehlo_thisStringShouldNeverOccurInInput',
+               DQUO=> '6_jrgwpm_thisStringShouldNeverOccurInInput',
+             };
 
 # IMPORTANT
 # This constant ist JUST a shortcut for readability.
@@ -501,7 +501,84 @@ sub interior_sequence {
     return LT . 'code' . GT . $arg . LT . '/code' . GT  if ($cmd eq 'F');
     return LT . 'i'    . GT . $arg . LT . '/i'    . GT  if ($cmd eq 'I');
     return              AMP . $arg . COL                if ($cmd eq 'E');
-    return LT.'a href='.QUO.$arg.QUO.GT.$arg.LT.'/a'.GT if ($cmd eq 'L');
+
+    # if there is an L<> we have to take care a little bit more
+    if ($cmd eq 'L') {
+
+        # if we have this:
+        #     L<CHI::Driver::File|File>
+        # this means that CHI::Driver::File is the name to be displayed
+        # and "File" is the link... which we direct to metacpan...
+
+        # empty vars
+        my $text = '';
+        my $link = '';
+
+        # if named we set the vars
+        if ($arg =~ m/^(.*)\|(.*)$/) {
+            $text = $1;
+            $link = $2;
+        }
+
+        # in case this is not set, we set it to original value
+        $link = $arg unless $link;
+
+        # the case
+        #     L</chapter>
+        # for relative sections is not handled well here because we
+        # don't know the module like that!
+        # so we just print the text as is
+        if($link =~ m%^/(.*)%) {
+            my $section = $1;
+            if ($text) {
+                return "$text ($section)";
+            }
+            else {
+                return DQUO . $section . DQUO;
+            }
+            # EXIT
+        }
+
+        # if the links seems to be http we also just return!
+        elsif ($link =~ /^http.*$/
+            or $link =~ /^.*\.{1}\w{2,5}$/ ) {
+                # this is a weblink!
+                # keep on going...
+        }
+
+        # if no special case we continue...
+        elsif ($link =~ m%(.*)/(.*)%) {
+            my $module  = $1;
+            my $section = $2;
+            $section =~ s/"//;
+
+            if ($module && $section) {
+                $link = "$module#$section";
+            }
+            elsif ($module && not $section) {
+                $link = $module;
+            }
+            elsif (not $module && $section) {
+                # this case should not happen but you never know
+                # (it should be handled in the first if!)
+                return "\"$section\"";
+            }
+
+            # this URL should be valid now
+            $link = "https://metacpan.org/module/$link";
+
+        }
+        # normal module name
+        else {
+            # this URL should be valid now
+            $link = "https://metacpan.org/module/$link";
+        }
+
+        # in case this is not set, we set it to original value
+        $text = $arg unless $text;
+
+        return LT.'a href='.QUO.$link.QUO.GT.$text.LT.'/a'.GT
+    }
 
     # if nothing matches we return the content unformated 'as is'
     return $arg;
@@ -564,11 +641,13 @@ sub _html_enc {
     my $am = AMP;           #    |
     my $co = COL;           #    |-- don't change this order!
     my $qu = QUO;           #    |
+    my $dqu= DQUO;          #    |
     $string =~ s/$lt/</g;   #    |
     $string =~ s/$gt/>/g;   #    |
     $string =~ s/$am/&/g;   #    |
     $string =~ s/$co/;/g;   #    |
-    $string =~ s/$qu/'/g;   #<---|
+    $string =~ s/$qu/'/g;   #    |
+    $string =~ s/$dqu/"/g;  #<---|
 
     return $string;
 }
