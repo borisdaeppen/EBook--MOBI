@@ -475,6 +475,8 @@ Stop debug messages and erease the reference to the subroutine.
 
 =over
 
+=item * L<Github|https://github.com/borisdaeppen/EBook--MOBI> for participating and also for L<bugreports|https://github.com/borisdaeppen/EBook--MOBI/issues>.
+
 =item * L<EBook::MOBI::Pod2Mhtml> - see how the POD becomes MHTML.
 
 =item * L<EBook::MOBI::Mhtml2Mobi> - look up what I mean by saying MHTML, and how the code from MobiPerl is doing it's job.
