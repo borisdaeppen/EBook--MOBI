@@ -258,7 +258,7 @@ sub debug {
 $book->set_filename('List.mobi');
 $book->set_title   ('A List');
 $book->set_author  ('Boris');
-$book->set_encoding('utf-8');
+$book->set_encoding(':encoding(UTF-8)');
 
 # fill the book with content
 $book->add_pod_content($pod);

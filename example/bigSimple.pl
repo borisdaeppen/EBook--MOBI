@@ -53,7 +53,7 @@ $book->debug_on(\&debug);
 $book->set_filename('Simple.mobi');
 $book->set_title   ('A Test');
 $book->set_author  ('Boris');
-$book->set_encoding('utf-8');
+$book->set_encoding(':encoding(UTF-8)');
 
 # fill the book with content
 $book->add_mhtml_content(" <h1>A Test Titlepage</h1><p>Very simple...</p>");
