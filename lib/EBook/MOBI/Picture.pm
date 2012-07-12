@@ -31,7 +31,7 @@ sub debug_on {
     
     &{$ref_to_debug_sub}('DEBUG mode on');
 
-    $self->_debug('Tests with PNG on the Kindle-Reader failed. So all poictures get converted to JPG!');
+    $self->_debug('Tests with PNG on the Kindle-Reader failed. So all pictures get converted to JPG!');
 }
 
 sub debug_off {
