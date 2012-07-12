@@ -3,7 +3,7 @@ package EBook::MOBI;
 use strict;
 use warnings;
 
-our $VERSION = 0.45;
+our $VERSION = 0.47;
 
 # needed CPAN stuff
 use IO::String;
@@ -270,13 +270,13 @@ __END__
 
 =head1 NAME
 
-EBook::MOBI - create an eBook in the MOBI format - out of POD formatted content.
+EBook::MOBI - create an ebook in the MOBI format, out of POD formatted content.
 
-You are at the right place here if you want to create an eBook in the so called MOBI format (somethimes also called PRC format). You are expecially at the right place if you have your books content available in the POD format. Because this is, what this code does best.
+You are at the right place here if you want to create an ebook in the so called MOBI format (somethimes also called PRC format or Mobipocket). You are especially at the right place if you have your books content available in the POD format. Because this is, what this code does best.
 
 =head1 SYNOPSIS
 
-If you plan to create a typical eBook you probably will need all of the methods provided by this class. So it might be a good idea to read all the descriptions in the methods section, and also have a look at this example here:
+If you plan to create a typical ebook you probably will need all of the methods provided by this class. So it might be a good idea to read all the descriptions in the methods section, and also have a look at this example here:
 
   # Create an object of a book
   use EBook::MOBI;
@@ -317,22 +317,33 @@ If you plan to create a typical eBook you probably will need all of the methods 
 
 =head2 set_title
 
-Give a string which will appear in the meta data of the format. This will be used e.g. by eBook-readers to determine the books name.
+Give a string which will appear in the meta data of the format. This will be used e.g. by ebook-readers to determine the books name.
+
+  $book->set_title('Read my Wisdome');
 
 =head2 set_author
 
-Give a string which will appear in the meta data of the format. This will be used e.g. by eBook-readers to determine the books author.
+Give a string which will appear in the meta data of the format. This will be used e.g. by ebook-readers to determine the books author.
+
+  $book->set_author('Bam Bam');
 
 =head2 set_filename
 
 The book will be stored under the name and location you pass here. When calling the save() method the file will be created.
+
+  $book->set_filename('./data/my_ebook.mobi');
 
 If you don't use this method, the default name will be 'book.mobi'.
 
 =head2 set_encoding
 
 If you don't set anything here, C<:encoding(UTF-8)> will be default.
+As far as I know, only CP1252 (Win Latin1) und UTF-8 are supported by popular readers.
+
+  $book->set_encoding(':encoding(UTF-8)');
+
 Please see L<http://perldoc.perl.org/functions/binmode.html> for the syntax of your encoding keyword.
+If you use use hardcoded strings in your program, C<use utf8;> should be helping.
 
 =head2 add_mhtml_content
 
@@ -349,7 +360,7 @@ If you indent the 'h1' tag with any whitespace, it will not appear in the TOC. T
 
 =head2 add_pod_content
 
-Perls POD format is very simple to use. So it might be a good idea to write your content in POD. If you did so, you can use this method to put your content into the book. Your POD will automatically be parsed and transformed to what I call 'mhtml' format. This means, your POD content will just look great in the eBook.
+Perls POD format is very simple to use. So it might be a good idea to write your content in POD. If you did so, you can use this method to put your content into the book. Your POD will automatically be parsed and transformed to what I call 'mhtml' format. This means, your POD content will just look great in the ebook.
 
   $book->add_pod_content($pod, 'pagemode', 'head0_mode');
 
@@ -363,10 +374,8 @@ Default is to not insert pagebreak.
 
 Pass any true value as the third argument to enable 'head0_mode'. The effect will be, that you are allowed to use a '=head0' command in your POD.
 
-  $book->head0_mode(1);
-  $book->add_pod_content(
-
-  '=head0 Module EBook::MOBI
+  my $pod = <<POD;
+  =head0 Module EBook::MOBI
   
   =head1 NAME
 
@@ -378,38 +387,45 @@ Pass any true value as the third argument to enable 'head0_mode'. The effect wil
 
   =head1 SYNOPSIS
 
-  =cut'
-  
-  , 0, 1);
+  =cut
+  POD
 
-This feature is useful if you want to have the documentation of several modules in Perl in one eBook. You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
+  $book->add_pod_content($pod, 0, 'head0_mode');
+
+This feature is useful if you want to have the documentation of several modules in Perl in one ebook. You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
 
 Default is to ignore any '=head0' command.
 
 =head3 Special syntax for images
 
-POD does not support images, but you might want images in your eBook.
+POD does not support images, but you might want images in your ebook.
 
 If you want to add images you can use an unofficial '=image' syntax in your POD.
 
   =image /path/to/image.jpg fig1: description which will be the caption.
 
-The image needs to exist at the path which you define here. When you call the save() method, those images will be read from this place and stored into the eBook-file.
+The image needs to exist at the path which you define here. When you call the save() method, those images will be read from this place and stored into the ebook-file.
 
 =head2 add_pagebreak
 
 Use this method to seperate content and give some structure to your book.
+
+  $book->add_pagebreak();
 
 =head2 add_toc_once
 
 Use this method to place a table of contents into your book. You will B<need to> call the make() method later, B<after> you added all your content to the book. This is, because we need all the content - to be able to calculate the
 references where the TOC is pointing to.
 
+  $book->add_toc_once();
+
 This method can only be called once. If you call it twice, the second call will not do anything.
 
 =head2 make
 
 You need to call this one before saving, especially if you have used the add_toc_once() method. This will calculate the references, pointing from the TOC into the content.
+
+  $book->make();
 
 =head2 print_mhtml
 
@@ -425,23 +441,35 @@ If you call the method it will print to standard output. You can change this beh
 
 =head2 save
 
-Put the whole thing together as an eBook. This will create a file, with the name and location you gave with set_filename().
+Put the whole thing together as an ebook. This will create a file, with the name and location you gave with set_filename().
 
-In this process it will also read images and store them into the eBook. So it is important, that the images are readable at the path you provided in your POD or mhtml syntax.
+  $book->save();
+
+In this process it will also read images and store them into the ebook. So it is important, that the images are readable at the path you provided in your POD or mhtml syntax.
 
 =head2 reset
 
 Reset the object, so that all the content is purged. Helpful if you like to make a new book, but are to lazy to create a new object. (e.g. for testing)
 
+  $book->reset();
+
 =head2 debug_on
 
 You can just ignore this method if you are not interested in debuging!
-
 Pass a reference to a debug subroutine and enable debug messages.
+
+  sub debug {
+      my ($package, $filename, $line) = caller;
+      print "$package\t$_[0]\n";
+  }
+
+  $book->debug_on(\&debug);
 
 =head2 debug_off
 
 Stop debug messages and erease the reference to the subroutine.
+
+  $book->debug_off();
 
 =head1 SEE ALSO
 
@@ -466,5 +494,19 @@ This program is free software; you can redistribute it and/or modify it under th
 =head1 AUTHOR
 
 Boris Däppen E<lt>boris_daeppen@bluewin.chE<gt>
+
+=head1 THANKS TO
+
+=over
+
+=item * Renée Bäcker and L<Perl-Services.de|http://www.perl-services.de/> for the idea and making this module possible.
+
+=item * L<Perl-Magazin|http://perl-magazin.de/> for publishing an article in autumn 2012.
+
+=item * L<Linux-Magazin|http://shop.linuxnewmedia.de/eh20194.html> for the same thing, the article is also available L<online|http://www.linux-magazin.de/content/view/full/69651> and as L<podcast|http://www.linux-magazin.de/plus/2012/08/Perl-Snapshot-Linux-Magazin-2012-08>.
+
+=item * Tompe for developing MobiPerl.
+
+=back
 
 =cut

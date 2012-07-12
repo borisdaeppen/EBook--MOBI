@@ -1,15 +1,30 @@
 Changes for EBook::MOBI
 
+0.47  2012-07-12
+
+    - removed unwanted message from stderr
+    - updated POD documentation
+    - fixed typos
+    - updated encoding syntax in examples
+
+0.46  2012-06-20
+
+    - Some unknowm problems with CPAN... let's count up the number
+
 0.45  2012-06-20
+
     - remove test-bug in version check in 0.44
 
 0.44  2012-06-20
+
     - better support for the L<> in POD
 
 0.43  2012-05-29
+
     - encoding is now binmode syntax
 
 0.42  2012-05-03
+
     - we get decoded pod, so we have to ensure to write the file with
       correct encoding (thx to reneeb)
 
