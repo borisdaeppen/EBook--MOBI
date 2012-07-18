@@ -19,6 +19,8 @@ sub new {
     my $ref = { html_data => '',
                 html_toc  => '',
                 toc_label => 'Table of Contents',
+                toc_set   => 0,
+                toc_done  => 0,
 
                 filename  => 'book.mobi',
                 title     => 'This Book has no Title',
@@ -27,6 +29,8 @@ sub new {
                 encoding  => ':encoding(UTF-8)',
 
                 CONST     => '6_--TOC-_thisStringShouldNeverOccurInInput',
+
+                ref_to_debug_sub => 0,
             };
 
     bless($ref, $self);
@@ -38,6 +42,8 @@ sub reset {
     $self->{html_data} = '',
     $self->{html_toc } = '',
     $self->{toc_label} = 'Table of Contents',
+    $self->{toc_set  } = 0,
+    $self->{toc_done } = 0,
 
     $self->{filename } = 'book',
     $self->{title    } = 'This Book has no Title',
@@ -46,6 +52,8 @@ sub reset {
     $self->{encoding } = ':encoding(UTF-8)',
 
     $self->{CONST    } = '6_--TOC-_thisStringShouldNeverOccurInInput',
+
+    $self->{ref_to_debug_sub} = 0,
 }
 
 sub debug_on {
