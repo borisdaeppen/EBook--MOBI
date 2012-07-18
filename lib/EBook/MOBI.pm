@@ -523,6 +523,8 @@ Boris Däppen E<lt>boris_daeppen@bluewin.chE<gt>
 
 =item * Tompe for developing MobiPerl.
 
+=item * L<Garu|https://metacpan.org/author/GARU> for a helpfull patch, allowing to set a name for the TOC.
+
 =back
 
 =cut
