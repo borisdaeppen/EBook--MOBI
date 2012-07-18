@@ -144,7 +144,7 @@ sub add_pod_content {
 }
 
 sub add_pagebreak {
-    my ($self, $html) = @_;
+    my ($self) = @_;
 
     $self->{html_data} .= '<mbp:pagebreak />' . "\n";
 }
