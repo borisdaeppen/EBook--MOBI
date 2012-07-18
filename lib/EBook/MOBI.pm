@@ -18,6 +18,7 @@ sub new {
     my $self = shift;
     my $ref = { html_data => '',
                 html_toc  => '',
+                toc_label => 'Table of Contents',
 
                 filename  => 'book.mobi',
                 title     => 'This Book has no Title',
@@ -36,6 +37,7 @@ sub reset {
     my $self = shift;
     $self->{html_data} = '',
     $self->{html_toc } = '',
+    $self->{toc_label} = 'Table of Contents',
 
     $self->{filename } = 'book',
     $self->{title    } = 'This Book has no Title',
@@ -148,8 +150,9 @@ sub add_pagebreak {
 }
 
 sub add_toc_once {
-    my ($self, $html) = @_;
+    my ($self, $label) = @_;
 
+    $self->{toc_label} = $label if $label;
     $self->{toc_set} = 1;
     $self->{html_data} .= $self->{CONST};
     # this newline is needed, otherwise the generation of the toc will
@@ -220,7 +223,7 @@ sub _generate_toc {
         }
     }
 
-    my $toc  = "<h1>Table of Contents</h1><!-- TOC start -->\n";
+    my $toc  = "<h1>$self->{toc_label}</h1><!-- TOC start -->\n";
        $toc .= "<p><ul>\n$self->{html_toc}<\/ul><\/p>\n";
 
     $self->{html_data} =~ s/$self->{CONST}/$toc/;
@@ -229,7 +232,7 @@ sub _generate_toc {
     $self->{html_data} = "<html>
 <head>
 <guide>
-<reference type=\"toc\" title=\"Table of Contents\" filepos=\"00000000\"/>
+<reference type=\"toc\" title=\"$self->{toc_label}\" filepos=\"00000000\"/>
 </guide>
 </head>
 <body>
@@ -255,7 +258,7 @@ sub _generate_toc {
             my $fill_pos = sprintf("%08d", $this_pos);
 
             $self->{html_data} =~
-            s/<reference type="toc" title="Table of Contents" filepos="00000000"\/>/<reference type="toc" title="Table of Contents" filepos="$fill_pos"\/>/;
+            s/<reference type="toc" title="$self->{toc_label}" filepos="00000000"\/>/<reference type="toc" title="$self->{toc_label}" filepos="$fill_pos"\/>/;
         }
         $chars += length($line) + 1;
     }
@@ -405,6 +408,10 @@ Use this method to seperate content and give some structure to your book.
 
 Use this method to place a table of contents into your book. You will B<need to> call the make() method later, B<after> you added all your content to the book. This is, because we need all the content - to be able to calculate the
 references where the TOC is pointing to.
+
+By default, the toc is called 'Table of Contents'. You can change that label by passing it as a parameter:
+
+   $book->add_toc_once( 'Summary' );
 
 This method can only be called once. If you call it twice, the second call will not do anything.
 
