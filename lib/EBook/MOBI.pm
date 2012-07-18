@@ -359,7 +359,7 @@ If you stick to the most basic HTML tags it should be perfect mhtml 'compatible'
        <p>Read my wisdome.</p>"
   );
 
-If you indent the 'h1' tag with any whitespace, it will not appear in the TOC. This may be usefull if you want to design a title page.
+If you indent the 'h1' tag with any whitespace, it will not appear in the TOC (only 'h1' tags directly starting and ending with a newline are marked for the TOC). This may be usefull if you want to design a title page.
 
 =head2 add_pod_content
 
@@ -417,7 +417,7 @@ Use this method to seperate content and give some structure to your book.
 
 =head2 add_toc_once
 
-Use this method to place a table of contents into your book. You will B<need to> call the make() method later, B<after> you added all your content to the book. This is, because we need all the content - to be able to calculate the references where the TOC is pointing to.
+Use this method to place a table of contents into your book. You will B<need to> call the make() method later, B<after> you added all your content to the book. This is, because we need all the content - to be able to calculate the references where the TOC is pointing to. Only 'h1' tags starting and ending with a newline char will enter the TOC. See  the docs for the method add_mhtml_content() for an example.
 
   $book->add_toc_once();
 
