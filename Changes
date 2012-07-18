@@ -1,5 +1,13 @@
 Changes for EBook::MOBI
 
+0.48  2012-07-18
+
+    - added naming of TOC: patch from GARU (from rt.cpan.org ticket 77430)
+    - added tests for the feature of GARU
+    - POD documentation update for TOC generation concerning h1 tag
+    - fix bug in reset() method
+    - removed unneeded variable
+
 0.47  2012-07-12
 
     - removed unwanted message from stderr
