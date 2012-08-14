@@ -9,7 +9,7 @@ our @ISA = qw(Pod::Parser);
 use Text::Trim;
 use HTML::Entities;
 use Carp;
-use EBook::MOBI::Driver;
+use EBook::MOBI::Converter;
 
 our $VERSION = 0.45;
 
@@ -36,7 +36,7 @@ sub begin_input {
     my $parser = shift;
     my $out_fh = $parser->output_handle();       # handle for parsing output
 
-    $parser->{+P . 'toMobi'} = EBook::MOBI::Driver->new();
+    $parser->{+P . 'toMobi'} = EBook::MOBI::Converter->new();
 
     $parser->_debug('found POD, parsing...');
 

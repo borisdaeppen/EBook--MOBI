@@ -1,4 +1,4 @@
-package EBook::MOBI::Driver;
+package EBook::MOBI::Converter;
 
 use strict;
 use warnings;
