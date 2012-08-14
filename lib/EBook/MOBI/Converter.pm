@@ -161,7 +161,7 @@ sub code {
     my $self = shift;
     my $txt  = shift;
 
-    my $mhtml = "<code>$txt</code>";
+    my $mhtml = "<code>$txt</code>\n";
 
     return $mhtml;
 }

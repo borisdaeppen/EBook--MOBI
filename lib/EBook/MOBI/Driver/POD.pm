@@ -4,7 +4,8 @@ use strict;
 use warnings;
 
 use Pod::Parser;
-our @ISA = qw(Pod::Parser);
+use EBook::MOBI::Driver;
+our @ISA = qw(Pod::Parser EBook::MOBI::Driver);
 
 use Text::Trim;
 use HTML::Entities;
@@ -44,7 +45,7 @@ sub begin_input {
     $parser->{+P . 'listcontext'} = 0;
     $parser->{+P . 'listjustwentback'} = 0;
 
-    if (exists $parser->{+P . 'body'} and $parser->{+P . 'body'}) {
+    if ($parser->html_body()) {
         print $out_fh $parser->{+P . 'toMobi'}->initialize();
     }
 }
@@ -57,7 +58,7 @@ sub end_input {
 
     $parser->_debug('...end of POD reached');
 
-    if (exists $parser->{+P . 'body'} and $parser->{+P . 'body'}) {
+    if ($parser->html_body()) {
         print $out_fh $parser->{+P . 'toMobi'}->finalize();
     }
 }
@@ -178,8 +179,7 @@ sub command {
         if ($command eq 'head0') {
             # head0 gets only printed if the option is set!
             # (head0 is not official POD standard)
-            if (exists $parser->{+P . 'head0_mode'}
-              and $parser->{+P . 'head0_mode'}) {
+            if ($parser->head0_mode()) {
                 # before every head1 we insert a "mobi-pagebreak"
                 # but not before the first one!
                 if (exists $parser->{+P . 'firstH1passed'}
@@ -199,9 +199,7 @@ sub command {
         }
         elsif ($command eq 'head1') {
             # we need to check to which level we translate the headings...
-            if (exists $parser->{+P . 'head0_mode'}
-                and $parser->{+P . 'head0_mode'}
-                ) {
+            if ($parser->head0_mode()) {
                 print $out_fh
                     $parser->{+P . 'toMobi'}->title($expansion, 2);
             }
@@ -225,9 +223,7 @@ sub command {
         }
         elsif ($command eq 'head2') {
             # we need to check to which level we translate the headings...
-            if (exists $parser->{+P . 'head0_mode'}
-                and $parser->{+P . 'head0_mode'}
-                ) {
+            if ($parser->head0_mode()) {
                 print $out_fh
                     $parser->{+P . 'toMobi'}->title($expansion, 3);
             }
@@ -238,9 +234,7 @@ sub command {
         }
         elsif ($command eq 'head3') {
             # we need to check to which level we translate the headings...
-            if (exists $parser->{+P . 'head0_mode'}
-                and $parser->{+P . 'head0_mode'}
-                ) {
+            if ($parser->head0_mode()) {
                 print $out_fh
                     $parser->{+P . 'toMobi'}->title($expansion, 4);
             }
@@ -251,9 +245,7 @@ sub command {
         }
         elsif ($command eq 'head4') {
             # we need to check to which level we translate the headings...
-            if (exists $parser->{+P . 'head0_mode'}
-                and $parser->{+P . 'head0_mode'}
-                ) {
+            if ($parser->head0_mode()) {
                 print $out_fh
                     $parser->{+P . 'toMobi'}->title($expansion, 5);
             }
@@ -394,7 +386,7 @@ sub verbatim {
     trim $expansion;
 
     # ok, we are done and print out the result
-    print $out_fh '<code>' . $expansion . '</code>' . "\n";
+    print $out_fh $parser->{+P . 'toMobi'}->code($expansion);
 }
 
 # Overwrite sub of Pod::Parser
@@ -583,49 +575,51 @@ sub interior_sequence {
     return $arg;
 }
 
-sub html_body {
-    my ($self, $boolean) = @_;
+#sub html_body {
+#    my ($self, $boolean) = @_;
+#
+#    $self->{+P . 'body'} = $boolean;
+#}
+#
+#sub pagemode {
+#    my ($self, $boolean) = @_;
+#
+#    $self->{+P . 'pages'} = $boolean;
+#}
+#
+#sub head0_mode {
+#    my ($self, $boolean) = @_;
+#
+#    $self->{+P . 'head0_mode'} = $boolean;
+#}
 
-    $self->{+P . 'body'} = $boolean;
-}
-
-sub pagemode {
-    my ($self, $boolean) = @_;
-
-    $self->{+P . 'pages'} = $boolean;
-}
-
-sub head0_mode {
-    my ($self, $boolean) = @_;
-
-    $self->{+P . 'head0_mode'} = $boolean;
-}
-
-sub debug_on {
-    my ($self, $ref_to_debug_sub) = @_; 
-
-    $self->{ref_to_debug_sub} = $ref_to_debug_sub;
-    
-    &$ref_to_debug_sub('DEBUG mode on');
-}
-
-sub debug_off {
-    my ($self) = @_; 
-
-    if ($self->{ref_to_debug_sub}) {
-        &{$self->{ref_to_debug_sub}}('DEBUG mode off');
-        $self->{ref_to_debug_sub} = 0;
-    }
-}
-
-# Internal debug method
-sub _debug {
-    my ($self,$msg) = @_; 
-
-    if ($self->{ref_to_debug_sub}) {
-        &{$self->{ref_to_debug_sub}}($msg);
-    }   
-}
+#sub debug_on {
+#    my ($self, $ref_to_debug_sub) = @_; 
+#
+#    $self->{ref_to_debug_sub} = $ref_to_debug_sub;
+#    
+#    &$ref_to_debug_sub('DEBUG mode on');
+#}
+#
+#sub debug_off {
+#    my ($self) = @_; 
+#
+#    if ($self->{ref_to_debug_sub}) {
+#        &{$self->{ref_to_debug_sub}}('DEBUG mode off');
+#        $self->{ref_to_debug_sub} = 0;
+#    }
+#}
+#
+#sub parse {};
+#
+## Internal debug method
+#sub _debug {
+#    my ($self,$msg) = @_; 
+#
+#    if ($self->{ref_to_debug_sub}) {
+#        &{$self->{ref_to_debug_sub}}($msg);
+#    }   
+#}
 
 # encode_entities() from HTML::Entities does not translate it correctly
 # this is why I make it here manually as a quick fix
@@ -651,7 +645,7 @@ sub _html_enc {
     return $string;
 }
 
-# replaces whitespace with html entitie
+## replaces whitespace with html entitie
 sub _nbsp {
     my $string = shift;
 
