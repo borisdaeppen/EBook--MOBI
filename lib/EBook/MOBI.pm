@@ -10,7 +10,7 @@ use IO::String;
 use File::Temp qw(tempfile);
 
 # needed local stuff
-use EBook::MOBI::Pod2Mhtml;
+use EBook::MOBI::Driver::POD;
 use EBook::MOBI::Mhtml2Mobi;
 
 # Constructor of this class
@@ -117,7 +117,7 @@ sub add_pod_content {
 
     # With this parser we will create HTML out of POD.
     # The HTML is specially prepared for the MOBI format
-    my $parser = EBook::MOBI::Pod2Mhtml->new();
+    my $parser = EBook::MOBI::Driver::POD->new();
 
     # pass some settings
     $parser->debug_on($self->{ref_to_debug_sub})
@@ -137,18 +137,18 @@ sub add_pod_content {
     close $fh;
     open my $pod_handle, "<$self->{encoding}", $f_name;
 
-    # OUTPUT:
-    # We create this IO-object because Pod::Parser does not provide
-    # pure string-data as return of result data
-    my $buffer4html; # this variable will contain the result!!!
-    my $buffer4html_handle = IO::String->new($buffer4html);
-
-    # we call the parser to parse, result will be in $buffer4html
-    $parser->parse_from_filehandle($pod_handle, $buffer4html_handle);
+    # and we have a file again...
+    my $input = '';
+    while (my $line = <$pod_handle>) {
+        $input .= $line;
+    }
     close $pod_handle;
     unlink $f_name;
 
-    $self->{html_data} .= $buffer4html;
+    # we call the parser to parse, result will be in $buffer4html
+    my $output = $parser->parse($input);
+
+    $self->{html_data} .= $output;
 }
 
 sub add_pagebreak {

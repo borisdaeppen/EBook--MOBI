@@ -11,6 +11,7 @@ use Text::Trim;
 use HTML::Entities;
 use Carp;
 use EBook::MOBI::Converter;
+use IO::String;
 
 our $VERSION = 0.45;
 
@@ -575,51 +576,23 @@ sub interior_sequence {
     return $arg;
 }
 
-#sub html_body {
-#    my ($self, $boolean) = @_;
-#
-#    $self->{+P . 'body'} = $boolean;
-#}
-#
-#sub pagemode {
-#    my ($self, $boolean) = @_;
-#
-#    $self->{+P . 'pages'} = $boolean;
-#}
-#
-#sub head0_mode {
-#    my ($self, $boolean) = @_;
-#
-#    $self->{+P . 'head0_mode'} = $boolean;
-#}
+sub parse {
+    my ($parser, $input) = @_;
 
-#sub debug_on {
-#    my ($self, $ref_to_debug_sub) = @_; 
-#
-#    $self->{ref_to_debug_sub} = $ref_to_debug_sub;
-#    
-#    &$ref_to_debug_sub('DEBUG mode on');
-#}
-#
-#sub debug_off {
-#    my ($self) = @_; 
-#
-#    if ($self->{ref_to_debug_sub}) {
-#        &{$self->{ref_to_debug_sub}}('DEBUG mode off');
-#        $self->{ref_to_debug_sub} = 0;
-#    }
-#}
-#
-#sub parse {};
-#
-## Internal debug method
-#sub _debug {
-#    my ($self,$msg) = @_; 
-#
-#    if ($self->{ref_to_debug_sub}) {
-#        &{$self->{ref_to_debug_sub}}($msg);
-#    }   
-#}
+    # INPUT:
+    my $input_fh = IO::String->new($input);
+
+    # OUTPUT:
+    # We create this IO-object because Pod::Parser does not provide
+    # pure string-data as return of result data
+    my $buffer4html; # this variable will contain the result!!!
+    my $buffer4html_handle = IO::String->new($buffer4html);
+
+    # we call the parser to parse, result will be in $buffer4html
+    $parser->parse_from_filehandle($input_fh, $buffer4html_handle);
+
+    return $buffer4html;
+};
 
 # encode_entities() from HTML::Entities does not translate it correctly
 # this is why I make it here manually as a quick fix

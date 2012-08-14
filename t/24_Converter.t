@@ -8,13 +8,13 @@ use utf8;
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 29;
+use Test::More tests => 21;
 
 ###########################
 # General module tests... #
 ###########################
 
-my $module = 'EBook::MOBI::Driver';
+my $module = 'EBook::MOBI::Converter';
 use_ok( $module );
 
 my $obj = $module->new();
@@ -81,7 +81,7 @@ is($mhtml, $expect, "bold");
 
 # code
 $mhtml = $obj->code("Ein Text.\nUnd das ist gut so.");
-$expect = "<code>Ein Text.\nUnd das ist gut so.</code>";
+$expect = "<code>Ein Text.\nUnd das ist gut so.</code>\n";
 is($mhtml, $expect, "code");
 
 # small
