@@ -47,7 +47,7 @@ sub begin_input {
     $parser->{+P . 'listjustwentback'} = 0;
 
     if ($parser->html_body()) {
-        print $out_fh $parser->{+P . 'toMobi'}->initialize();
+        print $out_fh $parser->{+P . 'toMobi'}->begin();
     }
 }
 
@@ -60,7 +60,7 @@ sub end_input {
     $parser->debug_msg('...end of POD reached');
 
     if ($parser->html_body()) {
-        print $out_fh $parser->{+P . 'toMobi'}->finalize();
+        print $out_fh $parser->{+P . 'toMobi'}->end();
     }
 }
 

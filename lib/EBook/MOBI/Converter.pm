@@ -14,12 +14,7 @@ our $VERSION = 0.5;
 
 sub new {
     my $self    = shift;
-    my $no_body = shift || 0;
-    my $ref = {
-           wip          => 0,        # flag, set true if first input occured
-           book_content => '',       # data
-           no_body      => $no_body, # flag, true if no body tags wanted
-              };
+    my $ref = {};
 
     bless($ref, $self);
 
@@ -38,33 +33,7 @@ sub parse {
 # Manage converted stuff #
 ##########################
 
-sub add_content {
-    my $self = shift;
-    my $txt  = shift;
-
-    # if this is the fist call, open a "body" tag
-    if (not $self->{wip} and not $self->{no_body}) {
-        $self->{book_content} .= "<body>\n";
-        $self->{wip} = 1;
-    }
-
-
-    $self->{book_content} .= $txt;
-}
-
-sub delete_content {
-    my $self = shift;
-
-    $self->{book_content} = '';
-}
-
-sub get_content {
-    my $self = shift;
-
-    return $self->{book_content};
-}
-
-sub initialize {
+sub begin {
     my $self = shift;
 
     # open a "body" tag
@@ -76,7 +45,7 @@ sub initialize {
     }
 }
 
-sub finalize {
+sub end {
     my $self = shift;
 
     # close the "body" tag
