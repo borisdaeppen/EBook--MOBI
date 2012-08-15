@@ -23,6 +23,15 @@ use constant { GT  => '1_qpdhcn_thisStringShouldNeverOccurInInput',
 # See http://perldoc.perl.org/constant.html for details
 use constant { P   => 'EBook_MOBI_Pod2Mhtml_' };
 
+sub new {
+    my $self = shift;
+    my $ref = {};  
+
+    bless($ref, $self);
+    return $ref;
+}
+
+
 sub parse {
     die ("method parse() no overriden.\n");
 }
@@ -79,7 +88,7 @@ sub debug_off {
 }
 
 # Internal debug method
-sub _debug {
+sub debug_msg {
     my ($self,$msg) = @_; 
 
     if ($self->{ref_to_debug_sub}) {

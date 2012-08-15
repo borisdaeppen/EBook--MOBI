@@ -40,7 +40,7 @@ sub begin_input {
 
     $parser->{+P . 'toMobi'} = EBook::MOBI::Converter->new();
 
-    $parser->_debug('found POD, parsing...');
+    $parser->debug_msg('found POD, parsing...');
 
     # make sure that this variable is set to 0 at beginning
     $parser->{+P . 'listcontext'} = 0;
@@ -57,7 +57,7 @@ sub end_input {
     my $parser = shift;
     my $out_fh = $parser->output_handle();
 
-    $parser->_debug('...end of POD reached');
+    $parser->debug_msg('...end of POD reached');
 
     if ($parser->html_body()) {
         print $out_fh $parser->{+P . 'toMobi'}->finalize();

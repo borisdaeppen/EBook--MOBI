@@ -139,7 +139,7 @@ sub pagebreak {
     return $mhtml;
 }
 
-sub verbatim {
+sub italic {
     my $self = shift;
     my $txt  = shift;
 
@@ -317,7 +317,7 @@ EBook::MOBI::Driver - Interface for plugins.
 
 =head2 pagebreak
 
-=head2 verbatim
+=head2 italic
 
 =head2 bold
 
