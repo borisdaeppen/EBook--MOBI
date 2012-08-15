@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use HTML::Entities;
-use HTML::Table;
 
 our $VERSION = 0.5;
 
