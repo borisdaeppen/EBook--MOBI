@@ -302,7 +302,7 @@ Most simple HTML tags will just work.
 
 Hyperlinks pointing to the WWW are working just like in HTML. But if you want to point into your own file, e.g. for a table of contents, it will not work. You then have to declare an attribute called 'filepos' which points to the char where you whant to jump to.
 
-  h1>Table of Contents</h1>
+  <h1>Table of Contents</h1>
   <ul>
   <li><a filepos="00000458">CHAPTER ONE</a></li>
   <li><a filepos="00000510">CHAPTER TWO</a></li>
