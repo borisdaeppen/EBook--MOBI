@@ -966,8 +966,8 @@ sub Write
 	my @record_data;
 
 	# Open file
-	open OFILE, "> $fname" or die "Can't write to \"$fname\": $!\n";
-	binmode OFILE;			# Write as binary file under MS-DOS
+	open my $OFILE, '>', $fname or die "Can't write to \"$fname\": $!\n";
+	binmode $OFILE;			# Write as binary file under MS-DOS
 
 	# Get AppInfo block
 	my $appinfo_block = $self->PackAppInfoBlock;
@@ -1122,13 +1122,13 @@ sub Write
 		$self->{uniqueIDseed};
 		;
 
-	print OFILE "$header";
+	print $OFILE "$header";
 
 	# Write index header
 	my $index_header;
 
 	$index_header = pack "N n", 0, ($#record_data+1);
-	print OFILE "$index_header";
+	print $OFILE "$index_header";
 
 	# Write index
 	my $rec_offset;		# Offset of next record/resource
@@ -1162,7 +1162,7 @@ sub Write
 				$type,
 				$id,
 				$rec_offset;
-			print OFILE "$index_data";
+			print $OFILE "$index_data";
 
 			$rec_offset += length($data);
 		}
@@ -1192,7 +1192,7 @@ sub Write
 				($id >> 16) & 0xff,
 				($id >> 8) & 0xff,
 				$id & 0xff;
-			print OFILE "$index_data";
+			print $OFILE "$index_data";
 
 			$rec_offset += length($data);
 		}
@@ -1201,16 +1201,16 @@ sub Write
 	# Write the two NULs
 	if (length($self->{"2NULs"}) == 2)
 	{
-		print OFILE $self->{"2NULs"};
+		print $OFILE $self->{"2NULs"};
 	} else {
-		print OFILE "\0\0";
+		print $OFILE "\0\0";
 	}
 
 	# Write AppInfo block
-	print OFILE $appinfo_block unless $appinfo_offset == 0;
+	print $OFILE $appinfo_block unless $appinfo_offset == 0;
 
 	# Write sort block
-	print OFILE $sort_block unless $sort_offset == 0;
+	print $OFILE $sort_block unless $sort_offset == 0;
 
 	# Write record/resource list
 	my $record;
@@ -1231,10 +1231,10 @@ sub Write
 
 			($attributes, $id, $data) = @{$record};
 		}
-		print OFILE $data;
+		print $OFILE $data;
 	}
 
-	close OFILE;
+	close $OFILE;
 }
 
 =head2 new_Record
