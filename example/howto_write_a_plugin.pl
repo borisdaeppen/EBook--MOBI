@@ -44,7 +44,7 @@ sub parse {
 
         # this converts every html special char to it's html entity.
         # if your markups format does interfere with html special chars
-        # you should not call this AFTER parsing.
+        # you should call this AFTER parsing.
         my $mobi_line .= $converter->text($line);
 
         if ($mobi_line =~ /^!(.)!\s+(.*)/) {
@@ -72,7 +72,7 @@ sub parse {
 
     $self->debug_msg("...done");
 
-    # and return the complete coverted text
+    # and return the complete converted text
     return $mobiFormat;
 }
 
