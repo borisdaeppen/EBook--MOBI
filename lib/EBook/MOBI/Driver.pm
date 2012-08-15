@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use HTML::Entities;
-use HTML::Table;
 
 # This constants are used for internal replacement
 # See interior_sequence() and _html_enc() for usage

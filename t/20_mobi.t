@@ -28,7 +28,7 @@ can_ok($obj, 'set_author');
 can_ok($obj, 'set_filename');
 can_ok($obj, 'set_encoding');
 can_ok($obj, 'add_mhtml_content');
-can_ok($obj, 'add_pod_content');
+can_ok($obj, 'add_content');
 can_ok($obj, 'add_pagebreak');
 can_ok($obj, 'add_toc_once');
 can_ok($obj, 'make');
@@ -317,46 +317,46 @@ my $POD_res_namedtoc_and_head0_and_pagemode = <<END;
 </html>
 END
 
-$obj->add_pod_content($POD_in);
+$obj->add_content($POD_in);
 $obj->make();
 my $res = $obj->print_mhtml(1);
 is($res, $POD_res_default, "Book -> default");
 
 $obj->reset();
-$obj->add_pod_content($POD_in, 0, 'head0_mode');
+$obj->add_content($POD_in, 0, 'head0_mode');
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_head0_mode, "Book -> head0_mode");
 
 $obj->reset();
-$obj->add_pod_content($POD_in, 'pagemode', 0);
+$obj->add_content($POD_in, 'pagemode', 0);
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_pagemode, "Book -> pagemode");
 
 $obj->reset();
-$obj->add_pod_content($POD_in, 'pagemode', 1);
+$obj->add_content($POD_in, 'pagemode', 1);
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_head0_and_pagemode, "Book -> head0+pagemode");
 
 $obj->reset();
 $obj->add_toc_once();
-$obj->add_pod_content($POD_in, 'pagemode', 1);
+$obj->add_content($POD_in, 'pagemode', 1);
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_toc_and_head0_and_pagemode, "Book -> toc+head0+pagemode");
 
 $obj->reset();
 $obj->add_toc_once('Inhaltsverzeichnis');
-$obj->add_pod_content($POD_in);
+$obj->add_content($POD_in);
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_namedtoc, "Book -> namedtoc");
 
 $obj->reset();
 $obj->add_toc_once('TOC_NAME');
-$obj->add_pod_content($POD_in, 'pagemode', 1);
+$obj->add_content($POD_in, 'pagemode', 1);
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_namedtoc_and_head0_and_pagemode, "Book -> namedtoc+head0+pagemode");

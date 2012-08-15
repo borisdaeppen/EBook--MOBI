@@ -261,7 +261,7 @@ $book->set_author  ('Boris');
 $book->set_encoding(':encoding(UTF-8)');
 
 # fill the book with content
-$book->add_pod_content($pod);
+$book->add_content($pod);
 
 $book->make();
 $book->print_mhtml();

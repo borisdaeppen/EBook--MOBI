@@ -27,6 +27,7 @@ sub new {
                 author    => 'This Book has no Author',
 
                 encoding  => ':encoding(UTF-8)',
+                in_driver => 'EBook::MOBI::Driver::POD',
 
                 CONST     => '6_--TOC-_thisStringShouldNeverOccurInInput',
 
@@ -50,6 +51,7 @@ sub reset {
     $self->{author   } = 'This Book has no Author',
 
     $self->{encoding } = ':encoding(UTF-8)',
+    $self->{in_driver} = 'EBook::MOBI::Driver::POD',
 
     $self->{CONST    } = '6_--TOC-_thisStringShouldNeverOccurInInput',
 
@@ -112,12 +114,21 @@ sub add_mhtml_content {
     $self->{html_data} .= $html;
 }
 
-sub add_pod_content {
-    my ($self, $pod, $pagemode, $head0_mode) = @_;
+sub add_content {
+    my ($self, $pod, $pagemode, $head0_mode, $driver) = @_;
 
+    unless ($driver) {
+        $driver = $self->{'in_driver'};
+    }
     # With this parser we will create HTML out of POD.
     # The HTML is specially prepared for the MOBI format
-    my $parser = EBook::MOBI::Driver::POD->new();
+
+    (my $require_name = $driver . ".pm") =~ s{::}{/}g;
+    require $require_name;
+
+    my $parser = $driver->new();
+
+    #my $parser = EBook::MOBI::Driver::POD->new();
 
     # pass some settings
     $parser->debug_on($self->{ref_to_debug_sub})
