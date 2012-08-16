@@ -22,6 +22,8 @@ use constant { GT  => '1_qpdhcn_thisStringShouldNeverOccurInInput',
 # See http://perldoc.perl.org/constant.html for details
 use constant { P   => 'EBook_MOBI_Pod2Mhtml_' };
 
+our $VERSION = 0.1;
+
 sub new {
     my $self = shift;
     my $ref = {};  

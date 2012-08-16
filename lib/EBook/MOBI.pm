@@ -309,7 +309,7 @@ If you plan to create a typical ebook you probably will need all of the methods 
   # give some meta information about this book
   $book->set_filename('./data/my_ebook.mobi');
   $book->set_title   ('Read my Wisdome');
-  $book->set_author  ('Bam Bam');
+  $book->set_author  ('Alfred Beispiel');
   $book->set_encoding(':encoding(UTF-8)');
 
   # lets create our own title page!
@@ -324,7 +324,11 @@ If you plan to create a typical ebook you probably will need all of the methods 
   $book->add_pagebreak();
 
   # add the books text, which is e.g. in the POD format
-  $book->add_pod_content($pod, 'pagemode');
+  $book->add_content( data => $POD_in,
+                      driver => 'EBook::MOBI::Driver::POD',
+                      pagemode => 1,
+                    );
+
 
   # prepare the book (e.g. calculate the references for the TOC)
   $book->make();
@@ -337,7 +341,7 @@ If you plan to create a typical ebook you probably will need all of the methods 
 
   # done
 
-=head1 METHODS
+=head1 METHODS (set meta data)
 
 =head2 set_title
 
@@ -369,6 +373,8 @@ As far as I know, only CP1252 (Win Latin1) und UTF-8 are supported by popular re
 Please see L<http://perldoc.perl.org/functions/binmode.html> for the syntax of your encoding keyword.
 If you use use hardcoded strings in your program, C<use utf8;> should be helping.
 
+=head1 METHODS (adding content)
+
 =head2 add_mhtml_content
 
 'mhtml' stands for mobi-html, which means: it is actually HTML but some things are different. I invented this term myself, so it is probably not a good idea to search the web or ask other people about it. If you are looking for more information about this format you might search the web for 'mobipocket file format' or something similar.
@@ -382,53 +388,37 @@ If you stick to the most basic HTML tags it should be perfect mhtml 'compatible'
 
 If you indent the 'h1' tag with any whitespace, it will not appear in the TOC (only 'h1' tags directly starting and ending with a newline are marked for the TOC). This may be usefull if you want to design a title page.
 
-=head2 add_pod_content
+=head2 add_content
 
-Perls POD format is very simple to use. So it might be a good idea to write your content in POD. If you did so, you can use this method to put your content into the book. Your POD will automatically be parsed and transformed to what I call 'mhtml' format. This means, your POD content will just look great in the ebook.
+Use this method if you have your content in a specific markup format.
+See below for details to the arguments supported by this method.
 
-  $book->add_pod_content($pod, 'pagemode', 'head0_mode');
+  $book->add_content( data => $POD_in,
+                      driver => 'EBook::MOBI::Driver::POD',
+                      pagemode => 1,
+                    );
+
+The method uses a plugin system to transform your format into an ebook.
+If you don't find a plugin for your markup please write one and release it under the namespace C<EBook::MOBI::Driver::$yourMarkup>.
+
+=head3 data
+
+A string, containing your text for the ebook.
+
+=head3 driver
+
+The name of the module which parses your data.
+If this value is not set, the default is C<EBook::MOBI::Driver::POD>.
+You are welcome to add your own driver for your markup!
 
 =head3 pagemode
 
-If you pass any true value as the second argument, every head1 chapter will end with a peagebreak. This mostly makes sence, so it is a good idea to use this feature.
+If you pass any true value here, every head1 chapter will end with a peagebreak. This mostly makes sence, so it is a good idea to use this feature.
 
 Default is to not insert pagebreak.
 
-=head3 head0_mode
-
-Pass any true value as the third argument to enable 'head0_mode'. The effect will be, that you are allowed to use a '=head0' command in your POD.
-
-  my $pod = <<POD;
-  =head0 Module EBook::MOBI
-  
-  =head1 NAME
-
-  =head1 SYNOPSIS
-
-  =head0 Module EBook::MOBI::Pod2Mhtml
-
-  =head1 NAME
-
-  =head1 SYNOPSIS
-
-  =cut
-  POD
-
-  $book->add_pod_content($pod, 0, 'head0_mode');
-
-This feature is useful if you want to have the documentation of several modules in Perl in one ebook. You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
-
-Default is to ignore any '=head0' command.
-
-=head3 Special syntax for images
-
-POD does not support images, but you might want images in your ebook.
-
-If you want to add images you can use an unofficial '=image' syntax in your POD.
-
-  =image /path/to/image.jpg fig1: description which will be the caption.
-
-The image needs to exist at the path which you define here. When you call the save() method, those images will be read from this place and stored into the ebook-file.
+This only works, if the driver has implemented this functionality!
+For C<EBook::MOBI::Driver::POD> that's the case.
 
 =head2 add_pagebreak
 
@@ -447,6 +437,8 @@ By default, the toc is called 'Table of Contents'. You can change that label by 
   $book->add_toc_once( 'Summary' );
 
 This method can only be called once. If you call it twice, the second call will not do anything.
+
+=head1 METHODS (finishing)
 
 =head2 make
 
@@ -474,6 +466,8 @@ Put the whole thing together as an ebook. This will create a file, with the name
 
 In this process it will also read images and store them into the ebook. So it is important, that the images are readable at the path you provided in your POD or mhtml syntax.
 
+=head1 METHODS (debugging)
+
 =head2 reset
 
 Reset the object, so that all the content is purged. Helpful if you like to make a new book, but are to lazy to create a new object. (e.g. for testing)
@@ -497,6 +491,57 @@ Pass a reference to a debug subroutine and enable debug messages.
 Stop debug messages and erease the reference to the subroutine.
 
   $book->debug_off();
+
+=head1 PLUGINS / DRIVERS
+
+=head2 POD
+
+Perls POD format is very simple to use. So it might be a good idea to write your content in POD. If you did so, you can use this method to put your content into the book. Your POD will automatically be parsed and transformed to what I call 'mhtml' format. This means, your POD content will just look great in the ebook.
+
+=head3 head0_mode
+
+For now, this just works for the plugin C<EBook::MOBI::Driver::POD>.
+
+Pass any true value here to enable 'head0_mode'. The effect will be, that you are allowed to use a '=head0' command in your POD.
+
+  my $pod = <<POD;
+  =head0 Module EBook::MOBI
+  
+  =head1 NAME
+
+  =head1 SYNOPSIS
+
+  =head0 Module EBook::MOBI::Pod2Mhtml
+
+  =head1 NAME
+
+  =head1 SYNOPSIS
+
+  =cut
+  POD
+
+  $book->add_content( data => $POD_in,
+                      driver => 'EBook::MOBI::Driver::POD',
+                      head0_mode => 1,
+                    );
+
+
+This feature is useful if you want to have the documentation of several modules in Perl in one ebook. You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
+
+This only works, if the driver has implemented this functionality!
+For C<EBook::MOBI::Driver::POD> that's the case.
+
+Default is to ignore any '=head0' command.
+
+=head3 Special syntax for images
+
+POD does not support images, but you might want images in your ebook.
+
+If you want to add images you can use an unofficial '=image' syntax in your POD.
+
+  =image /path/to/image.jpg fig1: description which will be the caption.
+
+The image needs to exist at the path which you define here. When you call the save() method, those images will be read from this place and stored into the ebook-file.
 
 =head1 SEE ALSO
 
