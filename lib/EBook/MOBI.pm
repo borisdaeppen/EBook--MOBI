@@ -27,7 +27,7 @@ sub new {
                 author    => 'This Book has no Author',
 
                 encoding  => ':encoding(UTF-8)',
-                in_driver => 'EBook::MOBI::Driver::POD',
+           default_driver => 'EBook::MOBI::Driver::POD',
 
                 CONST     => '6_--TOC-_thisStringShouldNeverOccurInInput',
 
@@ -51,7 +51,7 @@ sub reset {
     $self->{author   } = 'This Book has no Author',
 
     $self->{encoding } = ':encoding(UTF-8)',
-    $self->{in_driver} = 'EBook::MOBI::Driver::POD',
+$self->{default_driver}= 'EBook::MOBI::Driver::POD',
 
     $self->{CONST    } = '6_--TOC-_thisStringShouldNeverOccurInInput',
 
@@ -115,20 +115,22 @@ sub add_mhtml_content {
 }
 
 sub add_content {
-    my ($self, $pod, $pagemode, $head0_mode, $driver) = @_;
+    my $self = shift;
+    my %args = @_;
+    
+    my $data       = $args{data}       || 0;
+    my $pagemode   = $args{pagemode}   || 0;
+    my $head0_mode = $args{head0_mode} || 0;
+    my $driver     = $args{driver}     || $self->{default_driver};
 
-    unless ($driver) {
-        $driver = $self->{'in_driver'};
-    }
-    # With this parser we will create HTML out of POD.
-    # The HTML is specially prepared for the MOBI format
-
+    # we load a plugin to convert the input to mobi format
+    my $parser;
     (my $require_name = $driver . ".pm") =~ s{::}{/}g;
-    require $require_name;
-
-    my $parser = $driver->new();
-
-    #my $parser = EBook::MOBI::Driver::POD->new();
+    eval {
+        require $require_name;
+        $parser = $driver->new();
+    };
+    die "Problems with plugin $driver at $require_name: $@" if $@;
 
     # pass some settings
     $parser->debug_on($self->{ref_to_debug_sub})
@@ -144,16 +146,16 @@ sub add_content {
     # It seems like this is working after all...
     my ($fh,$f_name) = tempfile();
     binmode $fh, $self->{encoding};
-    print $fh $pod;
+    print $fh $data;
     close $fh;
-    open my $pod_handle, "<$self->{encoding}", $f_name;
+    open my $data_handle, "<$self->{encoding}", $f_name;
 
     # and we have a file again...
     my $input = '';
-    while (my $line = <$pod_handle>) {
+    while (my $line = <$data_handle>) {
         $input .= $line;
     }
-    close $pod_handle;
+    close $data_handle;
     unlink $f_name;
 
     # we call the parser to parse, result will be in $buffer4html

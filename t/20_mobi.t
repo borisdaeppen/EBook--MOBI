@@ -6,7 +6,7 @@ use warnings;
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 25;
+use Test::More tests => 26;
 
 ###########################
 # General module tests... #
@@ -317,46 +317,52 @@ my $POD_res_namedtoc_and_head0_and_pagemode = <<END;
 </html>
 END
 
-$obj->add_content($POD_in);
+$obj->add_content(data => $POD_in);
 $obj->make();
 my $res = $obj->print_mhtml(1);
 is($res, $POD_res_default, "Book -> default");
 
 $obj->reset();
-$obj->add_content($POD_in, 0, 'head0_mode');
+$obj->add_content(data => $POD_in, driver => 'EBook::MOBI::Driver::POD');
+$obj->make();
+$res = $obj->print_mhtml(1);
+is($res, $POD_res_default, "Book -> driver_select");
+
+$obj->reset();
+$obj->add_content(data => $POD_in, head0_mode => 1);
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_head0_mode, "Book -> head0_mode");
 
 $obj->reset();
-$obj->add_content($POD_in, 'pagemode', 0);
+$obj->add_content(data => $POD_in, pagemode => 1);
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_pagemode, "Book -> pagemode");
 
 $obj->reset();
-$obj->add_content($POD_in, 'pagemode', 1);
+$obj->add_content(data => $POD_in, pagemode => 1, head0_mode => 1);
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_head0_and_pagemode, "Book -> head0+pagemode");
 
 $obj->reset();
 $obj->add_toc_once();
-$obj->add_content($POD_in, 'pagemode', 1);
+$obj->add_content(data => $POD_in, pagemode => 1, head0_mode => 1);
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_toc_and_head0_and_pagemode, "Book -> toc+head0+pagemode");
 
 $obj->reset();
 $obj->add_toc_once('Inhaltsverzeichnis');
-$obj->add_content($POD_in);
+$obj->add_content(data => $POD_in);
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_namedtoc, "Book -> namedtoc");
 
 $obj->reset();
 $obj->add_toc_once('TOC_NAME');
-$obj->add_content($POD_in, 'pagemode', 1);
+$obj->add_content(data => $POD_in, pagemode => 1, head0_mode => 1);
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_namedtoc_and_head0_and_pagemode, "Book -> namedtoc+head0+pagemode");
