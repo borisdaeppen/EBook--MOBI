@@ -5,6 +5,7 @@ use feature 'switch';
 use EBook::MOBI::Converter;
 use EBook::MOBI::Driver;
 
+our $VERSION = 0.1;
 our @ISA = ('EBook::MOBI::Driver');
 
 
