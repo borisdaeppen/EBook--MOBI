@@ -68,3 +68,62 @@ sub parse {
 
 1;
 
+__END__
+
+=encoding utf8
+
+=head1 NAME
+
+EBook::MOBI::Driver::Example - Example plugin implementation.
+
+=head1 SYNOPSIS
+
+This module is just for demonstration.
+I invented a very simple markup, which works only line by line, to show how a plugin can be created.
+
+Here you can see how the plugin will be called by L<EBook::MOBI> and you can also see the simple markup, processed by this module:
+
+ use EBook::MOBI::Driver::Example;
+
+ my $plugin = EBook::MOBI::Driver::Example->new();
+
+ my $format= <<FOOMARKUP;
+ !h! This is a Title
+ ! ! A normal text line.
+ !i! An italic text line.
+ ! ! This is just a very simple example of markup.
+ !b! Guess what. This is a bold line.
+ 
+ typo : this is ignored
+ !U! unknown command
+ FOOMARKUP
+
+ my $mobi_format = $plugin->parse($format);
+
+Please check the source code of this module if you are interested in writing a plugin.
+It will be a good and simple example.
+
+=head1 Methods
+
+=head2 parse
+
+This is the method each plugin should provide!
+It takes the input format as a string and returns MHTML.
+
+=head2 inherited methods
+
+See L<EBook::MOBI::Driver> for usefull inherited methods.
+You can use the debug methods from this module for example.
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2012 Boris Däppen, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify it under the same terms of Artistic License 2.0.
+
+=head1 AUTHOR
+
+Boris Däppen E<lt>boris_daeppen@bluewin.chE<gt>
+
+=cut
+
