@@ -4,6 +4,9 @@
 ######################################################################
 package EBook::MOBI::Example::AnyPlugin;
 
+use strict;
+use warnings;
+
 # This is an input plugin for EBook::MOBI
 use EBook::MOBI::Driver;
 our @ISA = qw(EBook::MOBI::Driver);
@@ -16,7 +19,7 @@ use feature 'switch';
 # The only thing that needs to be implemented is the parse method.
 # It should take a string and return a converted string.
 sub parse {
-    ($self, $anyFormat) = @_;
+    my ($self, $anyFormat) = @_;
 
     # This module can help me to translate my stuff to html understood by
     # the mopipocket format
