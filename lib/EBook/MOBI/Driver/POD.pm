@@ -594,6 +594,53 @@ sub parse {
     return $buffer4html;
 };
 
+sub set_options {
+    my $self = shift;
+    my $args = shift;
+
+    if (ref($args) eq "HASH") {
+        $self->html_body ($args->{html_body})  if (exists $args->{html_body});
+        $self->head0_mode($args->{head0_mode}) if (exists $args->{head0_mode});
+        $self->pagemode  ($args->{pagemode})   if (exists $args->{pagemode});
+    }
+    else {
+        $self->debug_msg('Plugin options are not in a HASH');
+    }
+}
+
+sub html_body {
+    my ($self, $boolean) = @_; 
+
+    if (@_ > 1) {
+        $self->{+P . 'body'} = $boolean;
+    }   
+    else {
+        return $self->{+P . 'body'};
+    }   
+}
+
+sub pagemode {
+    my ($self, $boolean) = @_; 
+
+    if (@_ > 1) {
+        $self->{+P . 'pages'} = $boolean;
+    }   
+    else {
+        return $self->{+P . 'pages'};
+    }   
+}
+
+sub head0_mode {
+    my ($self, $boolean) = @_; 
+
+    if (@_ > 1) {
+        $self->{+P . 'head0_mode'} = $boolean;
+    }   
+    else {
+        return $self->{+P . 'head0_mode'};
+    }   
+}
+
 # encode_entities() from HTML::Entities does not translate it correctly
 # this is why I make it here manually as a quick fix
 # don't reall know where how to handle this utf8 problem for now...
@@ -635,34 +682,37 @@ __END__
 
 =head1 NAME
 
-EBook::MOBI::Pod2Mhtml - Create HTML, flavoured for the MOBI format, out of POD.
+EBook::MOBI::Driver::POD - Create HTML, flavoured for the MOBI format, out of POD.
 
 This module extends L<Pod::Parser> for parsing capabilities. The module L<HTML::Entities> is used to translate chars to HTML entities.
 
 =head1 SYNOPSIS
 
-  use EBook::MOBI::Pod2Mhtml;
-  my $p2h = new EBook::MOBI::Pod2Mhtml;
+This module is a plugin for L<EBook::MOBI>.
+You probably don't need to access this module directly, unless you are a developer for C<EBook::MOBI>.
 
-  # $pod_h and $html_out_h are file handles
-  # or IO::String objects
-  $p2h->parse_from_filehandle($pod_h, $html_out_h);
+ use EBook::MOBI::Driver::POD;
+ my $plugin = new EBook::MOBI::Driver::POD;
 
-  # result is now in $html_out_h
+ my $mobi_format = $plugin->parse($pod);
 
 =head1 METHODS
 
-=head2 parse_from_filehandle
+=head2 parse
 
-This is the method you need to call, if you want this module to be of any help for you. It will take your data in the POD format and return it in special flavoured HTML, which can be then further used for the MOBI format.
+This is the method each plugin should provide!
+It takes the input format as a string and returns MHTML.
 
-Hand over two file handles or Objects of L<IO::String>. The first handle points to your POD, the second waits to receive the result.
+=head1 METHODS (POD plugin specific)
 
-  # $pod_h and $html_out_h are file handles
-  # or IO::String objects
-  $p2h->parse_from_filehandle($pod_h, $html_out_h);
+=head2 set_options
 
-  # result is now in $html_out_h
+This method is provided by all plugins.
+This module supports the following options:
+
+ $plugin->set_options(pagemode => 1, head0_mode => 1, pagemode => 1);
+
+See description below for more details of the options.
 
 =head2 pagemode
 
@@ -706,6 +756,8 @@ Pass any true value to enable 'html_body'. If set, parsed content will be encaps
 
 Default is to not encapsulate in a body tag.
 
+=head1 METHODS (inherited from Driver code)
+
 =head2 debug_on
 
 You can just ignore this method if you are not interested in debuging!
@@ -715,6 +767,10 @@ Pass a reference to a debug subroutine and enable debug messages.
 =head2 debug_off
 
 Stop debug messages and erease the reference to the subroutine.
+
+=head2 debug_msg
+
+Write a message.
 
 =head2 INHERITED INTERNAL METHODS
 

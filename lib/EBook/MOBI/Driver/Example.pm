@@ -66,6 +66,11 @@ sub parse {
     return $mobiFormat;
 }
 
+sub set_options {
+    my $self = shift;
+    $self->debug_msg('this plugin has no options');
+}
+
 1;
 
 __END__

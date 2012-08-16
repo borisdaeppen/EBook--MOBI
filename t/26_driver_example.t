@@ -11,7 +11,7 @@ use File::Temp qw(tempfile);
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 6;
+use Test::More tests => 8;
 
 ###########################
 # General module tests... #
@@ -24,9 +24,11 @@ my $obj = $module->new();
 
 isa_ok($obj, $module);
 
-can_ok($obj, 'pagemode');
+can_ok($obj, 'parse');
+can_ok($obj, 'set_options');
 can_ok($obj, 'debug_on');
 can_ok($obj, 'debug_off');
+can_ok($obj, 'debug_msg');
 
 ################################
 # We define some parsing input #

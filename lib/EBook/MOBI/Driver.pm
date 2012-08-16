@@ -32,44 +32,13 @@ sub new {
     return $ref;
 }
 
-
 sub parse {
-    die ("method parse() no overriden.\n");
+    die ("method parse() not overriden.\n");
 }
 
-sub html_body {
-    my ($self, $boolean) = @_;
-
-    if (@_ > 1) {
-        $self->{+P . 'body'} = $boolean;
-    }
-    else {
-        return $self->{+P . 'body'};
-    }
+sub set_options {
+    die ("method set_options() not overriden.\n");
 }
-
-sub pagemode {
-    my ($self, $boolean) = @_;
-
-    if (@_ > 1) {
-        $self->{+P . 'pages'} = $boolean;
-    }
-    else {
-        return $self->{+P . 'pages'};
-    }
-}
-
-sub head0_mode {
-    my ($self, $boolean) = @_;
-
-    if (@_ > 1) {
-        $self->{+P . 'head0_mode'} = $boolean;
-    }
-    else {
-        return $self->{+P . 'head0_mode'};
-    }
-}
-
 
 sub debug_on {
     my ($self, $ref_to_debug_sub) = @_; 
@@ -97,30 +66,6 @@ sub debug_msg {
     }   
 }
 
-# encode_entities() from HTML::Entities does not translate it correctly
-# this is why I make it here manually as a quick fix
-# don't reall know where how to handle this utf8 problem for now...
-sub html_enc {
-    my $string = shift;
-
-    $string = encode_entities($string);
-                            #    ^
-    my $lt = LT;            #    |
-    my $gt = GT;            #    |
-    my $am = AMP;           #    |
-    my $co = COL;           #    |-- don't change this order!
-    my $qu = QUO;           #    |
-    my $dqu= DQUO;          #    |
-    $string =~ s/$lt/</g;   #    |
-    $string =~ s/$gt/>/g;   #    |
-    $string =~ s/$am/&/g;   #    |
-    $string =~ s/$co/;/g;   #    |
-    $string =~ s/$qu/'/g;   #    |
-    $string =~ s/$dqu/"/g;  #<---|
-
-    return $string;
-}
-
 1;
 
 __END__
@@ -136,7 +81,35 @@ EBook::MOBI::Driver - Interface for plugins.
 
   use EBook::MOBI::Driver;
 
-=head1 METHODS
+=head1 IMPLEMENTED METHODS
+
+=head2 new
+
+Saves a plugin the need to wrtite this one.
+
+=head2 debug_on
+
+Enable debugging by passing a sub.
+
+=head2 debug_off
+
+Stop debug messages.
+
+=head2 debug_msg
+
+Write a debug message.
+
+=head1 EMPTY METHODS
+
+=head2 parse
+
+Should be implemented by the plugin!
+Takes a string, returns a string.
+
+=head2 set_options
+
+Should be implemented by the plugin!
+Takes a %hash with arguments.
 
 =head1 COPYRIGHT & LICENSE
 

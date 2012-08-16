@@ -122,6 +122,7 @@ sub add_content {
     my $pagemode   = $args{pagemode}   || 0;
     my $head0_mode = $args{head0_mode} || 0;
     my $driver     = $args{driver}     || $self->{default_driver};
+    my $driver_opt = $args{driver_options} || 0;
 
     # we load a plugin to convert the input to mobi format
     my $parser;
@@ -133,10 +134,12 @@ sub add_content {
     die "Problems with plugin $driver at $require_name: $@" if $@;
 
     # pass some settings
-    $parser->debug_on($self->{ref_to_debug_sub})
-        if ($self->{ref_to_debug_sub});
-    $parser->pagemode($pagemode);
-    $parser->head0_mode($head0_mode);
+    if ($self->{ref_to_debug_sub}) {
+        $parser->debug_on($self->{ref_to_debug_sub});
+    }
+    if ($driver_opt) {
+        $parser->set_options($driver_opt);
+    }
 
     # ok, now we prepare the parsing, unfortunately we have to do
     # some complicated magic with the string data...
@@ -393,9 +396,9 @@ If you indent the 'h1' tag with any whitespace, it will not appear in the TOC (o
 Use this method if you have your content in a specific markup format.
 See below for details to the arguments supported by this method.
 
-  $book->add_content( data => $POD_in,
-                      driver => 'EBook::MOBI::Driver::POD',
-                      pagemode => 1,
+  $book->add_content( data           => $data_as_string,
+                      driver         => $driver_name,
+                      driver_options => {plugin_option => $value}
                     );
 
 The method uses a plugin system to transform your format into an ebook.
@@ -408,17 +411,8 @@ A string, containing your text for the ebook.
 =head3 driver
 
 The name of the module which parses your data.
-If this value is not set, the default is C<EBook::MOBI::Driver::POD>.
+If this value is not set, the default is L<EBook::MOBI::Driver::POD>.
 You are welcome to add your own driver for your markup!
-
-=head3 pagemode
-
-If you pass any true value here, every head1 chapter will end with a peagebreak. This mostly makes sence, so it is a good idea to use this feature.
-
-Default is to not insert pagebreak.
-
-This only works, if the driver has implemented this functionality!
-For C<EBook::MOBI::Driver::POD> that's the case.
 
 =head2 add_pagebreak
 

@@ -329,26 +329,26 @@ $res = $obj->print_mhtml(1);
 is($res, $POD_res_default, "Book -> driver_select");
 
 $obj->reset();
-$obj->add_content(data => $POD_in, head0_mode => 1);
+$obj->add_content(data => $POD_in, driver_options => {head0_mode => 1});
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_head0_mode, "Book -> head0_mode");
 
 $obj->reset();
-$obj->add_content(data => $POD_in, pagemode => 1);
+$obj->add_content(data => $POD_in, driver_options => {pagemode => 1});
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_pagemode, "Book -> pagemode");
 
 $obj->reset();
-$obj->add_content(data => $POD_in, pagemode => 1, head0_mode => 1);
+$obj->add_content(data => $POD_in, driver_options => {pagemode => 1, head0_mode => 1});
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_head0_and_pagemode, "Book -> head0+pagemode");
 
 $obj->reset();
 $obj->add_toc_once();
-$obj->add_content(data => $POD_in, pagemode => 1, head0_mode => 1);
+$obj->add_content(data => $POD_in, driver_options => {pagemode => 1, head0_mode => 1});
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_toc_and_head0_and_pagemode, "Book -> toc+head0+pagemode");
@@ -362,7 +362,7 @@ is($res, $POD_res_namedtoc, "Book -> namedtoc");
 
 $obj->reset();
 $obj->add_toc_once('TOC_NAME');
-$obj->add_content(data => $POD_in, pagemode => 1, head0_mode => 1);
+$obj->add_content(data => $POD_in, driver_options => {pagemode => 1, head0_mode => 1});
 $obj->make();
 $res = $obj->print_mhtml(1);
 is($res, $POD_res_namedtoc_and_head0_and_pagemode, "Book -> namedtoc+head0+pagemode");
