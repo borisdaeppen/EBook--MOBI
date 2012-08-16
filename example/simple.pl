@@ -51,7 +51,7 @@ $book->debug_on(\&debug);
 
 # fill the book with meta info
 $book->set_filename('Simple.mobi');
-$book->set_title   ('A Test');
+$book->set_title   ('A Test: Simple');
 $book->set_author  ('Boris');
 $book->set_encoding(':encoding(UTF-8)');
 
@@ -60,7 +60,7 @@ $book->add_mhtml_content(" <h1>A Test Titlepage</h1><p>Very simple...</p>");
 $book->add_pagebreak();
 $book->add_toc_once();
 $book->add_pagebreak();
-$book->add_content($pod, 'pagemode');
+$book->add_content(data => $pod, pagemode => 1);
 
 $book->make();
 #$book->print_mhtml();

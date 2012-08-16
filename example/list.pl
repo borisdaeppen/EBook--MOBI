@@ -256,12 +256,12 @@ sub debug {
 
 # fill the book with meta info
 $book->set_filename('List.mobi');
-$book->set_title   ('A List');
+$book->set_title   ('A Test: List');
 $book->set_author  ('Boris');
 $book->set_encoding(':encoding(UTF-8)');
 
 # fill the book with content
-$book->add_content($pod);
+$book->add_content(data => $pod);
 
 $book->make();
 $book->print_mhtml();
