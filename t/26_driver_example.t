@@ -11,7 +11,7 @@ use File::Temp qw(tempfile);
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 29;
+use Test::More tests => 6;
 
 ###########################
 # General module tests... #
