@@ -73,11 +73,22 @@ sub text {
 sub title {
     my $self = shift;
     my $txt  = shift;
-    my $lvl  = shift || '1';
+    my $lvl  = shift || 1;
+    my $toc  = shift || 1;
 
     die("Titles can't be higher than level 6\n") if ($lvl > 6);
 
-    my $mhtml = "<h$lvl>$txt</h$lvl>\n";
+    my $mhtml = '';
+    
+    if ($toc) {
+        $mhtml = "<h$lvl>$txt</h$lvl>\n";
+    }
+    else {
+        # If the h1 (or any other level) should not appear in the TOC
+        # we put a whitespace in front of it.
+        # Like this the regex of the TOC generator does not find it.
+        $mhtml = " <h$lvl>$txt</h$lvl> <!-- not in TOC -->\n";
+    }
 
     return $mhtml;
 }
@@ -129,7 +140,10 @@ sub code {
     my $self = shift;
     my $txt  = shift;
 
-    my $mhtml = "<code>$txt</code>\n";
+    my $enc_txt = _nbsp($txt);   # whitespaces
+       $enc_txt =~ s/\n/<br \/>\n/g; # line breaks
+
+    my $mhtml = "<code>$enc_txt</code>\n";
 
     return $mhtml;
 }
@@ -168,6 +182,7 @@ sub list {
 
     my $mhtml = "<$list_type>\n";
     foreach my $item (@{$list_ref}) {
+
         $mhtml .= "<li>$item</li>\n";
     }
     $mhtml .= "</$list_type>\n";
@@ -218,7 +233,7 @@ sub table {
     }
 
     if (exists $table_data{caption}) {
-        $mhtml .= '<caption>' . $table_data{caption} . '</caption>' . "\n";
+        $mhtml .= "<caption>$table_data{caption}</caption>\n";
     }
 
     $mhtml .= "</table>\n";
@@ -244,10 +259,22 @@ sub image {
             . "\n";
 
     # Then we print out the image description
-    $mhtml .= '<p>' . $description . '</p>' . "\n"
-        if ($description);
+    if ($description) {
+        $mhtml .= "<p>$description</p>\n";
+    }
 
     return $mhtml;
+}
+
+###################################################################
+
+## replaces whitespace with html entitie
+sub _nbsp {
+    my $string = shift;
+
+    $string =~ s/\ /&nbsp;/g;
+
+    return $string;
 }
 
 1;
@@ -269,15 +296,30 @@ EBook::MOBI::Driver - Interface for plugins.
 
 =head2 new
 
-=head2 add_content
-
-=head2 delete_content
-
-=head2 get_content
-
 =head2 text
 
+Returns your normal text (without markup) encoded for MHTML, which means, HTML special chars get replaced with HTML entities.
+
+This method gets called autmotically by most of the other methods too.
+So you don't need to worry about encoding of non ASCII chars.
+
 =head2 title
+
+Returns your text formated as a title.
+Takes 3 arguments:
+
+ my $mobi_title = $converter->title(
+
+    # Arguments:
+
+        $text, # your title
+
+        $level,# title level form 1 to 6
+               # (default: 1)
+
+        $toc   # pass false if it should not appear in the TOC
+               # (default: true)
+ );
 
 =head2 paragraph
 

@@ -387,7 +387,7 @@ sub verbatim {
     trim $expansion;
 
     # ok, we are done and print out the result
-    print $out_fh $parser->{+P . 'toMobi'}->code($expansion);
+    print $out_fh "<code>$expansion</code>\n";
 }
 
 # Overwrite sub of Pod::Parser

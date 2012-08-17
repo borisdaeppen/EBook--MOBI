@@ -80,8 +80,18 @@ $expect = "<b>Ein Text.\nUnd das ist gut so.</b>";
 is($mhtml, $expect, "bold");
 
 # code
-$mhtml = $obj->code("Ein Text.\nUnd das ist gut so.");
-$expect = "<code>Ein Text.\nUnd das ist gut so.</code>\n";
+$mhtml = $obj->code(
+'for my $i (@a) {
+    print $_;
+    print "the end\n";
+}
+');
+$expect = '<code>for&nbsp;my&nbsp;$i&nbsp;(@a)&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;$_;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"the&nbsp;end\n";<br />
+}<br />
+</code>
+';
 is($mhtml, $expect, "code");
 
 # small
