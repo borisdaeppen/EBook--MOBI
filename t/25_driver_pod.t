@@ -9,7 +9,7 @@ use File::Temp qw(tempfile);
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 29;
+use Test::More tests => 27;
 
 ###########################
 # General module tests... #
@@ -23,7 +23,6 @@ my $obj = $module->new();
 isa_ok($obj, $module);
 isa_ok($obj, 'Pod::Parser');
 
-can_ok($obj, 'html_body');
 can_ok($obj, 'pagemode');
 can_ok($obj, 'head0_mode');
 can_ok($obj, 'debug_on');
@@ -47,10 +46,8 @@ Text
 HEREDOC
 
 $html_out{minimal} = <<'HEREDOC';
-<body>
 <h1>MINIMAL</h1>
 <p>Text</p>
-</body>
 HEREDOC
 
 # 2
@@ -85,7 +82,6 @@ $pod_input{lists} = <<'HEREDOC';
 HEREDOC
 
 $html_out{lists} = <<'HEREDOC';
-<body>
 <h1>LISTS</h1>
 <ul>
 <li>normal list (1)</li>
@@ -99,7 +95,6 @@ $html_out{lists} = <<'HEREDOC';
 <li>5</li>
 <li>normal list with number as first item</li>
 </ul>
-</body>
 HEREDOC
 
 # 3
@@ -146,7 +141,6 @@ normal list with number as first item
 HEREDOC
 
 $html_out{lists_breakline} = <<'HEREDOC';
-<body>
 <h1>LISTS</h1>
 <ul>
 <li>normal list (1)</li>
@@ -160,7 +154,6 @@ $html_out{lists_breakline} = <<'HEREDOC';
 <li>5</li>
 <li>normal list with number as first item</li>
 </ul>
-</body>
 HEREDOC
 
 $pod_input{lists_contentInCommand} = <<'HEREDOC';
@@ -178,14 +171,12 @@ $pod_input{lists_contentInCommand} = <<'HEREDOC';
 HEREDOC
 
 $html_out{lists_contentInCommand} = <<'HEREDOC';
-<body>
 <h1>Content in Command</h1>
 <ul>
 <li>First item.</li>
 <li>Second item.</li>
 <li>Third item.</li>
 </ul>
-</body>
 HEREDOC
 
 $pod_input{lists_contentInTextblock} = <<'HEREDOC';
@@ -209,14 +200,12 @@ Third item.
 HEREDOC
 
 $html_out{lists_contentInTextblock} = <<'HEREDOC';
-<body>
 <h1>Content in Textblock</h1>
 <ul>
 <li>First item.</li>
 <li>Second item.</li>
 <li>Third item.</li>
 </ul>
-</body>
 HEREDOC
 
 $pod_input{lists_contentInTextblock2} = <<'HEREDOC';
@@ -240,14 +229,12 @@ Third item.
 HEREDOC
 
 $html_out{lists_contentInTextblock2} = <<'HEREDOC';
-<body>
 <h1>Content as Textblock with *</h1>
 <ul>
 <li>First item.</li>
 <li>Second item.</li>
 <li>Third item.</li>
 </ul>
-</body>
 HEREDOC
 
 $pod_input{lists_contentMixed} = <<'HEREDOC';
@@ -270,7 +257,6 @@ With additional Text.
 HEREDOC
 
 $html_out{lists_contentMixed} = <<'HEREDOC';
-<body>
 <h1>Content mixed as Command and Textblock</h1>
 <ul>
 <li>First item.</li>
@@ -278,7 +264,6 @@ $html_out{lists_contentMixed} = <<'HEREDOC';
 <li>Third item.<br />With additional Text.
 With additional Text.</li>
 </ul>
-</body>
 HEREDOC
 
 $pod_input{lists_nested} = <<'HEREDOC';
@@ -306,7 +291,6 @@ $pod_input{lists_nested} = <<'HEREDOC';
 HEREDOC
 
 $html_out{lists_nested} = <<'HEREDOC';
-<body>
 <h1>Nested List</h1>
 <ul>
 <li>First item.</li>
@@ -318,7 +302,6 @@ $html_out{lists_nested} = <<'HEREDOC';
 <li>Second item.</li>
 <li>Third item.</li>
 </ul>
-</body>
 HEREDOC
 
 $pod_input{lists_noItems} = <<'HEREDOC';
@@ -336,12 +319,10 @@ Third item.
 HEREDOC
 
 $html_out{lists_noItems} = <<'HEREDOC';
-<body>
 <h1>No Items (Blockquote)</h1>
 <blockquote>First item.</blockquote>
 <blockquote>Second item.</blockquote>
 <blockquote>Third item.</blockquote>
-</body>
 HEREDOC
 
 $pod_input{lists_noItemsNested} = <<'HEREDOC';
@@ -369,7 +350,6 @@ Third item.
 HEREDOC
 
 $html_out{lists_noItemsNested} = <<'HEREDOC';
-<body>
 <h1>Nested Blockquote</h1>
 <blockquote>First item.</blockquote>
 <blockquote>Second item.</blockquote>
@@ -380,7 +360,6 @@ $html_out{lists_noItemsNested} = <<'HEREDOC';
 <blockquote><blockquote>Third.</blockquote>
 </blockquote>
 <blockquote>Third item.</blockquote>
-</body>
 HEREDOC
 
 $pod_input{lists_deepNested} = <<'HEREDOC';
@@ -456,7 +435,6 @@ $pod_input{lists_deepNested} = <<'HEREDOC';
 HEREDOC
 
 $html_out{lists_deepNested} = <<'HEREDOC';
-<body>
 <h1>Nested List of Depth 5 !!!</h1>
 <ul>
 <li>First item.</li>
@@ -492,7 +470,6 @@ $html_out{lists_deepNested} = <<'HEREDOC';
 <li>Second item.</li>
 <li>Third item.</li>
 </ul>
-</body>
 HEREDOC
 
 $pod_input{lists_nestedMixed1} = <<'HEREDOC';
@@ -520,7 +497,6 @@ C
 HEREDOC
 
 $html_out{lists_nestedMixed1} = <<'HEREDOC';
-<body>
 <h1>Nested List with Blockquote</h1>
 <ol>
 <li>One.</li>
@@ -533,7 +509,6 @@ $html_out{lists_nestedMixed1} = <<'HEREDOC';
 </blockquote>
 <li>Three.</li>
 </ol>
-</body>
 HEREDOC
 
 $pod_input{lists_nestedMixed2} = <<'HEREDOC';
@@ -561,7 +536,6 @@ Three.
 HEREDOC
 
 $html_out{lists_nestedMixed2} = <<'HEREDOC';
-<body>
 <h1>Nested Blockquote with List</h1>
 <blockquote>One.</blockquote>
 <blockquote>Two.</blockquote>
@@ -571,7 +545,6 @@ $html_out{lists_nestedMixed2} = <<'HEREDOC';
 <li>C</li>
 </ul>
 <blockquote>Three.</blockquote>
-</body>
 HEREDOC
 
 # 4
@@ -588,13 +561,11 @@ Some other text...
 HEREDOC
 
 $html_out{pic} = <<'HEREDOC';
-<body>
 <h2>PIC</h2>
 <p>Some text?</p>
 <img src="/path/to/pic.jpg" recindex="1" >
 <p>This is the description!</p>
 <p>Some other text...</p>
-</body>
 HEREDOC
 
 # 5
@@ -608,11 +579,9 @@ $pod_input{umlaut} = <<'HEREDOC';
 HEREDOC
 
 $html_out{umlaut} = <<'HEREDOC';
-<body>
 <h3>UMLAUT</h3>
 <p>&uuml;&ouml;&auml;&Uuml;&Ouml;&Auml;
 &eacute;&agrave;&egrave;&Eacute;&Agrave;&Egrave;</p>
-</body>
 HEREDOC
 
 # 6
@@ -629,13 +598,11 @@ B<BOLD> C<CODE> F<FILE> I<ITALIC> E<nbsp> L<perl.org>
 HEREDOC
 
 $html_out{angle_bracket} = <<'HEREDOC';
-<body>
 <h4>ANGLE BRACKET</h4>
 <p>HTML chars:
 &lt;html&gt; &amp;nbsp; &lt;/html&gt;</p>
 <p>POD markup:
 <b>BOLD</b> <code>CODE</code> <code>FILE</code> <i>ITALIC</i> &nbsp; <a href='perl.org'>perl.org</a></p>
-</body>
 HEREDOC
 
 # 7
@@ -656,7 +623,6 @@ Text2
 HEREDOC
 
 $html_out{code} = <<'HEREDOC';
-<body>
 <h1>CODE</h1>
 <p>Text1</p>
 <code>&nbsp;&nbsp;#&nbsp;Code<br />
@@ -666,7 +632,6 @@ $html_out{code} = <<'HEREDOC';
 &nbsp;&nbsp;#&nbsp;multiline&nbsp;code<br />
 <br /></code>
 <p>Text2</p>
-</body>
 HEREDOC
 
 # 8
@@ -683,13 +648,11 @@ Text2
 HEREDOC
 
 $html_out{pagebreak} = <<'HEREDOC';
-<body>
 <h1>PAGEBREAK</h1>
 <p>Text1</p>
 <mbp:pagebreak />
 <h1>Here should be a break</h1>
 <p>Text2</p>
-</body>
 HEREDOC
 
 # 9
@@ -720,7 +683,6 @@ Link 10 L<Perl|perl.org>
 HEREDOC
 
 $html_out{inline_links} = <<'HEREDOC';
-<body>
 <h1>Inline Links</h1>
 <p>Link 1 <a href='https://metacpan.org/module/Module'>Module</a></p>
 <p>Link 2 <a href='https://metacpan.org/module/Module#Chapter'>Module/Chapter</a></p>
@@ -732,7 +694,6 @@ $html_out{inline_links} = <<'HEREDOC';
 <p>Link 8 <a href='perl.org'>perl.org</a></p>
 <p>Link 9 <a href='http://perl.org'>Perl</a></p>
 <p>Link 10 <a href='perl.org'>Perl</a></p>
-</body>
 HEREDOC
 
 #################################################
@@ -752,42 +713,17 @@ for my $key (keys %pod_input) {
     my $html_res; # this variable will contain the result!!!
     my $res_handle = IO::String->new($html_res);
 
-    $obj->html_body(1);
     $obj->pagemode(1);
     $obj->parse_from_filehandle($pod_handle, $res_handle);
     is($html_res, $html_out{$key}, "POD to HTML -> $key");
 }
-
-# Ok, we should also test what happens if we DON'T
-# use $obj->html_body() so we do a seperate test here.
-$obj = $module->new();
-
-my ($fh,$f_name) = tempfile();
-binmode $fh;
-print $fh "=head1 NO BODY
-
-There should be no html body-tag here.
-
-=cut
-";
-close $fh;
-open my $pod_handle, "<:encoding(utf-8)", $f_name;
-
-my $html_res; # this variable will contain the result!!!
-my $res_handle = IO::String->new($html_res);
-
-$obj->parse_from_filehandle($pod_handle, $res_handle);
-is($html_res,
-   "<h1>NO BODY</h1>\n<p>There should be no html body-tag here.</p>\n",
-   "POD to HTML -> no-body-tag"
-  );
 
 # Ok, and we should also test what happens if we
 # use $obj->head0_mode() so we do a seperate test here.
 $obj = $module->new();
 $obj->head0_mode(1);
 
-($fh,$f_name) = tempfile();
+my ($fh,$f_name) = tempfile();
 binmode $fh;
 print $fh "=head0 Biggest Title
 
@@ -800,9 +736,10 @@ Some text...
 =cut
 ";
 close $fh;
-open $pod_handle, "<:encoding(utf-8)", $f_name;
+open my $pod_handle, "<:encoding(utf-8)", $f_name;
 
-$res_handle = IO::String->new($html_res);
+my $html_res;
+my $res_handle = IO::String->new($html_res);
 
 $obj->parse_from_filehandle($pod_handle, $res_handle);
 is($html_res,

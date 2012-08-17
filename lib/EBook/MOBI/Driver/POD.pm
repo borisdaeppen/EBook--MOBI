@@ -33,7 +33,6 @@ use constant { GT  => '1_qpdhcn_thisStringShouldNeverOccurInInput',
 use constant { P   => 'EBook_MOBI_Pod2Mhtml_' };
 
 # Overwrite sub of Pod::Parser
-# At start of POD we print a html BODY tag
 sub begin_input {
     my $parser = shift;
     my $out_fh = $parser->output_handle();       # handle for parsing output
@@ -45,23 +44,14 @@ sub begin_input {
     # make sure that this variable is set to 0 at beginning
     $parser->{+P . 'listcontext'} = 0;
     $parser->{+P . 'listjustwentback'} = 0;
-
-    if ($parser->html_body()) {
-        print $out_fh $parser->{+P . 'toMobi'}->begin();
-    }
 }
 
 # Overwrite sub of Pod::Parser
-# At end of POD we print a html /BODY tag
 sub end_input {
     my $parser = shift;
     my $out_fh = $parser->output_handle();
 
     $parser->debug_msg('...end of POD reached');
-
-    if ($parser->html_body()) {
-        print $out_fh $parser->{+P . 'toMobi'}->end();
-    }
 }
 
 # Overwrite sub of Pod::Parser
@@ -599,24 +589,12 @@ sub set_options {
     my $args = shift;
 
     if (ref($args) eq "HASH") {
-        $self->html_body ($args->{html_body})  if (exists $args->{html_body});
         $self->head0_mode($args->{head0_mode}) if (exists $args->{head0_mode});
         $self->pagemode  ($args->{pagemode})   if (exists $args->{pagemode});
     }
     else {
         $self->debug_msg('Plugin options are not in a HASH');
     }
-}
-
-sub html_body {
-    my ($self, $boolean) = @_; 
-
-    if (@_ > 1) {
-        $self->{+P . 'body'} = $boolean;
-    }   
-    else {
-        return $self->{+P . 'body'};
-    }   
 }
 
 sub pagemode {
@@ -747,14 +725,6 @@ Pod can now look like this:
 This feature is useful if you want to have the documentation of several modules in Perl in one eBook. You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
 
 Default is to ignore any '=head0' command.
-
-=head2 html_body
-
-Pass any true value to enable 'html_body'. If set, parsed content will be encapsulated in a HTML body tag. You may want this if you parse all data at once. But if there is more to add, you should not use this mode, you then will just get HTML markup which is not encapsulated in a body tag.
-
-  $p2h->html_body(1);
-
-Default is to not encapsulate in a body tag.
 
 =head1 METHODS (inherited from Driver code)
 

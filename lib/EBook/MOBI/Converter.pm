@@ -28,34 +28,6 @@ sub parse {
     die "the method parse() must be overwritten!\n";
 }
 
-##########################
-# Manage converted stuff #
-##########################
-
-sub begin {
-    my $self = shift;
-
-    # open a "body" tag
-    if (not $self->{no_body}) {
-        return "<body>\n";
-    }
-    else {
-        return '';
-    }
-}
-
-sub end {
-    my $self = shift;
-
-    # close the "body" tag
-    if (not $self->{no_body}) {
-        return "</body>\n";
-    }
-    else {
-        return '';
-    }
-}
-
 ########################################
 # Implementation of the converter subs #
 ########################################

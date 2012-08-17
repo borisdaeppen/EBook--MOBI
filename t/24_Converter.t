@@ -21,8 +21,6 @@ my $obj = $module->new();
 
 isa_ok($obj, $module);
 
-#can_ok($obj, 'html_body');
-
 ################################
 # We define some parsing input #
 # and also how the result      #
