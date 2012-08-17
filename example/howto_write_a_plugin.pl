@@ -33,9 +33,6 @@ sub parse {
     # We have some usefull methods from EBook::MOBI::Driver
     $self->debug_msg("Start parsing...");
 
-    # I should call this if I'm planning to create a book out of this.
-    $mobiFormat .= $converter->begin();
-
     ########################################################################
     # Here is the parsing... for sure this looks different for any other   #
     # format. You might even use an existing parser like e.g. POD::Parser. #
@@ -69,9 +66,6 @@ sub parse {
             $self->debug_msg("Unknown line: $mobi_line");
         }
     }
-
-    # we finish the book
-    $mobiFormat .= $converter->end();
 
     $self->debug_msg("...done");
 
