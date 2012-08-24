@@ -297,13 +297,19 @@ __END__
 
 =head1 NAME
 
-EBook::MOBI - create an ebook in the MOBI format, out of POD formatted content.
+EBook::MOBI - create an ebook in the MOBI format.
 
-You are at the right place here if you want to create an ebook in the so called MOBI format (somethimes also called PRC format or Mobipocket). You are especially at the right place if you have your books content available in the POD format. Because there is a plugin to render POD. Take a look at the plugin section, to find out more about existing pugins.
+You are at the right place here if you want to create an ebook in the so called MOBI format (somethimes also called PRC format or Mobipocket).
 
 =head1 SYNOPSIS
 
-If you plan to create a typical ebook you probably will need all of the methods provided by this class. So it might be a good idea to read all the descriptions in the methods section, and also have a look at this example here:
+If you plan to create a typical ebook you probably will need most of the methods provided by this module. So it might be a good idea to read all the descriptions in the methods section, and also have a look at this example here.
+
+Because the input in this example is from the same file as the code, and this text-file is utf-8, we enable utf-8 and we will have no problems.
+
+ use utf8;
+
+Then we create an object and set some information about the book.
 
  # Create an object of a book
  use EBook::MOBI;
@@ -315,6 +321,10 @@ If you plan to create a typical ebook you probably will need all of the methods 
  $book->set_author  ('Alfred Beispiel');
  $book->set_encoding(':encoding(UTF-8)');
 
+Input can be done in several ways.
+You can always work directly with the format itself.
+See L<EBook::MOBI::Converter> for more information about this format.
+
  # lets create our own title page!
  $book->add_mhtml_content(
      " <h1>This is my Book</h1>
@@ -322,9 +332,22 @@ If you plan to create a typical ebook you probably will need all of the methods 
  );
  $book->add_pagebreak();
 
+To help you with the format there is also a module.
+The above could also be coded with the help of that.
+
+ my $c = EBook::MOBI::Converter->new();
+ $book->add_mhtml_content( $c->title('This is my Book', 1, 0) );
+ $book->add_mhtml_content( $c->paragraph('Read my wisdome')   );
+ $book->add_mhtml_content( $c->pagebreak()                    );
+
+At any point in the book you can insert a table of content.
+
  # insert a table of contents after the titlepage
  $book->add_toc_once();
  $book->add_pagebreak();
+
+The preferred way for your normal input should be the add_content() method.
+It makes use of plugins, so you should make sure there is a plugin for your input markup.
 
  # add the books text, which is e.g. in the POD format
  $book->add_content( data           => $POD_in,
@@ -332,11 +355,12 @@ If you plan to create a typical ebook you probably will need all of the methods 
                      driver_options => { pagemode => 1},
                    );
 
+After that, some small final steps are needed and the book is ready.
 
  # prepare the book (e.g. calculate the references for the TOC)
  $book->make();
 
- # let me see how this mobi-html looks like
+ # let me see how this mobi-format looks like
  $book->print_mhtml();
 
  # ok, give me that mobi-book as a file!
@@ -356,7 +380,7 @@ Give a string which will appear in the meta data of the format. This will be use
 
 Give a string which will appear in the meta data of the format. This will be used e.g. by ebook-readers to determine the books author.
 
- $book->set_author('Bam Bam');
+ $book->set_author('Alfred Beispiel');
 
 =head2 set_filename
 
