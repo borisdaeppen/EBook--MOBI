@@ -81,12 +81,35 @@ __END__
 
 EBook::MOBI::Driver::Example - Example plugin implementation.
 
-=head1 SYNOPSIS
-
 This module is just for demonstration.
 I invented a very simple markup, which works only line by line, to show how a plugin can be created.
 
-Here you can see how the plugin will be called by L<EBook::MOBI> and you can also see the simple markup, processed by this module:
+=head1 SYNOPSIS (for users)
+
+If you wan't to run this as a plugin, use this code.
+But I can't imagine any situation where this might be the case for real, since this is B<just an example> for a markup which is not actually existing.
+
+ use EBook::MOBI;
+ my $book = EBook::MOBI->new();
+
+ my $foomarkup= <<FOOMARKUP;
+ !h! This is a Title
+ ! ! A normal text line.
+ !i! An italic text line.
+ ! ! This is just a very simple example of markup.
+ !b! Guess what. This is a bold line.
+ 
+ typo : this is ignored
+ !U! unknown command
+ FOOMARKUP
+
+ $book->add_content( data   => $foomarkup,
+                     driver => 'EBook::MOBI::Driver::Example',
+                   );
+
+=head1 SYNOPSIS (for developers)
+
+Here you can see how the plugin will be called by L<EBook::MOBI>:
 
  use EBook::MOBI::Driver::Example;
 

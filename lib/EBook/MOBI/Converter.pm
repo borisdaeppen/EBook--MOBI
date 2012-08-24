@@ -257,12 +257,59 @@ __END__
 
 =head1 NAME
 
-EBook::MOBI::Driver - Interface for plugins.
+EBook::MOBI::Converter - Tool to create MHTML.
 
 =head1 SYNOPSIS
 
+  use EBook::MOBI::Converter;
+  my $c = EBook::MOBI::Converter->new();
 
-  use EBook::MOBI::Driver;
+  my $mhtml_text = '';
+
+  $mhtml_text .= $c->title(     $c->text('This is my Book') , 1, 0);
+  $mhtml_text .= $c->paragraph( $c->text('Read my wisdome')       );
+  $mhtml_text .= $c->pagebreak(                                   );
+
+=head1 WHAT IS MHTML?
+
+'mhtml' stands for mobi-html, which means: it is actually HTML but some things are different. I invented this term myself, so it is probably not a good idea to search the web or ask other people about this term. If you are looking for more information about this format you might search the web for 'mobipocket file format' or something similar.
+
+If you stick to the most basic HTML tags it should be perfect mhtml 'compatible'. So if you want to 'write a book' or something similar you can just use basic HTML for markup. The ebook readers using the MOBI format actually just display plain HTML. But sadly that's not the whole truth - you can't stick to the official HTML standards. Since I did some research on how to do things, I'd like to share my knowledge.
+
+=head2 Simple Text
+
+Most simple HTML tags will just work.
+
+  <h1>My Book</h1>
+  <p>
+  This is my first book.
+  I want to show the world <b>my</b> mind!
+  <br />&nbsp; -- the author
+  </p>
+
+=head2 TOC and Hyperlinks
+
+Hyperlinks pointing to the WWW are working just like in HTML. But if you want to point into your own file, e.g. for a table of contents, it will not work. You then have to declare an attribute called 'filepos' which points to the char where you whant to jump to.
+
+  <h1>Table of Contents</h1>
+  <ul>
+  <li><a filepos="00000458">CHAPTER ONE</a></li>
+  <li><a filepos="00000510">CHAPTER TWO</a></li>
+  </ul>
+
+=head2 Images
+
+Images are handled slightly different than in standard HTML, since all the data is not on a normal filesystem - it is packed into the MOBI format. Since there are no such thing as filenames in the MOBI format (at least as far as I know) you can't point to an image over it's name. Images are stored in seperat format-intern containers, which have a count. You can then adress to an image with the number of it's container. The syntax is like this:
+
+  <img recindex="0004">
+
+Attention! If you have a lot of text, it will fill up more than one container. But even then... images always start counting from recindex one! So this count seems to be relative, not absolute. Just start counting with C<recindex="1"> and it will be fine!
+
+=head2 New Page
+
+If you want to enforce a new page at the ebook-reader you can use a MOBI specific tag:
+
+  <mbp:pagebreak />
 
 =head1 METHODS
 
@@ -272,8 +319,10 @@ EBook::MOBI::Driver - Interface for plugins.
 
 Returns your normal text (without markup) encoded for MHTML, which means, HTML special chars get replaced with HTML entities.
 
-This method gets called autmotically by most of the other methods too.
-So you don't need to worry about encoding of non ASCII chars.
+This method gets not called autmotically by the other methods.
+So you need to call this every time, also when using other methods, if you want to ensure that special chars are converted.
+
+=head1 METHODS (for tags)
 
 =head2 title
 
@@ -305,6 +354,13 @@ Takes 3 arguments:
 
 =head2 code
 
+ $mhtml = $c->code(
+ 'for my $i (@a) {
+     print $_;
+     print "the end\n";
+ }
+ ');
+
 =head2 small
 
 =head2 big
@@ -313,13 +369,38 @@ Takes 3 arguments:
 
 =head2 list
 
+Create a very simple list.
+
+ my $mhtml = $c->list( ['A', 'B', 'C', 'D'], 'ul' );
+
 =head2 table
+
+Create a very simple table.
+
+ $mhtml = $c->table(   th =>   ['A', 'B', 'C'],
+                         td => [
+                                ['1', '2', '3'],
+                                ['10', '20', '30'],
+                                ['100', '200', '300']
+                               ],
+                         caption     => 'This is a table',
+                         border      => '8',
+                         cellspacing => '10',
+                         cellpadding => '20'
+                     );
 
 =head2 image
 
+Add a picture to the data.
+
+ $mhtml = $c->image('/path/to/pic.jpg', 'This is a picture');
+
+Image must remain on the path at disc, until ebook is created!
+This method just adds the path, not the data.
+
 =head1 Possible Tags
 
-According to L<http://www.mobipocket.com/dev/article.asp?BaseFolder=prcgen&File=TagRef_OEB.htm> the following tags are supported in Mobipocket. Not all are implemented in the methods mentioned above.
+According to L<mobipocket.com|http://www.mobipocket.com/dev/article.asp?BaseFolder=prcgen&File=TagRef_OEB.htm> the following tags are supported in Mobipocket. Not all are implemented in the methods mentioned above.
 
   <?xml?>
   <?xml-stylesheet?>
@@ -389,7 +470,7 @@ According to L<http://www.mobipocket.com/dev/article.asp?BaseFolder=prcgen&File=
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2011 Boris Däppen, all rights reserved.
+Copyright 2012 Boris Däppen, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the same terms of Artistic License 2.0.
 

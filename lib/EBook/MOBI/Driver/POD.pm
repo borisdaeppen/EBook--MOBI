@@ -664,7 +664,27 @@ EBook::MOBI::Driver::POD - Create HTML, flavoured for the MOBI format, out of PO
 
 This module extends L<Pod::Parser> for parsing capabilities. The module L<HTML::Entities> is used to translate chars to HTML entities.
 
-=head1 SYNOPSIS
+=head1 SYNOPSIS (for users)
+
+The plugin is called like this while using C<EBook::MOBI>:
+
+ use EBook::MOBI;
+ my $book = EBook::MOBI->new();
+
+ my $POD_in = <<END;
+ =head1 SOME POD
+
+ Just an example.
+
+ END
+
+ $book->add_content( data           => $POD_in,
+                     driver         => 'EBook::MOBI::Driver::POD',
+                     driver_options => { pagemode => 1, head0_mode => 0 }
+                   );
+
+
+=head1 SYNOPSIS (for developers)
 
 This module is a plugin for L<EBook::MOBI>.
 You probably don't need to access this module directly, unless you are a developer for C<EBook::MOBI>.
@@ -681,30 +701,26 @@ You probably don't need to access this module directly, unless you are a develop
 This is the method each plugin should provide!
 It takes the input format as a string and returns MHTML.
 
-=head1 METHODS (POD plugin specific)
+=head1 OPTIONS (POD plugin specific)
 
 =head2 set_options
 
 This method is provided by all plugins.
 This module supports the following options:
 
- $plugin->set_options(pagemode => 1, head0_mode => 1, pagemode => 1);
+ $plugin->set_options(pagemode => 1, head0_mode => 1);
 
 See description below for more details of the options.
 
-=head2 pagemode
+=head3 pagemode
 
-Pass any true value to enable 'pagemode'. The effect will be, that before every - but the first - '=head1' there will be a peagebreak inserted. This means: The resulting eBook will start each head1 chapter at a new page.
-
-  $p2h->pagemode(1);
+Pass any true value to enable C<pagemode>. The effect will be, that before every - but the first - title on highest level there will be a peagebreak inserted. This means: The resulting ebook will start each C<h1> chapter at a new page.
 
 Default is to not add any pagebreak.
 
-=head2 head0_mode
+=head3 head0_mode
 
-Pass any true value to enable 'head0_mode'. The effect will be, that you are allowed to use a '=head0' command in your POD.
-
-  $p2h->head0_mode(1);
+Pass any true value to enable C<head0_mode>. The effect will be, that you are allowed to use a C<=head0> command in your POD.
 
 Pod can now look like this:
 
@@ -722,55 +738,13 @@ Pod can now look like this:
 
   =cut
 
-This feature is useful if you want to have the documentation of several modules in Perl in one eBook. You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
+This feature is useful if you want to have the documentation of several modules in Perl in one ebook. You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
 
-Default is to ignore any '=head0' command.
-
-=head1 METHODS (inherited from Driver code)
-
-=head2 debug_on
-
-You can just ignore this method if you are not interested in debuging!
-
-Pass a reference to a debug subroutine and enable debug messages.
-
-=head2 debug_off
-
-Stop debug messages and erease the reference to the subroutine.
-
-=head2 debug_msg
-
-Write a message.
-
-=head2 INHERITED INTERNAL METHODS
-
-=head3 begin_input
-
-Inherited from L<Pod::Parser>. Gets called when POD-input starts.
-
-=head3 command
-
-Inherited from L<Pod::Parser>. Gets called when a command is found.
-
-=head3 end_input
-
-Inherited from L<Pod::Parser>. Gets called when POD-input ends.
-
-=head3 interior_sequence
-
-Inherited from L<Pod::Parser>. Gets called for inline replacements..
-
-=head3 textblock
-
-Inherited from L<Pod::Parser>. Gets called for text sections.
-
-=head3 verbatim
-
-Inherited from L<Pod::Parser>. Gets called for code sections..
+Default is to ignore any C<=head0> command.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2011 Boris Däppen, all rights reserved.
+Copyright 2011,2012 Boris Däppen, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the same terms of Artistic License 2.0.
 

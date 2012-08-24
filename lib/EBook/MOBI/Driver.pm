@@ -76,16 +76,43 @@ __END__
 
 EBook::MOBI::Driver - Interface for plugins.
 
+Thid module helps you to write an input plugin for C<EBook::MOBI>.
+
 =head1 SYNOPSIS
 
+Some example code snippets are provided here.
+For a complete example, please have a look at L<EBook::MOBI::Driver::Example>.
 
-  use EBook::MOBI::Driver;
+ # Plugin for EBook::MOBI
+ use EBook::MOBI::Driver;
+ our @ISA = ('EBook::MOBI::Driver');
+
+ sub parse {
+     my ($self, $input) = @_;
+
+     # your code to convert input to output
+
+     return $output;
+ }
+
+ sub set_options {
+     my $self = shift;
+     my $args = shift;
+
+     # call the args like this
+     if (ref($args) eq "HASH") {
+         if ($args->{YOUR_ARG_NAME}) {
+             # do your stuff
+         }
+     }
+ }
+
 
 =head1 IMPLEMENTED METHODS
 
 =head2 new
 
-Saves a plugin the need to wrtite this one.
+Saves a plugin the need to write this one.
 
 =head2 debug_on
 
@@ -109,11 +136,11 @@ Takes a string, returns a string.
 =head2 set_options
 
 Should be implemented by the plugin!
-Takes a %hash with arguments.
+Takes a hash ref with arguments.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2011 Boris Däppen, all rights reserved.
+Copyright 2012 Boris Däppen, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the same terms of Artistic License 2.0.
 

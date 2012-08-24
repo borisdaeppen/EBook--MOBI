@@ -415,6 +415,8 @@ If you stick to the most basic HTML tags it should be perfect mhtml 'compatible'
 
 If you indent the 'h1' tag with any whitespace, it will not appear in the TOC (only 'h1' tags directly starting and ending with a newline are marked for the TOC). This may be usefull if you want to design a title page.
 
+There is a module L<EBook::MOBI::Converter> which helps you in creating this format. See it's documentation for more information.
+
 =head2 add_content
 
 Use this method if you have your content in a specific markup format.
@@ -436,7 +438,12 @@ A string, containing your text for the ebook.
 
 The name of the module which parses your data.
 If this value is not set, the default is L<EBook::MOBI::Driver::POD>.
-You are welcome to add your own driver for your markup!
+You are welcome to add your own driver for your markup of choice!
+
+=head3 driver_options
+
+Pass a hash ref here, with options for the plugin.
+This options may be different for each plugin.
 
 =head2 add_pagebreak
 
@@ -446,7 +453,7 @@ Use this method to seperate content and give some structure to your book.
 
 =head2 add_toc_once
 
-Use this method to place a table of contents into your book. You will B<need to> call the make() method later, B<after> you added all your content to the book. This is, because we need all the content - to be able to calculate the references where the TOC is pointing to. Only 'h1' tags starting and ending with a newline char will enter the TOC. See  the docs for the method add_mhtml_content() for an example.
+Use this method to place a table of contents into your book. You will B<need to> call the make() method later, B<after> you added all your content to the book. This is, because we need all the content - to be able to calculate the references where the TOC is pointing to. Only 'h1' tags starting and ending with a newline char will enter the TOC.
 
  $book->add_toc_once();
 
@@ -460,7 +467,7 @@ This method can only be called once. If you call it twice, the second call will 
 
 =head2 make
 
-You need to call this one before saving, especially if you have used the add_toc_once() method. This will calculate the references, pointing from the TOC into the content.
+You only need to call this one before saving, if you have used the add_toc_once() method. This will calculate the references, pointing from the TOC into the content.
 
  $book->make();
 
@@ -474,7 +481,7 @@ If you call the method it will print to standard output. You can change this beh
  $book->print_mhtml();
  
  # or get the result into a variable
- $mhtml_data = $book->print_mhtml(1);
+ $mhtml_data = $book->print_mhtml('result to var');
 
 =head2 save
 
@@ -482,7 +489,7 @@ Put the whole thing together as an ebook. This will create a file, with the name
 
  $book->save();
 
-In this process it will also read images and store them into the ebook. So it is important, that the images are readable at the path you provided in your POD or mhtml syntax.
+In this process it will also read images and store them into the ebook. So it is important, that the images are readable at the path you provided before.
 
 =head1 METHODS (debugging)
 
@@ -506,7 +513,7 @@ Pass a reference to a debug subroutine and enable debug messages.
 
 Or shorter:
 
- $book->debug_on(sub { print @_ });
+ $book->debug_on(sub { print @_; print "\n" });
 
 =head2 debug_off
 
@@ -518,52 +525,13 @@ Stop debug messages and erease the reference to the subroutine.
 
 =head2 POD
 
-Perls POD format is very simple to use. So it might be a good idea to write your content in POD. If you did so, you can use this method to put your content into the book. Your POD will automatically be parsed and transformed to what I call 'mhtml' format. This means, your POD content will just look great in the ebook.
+L<EBook::MOBI::Driver::POD> is a plugin for Perls markup language POD.
+Please see its docs for more information and options.
 
-=head3 head0_mode
+=head2 Example
 
-For now, this just works for the plugin C<EBook::MOBI::Driver::POD>.
-
-Pass any true value here to enable 'head0_mode'. The effect will be, that you are allowed to use a '=head0' command in your POD.
-
- my $pod = <<POD;
- =head0 Module EBook::MOBI
- 
- =head1 NAME
-
- =head1 SYNOPSIS
-
- =head0 Module EBook::MOBI::Pod2Mhtml
-
- =head1 NAME
-
- =head1 SYNOPSIS
-
- =cut
- POD
-
- $book->add_content( data           => $POD_in,
-                     driver         => 'EBook::MOBI::Driver::POD',
-                     driver_options => {head0_mode => 1},
-                   );
-
-
-This feature is useful if you want to have the documentation of several modules in Perl in one ebook. You then can add a higher level of titles, so that the TOC does not only contain several NAME and SYNOPSIS entries.
-
-This only works, if the driver has implemented this functionality!
-For C<EBook::MOBI::Driver::POD> that's the case.
-
-Default is to ignore any '=head0' command.
-
-=head3 Special syntax for images
-
-POD does not support images, but you might want images in your ebook.
-
-If you want to add images you can use an unofficial '=image' syntax in your POD.
-
- =image /path/to/image.jpg fig1: description which will be the caption.
-
-The image needs to exist at the path which you define here. When you call the save() method, those images will be read from this place and stored into the ebook-file.
+L<EBook::MOBI::Driver::Example> is an example implementation of a simple plugin. It is only useful for plugin writers, as an example.
+Please see its docs for more information and options.
 
 =head1 SEE ALSO
 
@@ -571,13 +539,31 @@ The image needs to exist at the path which you define here. When you call the sa
 
 =item * L<Github|https://github.com/borisdaeppen/EBook--MOBI> for participating and also for L<bugreports|https://github.com/borisdaeppen/EBook--MOBI/issues>.
 
-=item * L<EBook::MOBI::Pod2Mhtml> - see how the POD becomes MHTML.
-
-=item * L<EBook::MOBI::Mhtml2Mobi> - look up what I mean by saying MHTML, and how the code from MobiPerl is doing it's job.
-
-=item * L<EBook::MOBI::Picture> - see how bad I manage your images.
+=item * L<EBook::MOBI::Converter> - look up what I mean by saying MHTML.
 
 =item * Everything in the namespace C<EBook::MOBI::MobiPerl> is coming from MobiPerl. For information about this code, please visit L<https://dev.mobileread.com/trac/mobiperl>
+
+=back
+
+=head1 THANKS TO
+
+=over
+
+=item * Renée Bäcker and L<Perl-Services.de|http://www.perl-services.de/> for the idea, patches and making this module possible.
+
+=item * L<Perl-Magazin|http://perl-magazin.de/> for publishing an article in autumn 2012.
+
+=item * L<Linux-Magazin|http://shop.linuxnewmedia.de/eh20194.html> for mentioning the module in the Perl-Snapshots. The article is also available L<online|http://www.linux-magazin.de/content/view/full/69651> and as L<podcast|http://www.linux-magazin.de/plus/2012/08/Perl-Snapshot-Linux-Magazin-2012-08>.
+
+=item * Tompe for developing MobiPerl.
+
+=back
+
+=head1 CONTRIBUTORS
+
+=over
+
+=item * L<Garu|https://metacpan.org/author/GARU>
 
 =back
 
@@ -587,25 +573,10 @@ Copyright 2012 Boris Däppen, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the same terms of Artistic License 2.0.
 
+
 =head1 AUTHOR
 
 Boris Däppen E<lt>boris_daeppen@bluewin.chE<gt>
-
-=head1 THANKS TO
-
-=over
-
-=item * Renée Bäcker and L<Perl-Services.de|http://www.perl-services.de/> for the idea and making this module possible.
-
-=item * L<Perl-Magazin|http://perl-magazin.de/> for publishing an article in autumn 2012.
-
-=item * L<Linux-Magazin|http://shop.linuxnewmedia.de/eh20194.html> for the same thing, the article is also available L<online|http://www.linux-magazin.de/content/view/full/69651> and as L<podcast|http://www.linux-magazin.de/plus/2012/08/Perl-Snapshot-Linux-Magazin-2012-08>.
-
-=item * Tompe for developing MobiPerl.
-
-=item * L<Garu|https://metacpan.org/author/GARU> for a helpfull patch, allowing to set a name for the TOC.
-
-=back
 
 =cut
 
