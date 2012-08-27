@@ -591,7 +591,7 @@ Please see its docs for more information and options.
 
 =back
 
-=head1 COPYRIGHTRenee & LICENSE
+=head1 COPYRIGHT & LICENSE
 
 Copyright 2012 Boris Däppen, all rights reserved.
 
