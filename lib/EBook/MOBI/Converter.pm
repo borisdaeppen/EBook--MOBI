@@ -299,7 +299,7 @@ Hyperlinks pointing to the WWW are working just like in HTML. But if you want to
 
 =head2 Images
 
-Images are handled slightly different than in standard HTML, since all the data is not on a normal filesystem - it is packed into the MOBI format. Since there are no such thing as filenames in the MOBI format (at least as far as I know) you can't point to an image over it's name. Images are stored in seperat format-intern containers, which have a count. You can then adress to an image with the number of it's container. The syntax is like this:
+Images are handled slightly different than in standard HTML, since all the data is not on a normal filesystem - it is packed into the MOBI format. Since there are no such things as filenames in the MOBI format (at least as far as I know) you can't point to an image over it's name. Images are stored in seperat format-intern containers, which have a count. You can then adress to an image with the number of it's container. The syntax is like this:
 
   <img recindex="0004">
 

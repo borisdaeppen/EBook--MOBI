@@ -301,6 +301,12 @@ EBook::MOBI - create an ebook in the MOBI format.
 
 You are at the right place here if you want to create an ebook in the so called MOBI format (somethimes also called PRC format or Mobipocket).
 
+=head1 VERSION
+
+B<Important:> This version (>= 0.5) has different API then older releases (<= 0.491).
+add_pod_content() is no more.
+Please take care while upgrading and change your code to the new way of adding content with the add_content() method.
+
 =head1 SYNOPSIS
 
 If you plan to create a typical ebook you probably will need most of the methods provided by this module. So it might be a good idea to read all the descriptions in the methods section, and also have a look at this example here.
@@ -332,8 +338,8 @@ See L<EBook::MOBI::Converter> for more information about this format.
  );
  $book->add_pagebreak();
 
-To help you with the format there is also a module.
-The above could also be coded with the help of that.
+To help you with the format use L<EBook::MOBI::Converter>.
+The above would then look like this:
 
  my $c = EBook::MOBI::Converter->new();
  $book->add_mhtml_content( $c->title('This is my Book', 1, 0) );
@@ -348,6 +354,8 @@ At any point in the book you can insert a table of content.
 
 The preferred way for your normal input should be the add_content() method.
 It makes use of plugins, so you should make sure there is a plugin for your input markup.
+
+ my $POD_in = "=head1 Title\n\nSome text.\n\n";  
 
  # add the books text, which is e.g. in the POD format
  $book->add_content( data           => $POD_in,
@@ -428,7 +436,9 @@ See below for details to the arguments supported by this method.
                    );
 
 The method uses a plugin system to transform your format into an ebook.
-If you don't find a plugin for your markup please write one and release it under the namespace C<EBook::MOBI::Driver::$yourMarkup>.
+If you don't find a plugin for your markup please write one and release it under the namespace C<EBook::MOBI::Driver::$YourMarkup>.
+
+Details for the options of this method:
 
 =head3 data
 
@@ -501,7 +511,7 @@ Reset the object, so that all the content is purged. Helpful if you like to make
 
 =head2 debug_on
 
-You can just ignore this method if you are not interested in debuging!
+You can just ignore this method if you are not interested in debugging!
 Pass a reference to a debug subroutine and enable debug messages.
 
  sub debug {
@@ -539,7 +549,19 @@ Please see its docs for more information and options.
 
 =item * L<Github|https://github.com/borisdaeppen/EBook--MOBI> for participating and also for L<bugreports|https://github.com/borisdaeppen/EBook--MOBI/issues>.
 
-=item * L<EBook::MOBI::Converter> - look up what I mean by saying MHTML.
+=item * L<EBook::MOBI> - create an ebook in the MOBI format.
+
+=item * L<EBook::MOBI::Driver::Example> - Example plugin implementation.
+
+=item * L<EBook::MOBI::Driver::POD> - Create HTML, flavoured for the MOBI format, out of POD.
+
+=item * L<EBook::MOBI::Driver> - Interface for plugins.
+
+=item * L<EBook::MOBI::Converter> - Tool to create MHTML.
+
+=item * L<EBook::MOBI::Picture> - Make sure that pictures cope with the MOBI standards.
+
+=item * L<EBook::MOBI::Mhtml2Mobi> - Create a Mobi ebook by packing MOBI-ready HTML.
 
 =item * Everything in the namespace C<EBook::MOBI::MobiPerl> is coming from MobiPerl. For information about this code, please visit L<https://dev.mobileread.com/trac/mobiperl>
 
@@ -563,11 +585,13 @@ Please see its docs for more information and options.
 
 =over
 
-=item * L<Garu|https://metacpan.org/author/GARU>
+=item * L<GARU|https://metacpan.org/author/GARU>
+
+=item * L<RENEEB|https://metacpan.org/author/RENEEB>
 
 =back
 
-=head1 COPYRIGHT & LICENSE
+=head1 COPYRIGHTRenee & LICENSE
 
 Copyright 2012 Boris Däppen, all rights reserved.
 

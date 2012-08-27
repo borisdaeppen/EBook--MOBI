@@ -714,7 +714,7 @@ See description below for more details of the options.
 
 =head3 pagemode
 
-Pass any true value to enable C<pagemode>. The effect will be, that before every - but the first - title on highest level there will be a peagebreak inserted. This means: The resulting ebook will start each C<h1> chapter at a new page.
+Pass any true value to enable C<pagemode>. The effect will be, that before every - but the first - title on highest level there will be a pagebreak inserted. This means: The resulting ebook will start each C<h1> chapter at a new page.
 
 Default is to not add any pagebreak.
 
@@ -730,7 +730,7 @@ Pod can now look like this:
 
   =head1 SYNOPSIS
 
-  =head0 Module EBook::MOBI::Pod2Mhtml
+  =head0 Module EBook::MOBI::Converter
 
   =head1 NAME
 
@@ -742,9 +742,16 @@ This feature is useful if you want to have the documentation of several modules 
 
 Default is to ignore any C<=head0> command.
 
+=head1 SPECIAL SYNTAX FOR IMAGES
+
+POD does not support images.
+However you can add images with some special markup.
+
+ =image /path/to/image.jpg And some description here.
+
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2011,2012 Boris Däppen, all rights reserved.
+Copyright 2012 Boris Däppen, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the same terms of Artistic License 2.0.
 

@@ -275,7 +275,7 @@ Call the method like this:
 
   $mobi->pack($mhtml, $filename, $author, $title);
 
-After the method call, a Mobi ebook should be found at the path you specified in $filename.
+After the method call, a Mobi ebook should be found at the path you specified in C<$filename>.
 
 =head3 Handling of Images
 
