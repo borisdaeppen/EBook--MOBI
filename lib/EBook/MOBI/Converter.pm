@@ -5,7 +5,7 @@ use warnings;
 
 use HTML::Entities;
 
-our $VERSION = 0.5;
+our $VERSION = 0.51;
 
 #############################
 # Constructor of this class #
@@ -19,18 +19,6 @@ sub new {
 
     return $ref;
 }
-
-##########################
-# Interface to implement #
-##########################
-
-sub parse {
-    die "the method parse() must be overwritten!\n";
-}
-
-########################################
-# Implementation of the converter subs #
-########################################
 
 sub text {
     my $self = shift;

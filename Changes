@@ -1,5 +1,10 @@
 Changes for EBook::MOBI
 
+0.51  2012-08-29
+
+    - Fix issues with pod tests (thx to cpantesters.org)
+    - Fix typo
+
 0.5  2012-08-27
 
     - new API with plugin system
