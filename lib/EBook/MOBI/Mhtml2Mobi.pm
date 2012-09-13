@@ -1,4 +1,7 @@
 package EBook::MOBI::Mhtml2Mobi;
+
+# VERSION (hook for Dist::Zilla::Plugin::OurPkgVersion)
+
 # This file contains some example code, borrowed from MobiPerl.
 # The code comes from the html2mobi file from MobiPerl.
 # Thus this code has the same license than MobiPerl:
@@ -41,8 +44,6 @@ use EBook::MOBI::MobiPerl::Util;
 use constant DOC_UNCOMPRESSED => scalar 1;
 use constant DOC_COMPRESSED => scalar 2;
 use constant DOC_RECSIZE => scalar 4096;
-
-our $VERSION = 0.41;
 
 # Constructor of this class
 sub new {

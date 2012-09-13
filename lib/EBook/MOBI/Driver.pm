@@ -1,5 +1,7 @@
 package EBook::MOBI::Driver;
 
+# VERSION (hook for Dist::Zilla::Plugin::OurPkgVersion)
+
 use strict;
 use warnings;
 
@@ -21,8 +23,6 @@ use constant { GT  => '1_qpdhcn_thisStringShouldNeverOccurInInput',
 # interpreted as a string, so it looks like this: $parser->{+P . 'bla'}
 # See http://perldoc.perl.org/constant.html for details
 use constant { P   => 'EBook_MOBI_Pod2Mhtml_' };
-
-our $VERSION = 0.1;
 
 sub new {
     my $self = shift;

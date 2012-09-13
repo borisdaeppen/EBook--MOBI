@@ -1,5 +1,7 @@
 package EBook::MOBI::Driver::POD;
 
+# VERSION (hook for Dist::Zilla::Plugin::OurPkgVersion)
+
 use strict;
 use warnings;
 
@@ -12,8 +14,6 @@ use HTML::Entities;
 use Carp;
 use EBook::MOBI::Converter;
 use IO::String;
-
-our $VERSION = 0.45;
 
 # This constants are used for internal replacement
 # See interior_sequence() and _html_enc() for usage

@@ -1,11 +1,11 @@
 package EBook::MOBI::Converter;
 
+# VERSION (hook for Dist::Zilla::Plugin::OurPkgVersion)
+
 use strict;
 use warnings;
 
 use HTML::Entities;
-
-our $VERSION = 0.51;
 
 #############################
 # Constructor of this class #

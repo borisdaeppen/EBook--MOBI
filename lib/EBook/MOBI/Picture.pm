@@ -1,12 +1,12 @@
 package EBook::MOBI::Picture;
 
+# VERSION (hook for Dist::Zilla::Plugin::OurPkgVersion)
+
 use strict;
 use warnings;
 
 use Image::Resize;
 use File::Basename;
-
-our $VERSION = 0.41;
 
 # Constructor of this class
 sub new {
