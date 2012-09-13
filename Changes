@@ -1,5 +1,10 @@
 Changes for EBook::MOBI
 
+0.52 2012-09-13
+
+    - Equal versioning among modules (Dist::Zilla Plugin)
+    - Copy and paste example in SYNOPSIS
+
 0.51 2012-08-29
 
     - Fix issues with pod tests (thx to cpantesters.org)
