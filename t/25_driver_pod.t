@@ -9,7 +9,7 @@ use File::Temp qw(tempfile);
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 27;
+use Test::More tests => 28;
 
 ###########################
 # General module tests... #
@@ -694,6 +694,31 @@ $html_out{inline_links} = <<'HEREDOC';
 <p>Link 8 <a href='perl.org'>perl.org</a></p>
 <p>Link 9 <a href='http://perl.org'>Perl</a></p>
 <p>Link 10 <a href='perl.org'>Perl</a></p>
+HEREDOC
+
+#10
+$pod_input{begin_html} = <<'HEREDOC';
+
+=head1 HTML in POD
+
+Just some B<HTML> in the I<POD>:
+
+=begin html
+
+Das ist <b>DICK</b>!
+
+=end html
+
+=cut
+HEREDOC
+
+$html_out{begin_html} = <<'HEREDOC';
+<h1>HTML in POD</h1>
+<p>Just some <b>HTML</b> in the <i>POD</i>:</p>
+<p>
+Das ist <b>DICK</b>!
+
+</p>
 HEREDOC
 
 #################################################

@@ -44,6 +44,7 @@ sub begin_input {
     # make sure that this variable is set to 0 at beginning
     $parser->{+P . 'listcontext'} = 0;
     $parser->{+P . 'listjustwentback'} = 0;
+    $parser->{+P . 'begin'} = '';
 }
 
 # Overwrite sub of Pod::Parser
@@ -154,6 +155,23 @@ sub command {
     # CUT: end of POD
     elsif ($command eq 'cut') {
         # We don't need to do anything here...
+    }
+    elsif ($command eq 'begin') {
+        if ($paragraph =~ m/^\W*(\w+)\W*$/) {
+            my $begin_name = $1;
+            $parser->{+P . 'begin'} = $begin_name;
+        }
+    }
+    elsif ($command eq 'end') {
+        if ($paragraph =~ m/^\W*(\w+)\W*$/) {
+            my $end_name = $1;
+            if ($parser->{+P . 'begin'} eq $end_name) {
+                $parser->{+P . 'begin'} = '';
+            }
+            else {
+                croak 'no nested begin/end supported';
+            }
+        }
     }
     # if we reach this ELSE, this means that the command can only be
     # of type HEAD or ITEM (so they contain some text!)
@@ -385,6 +403,18 @@ sub verbatim {
 sub textblock { 
     my ($parser, $paragraph, $line_num) = @_; 
     my $out_fh = $parser->output_handle();       # handle for parsing output
+
+    # we could be in a =begin block so we just check that an return if
+    # this is the case
+    if ($parser->{+P . 'begin'} eq 'html') {
+        # we are in a html block, so just print the plain thing
+        print $out_fh "<p>\n";
+        print $out_fh $paragraph;
+        print $out_fh "</p>\n";
+        return
+    }
+
+    # no begin block... so do the rest of this complicate code!
 
     # ok, this one is tricky...
     # textblock() can be called when the parser is actually parsing a list.
