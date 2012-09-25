@@ -6,7 +6,6 @@ use warnings;
 our $VERSION = 0.52;
 
 # needed CPAN stuff
-use IO::String;
 use File::Temp qw(tempfile);
 
 # needed local stuff
