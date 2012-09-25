@@ -1,5 +1,10 @@
 Changes for EBook::MOBI
 
+0.53 2012-09-25
+
+    - Support for "=begin html" blocks in POD
+    - Minor code fixes
+
 0.52 2012-09-13
 
     - Equal versioning among modules (Dist::Zilla Plugin)
