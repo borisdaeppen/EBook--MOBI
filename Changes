@@ -1,5 +1,11 @@
 Changes for EBook::MOBI
 
+0.54 2012-11-30
+
+    - Marked inofficial POD command '=image' as deprecated
+    - Introduced POD command '=for image' (github issue #9)
+    - Added documentation for '=begin html' support (github issue #16)
+
 0.53 2012-09-25
 
     - Support for "=begin html" blocks in POD
