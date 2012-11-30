@@ -16,7 +16,7 @@ An image.
 
 An image which has been resized.
 
-=image ./example/img/camel_big.jpg A Camel again.
+=for image ./example/img/camel_big.jpg A Camel again.
 
 =head3 A List
 

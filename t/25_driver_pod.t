@@ -9,7 +9,7 @@ use File::Temp qw(tempfile);
 #######################
 # TESTING starts here #
 #######################
-use Test::More tests => 28;
+use Test::More tests => 29;
 
 ###########################
 # General module tests... #
@@ -562,6 +562,26 @@ HEREDOC
 
 $html_out{pic} = <<'HEREDOC';
 <h2>PIC</h2>
+<p>Some text?</p>
+<img src="/path/to/pic.jpg" recindex="1" >
+<p>This is the description!</p>
+<p>Some other text...</p>
+HEREDOC
+
+$pod_input{image} = <<'HEREDOC';
+=head2 IMAGE
+
+Some text?
+
+=for image /path/to/pic.jpg This is the description!
+
+Some other text...
+
+=cut
+HEREDOC
+
+$html_out{image} = <<'HEREDOC';
+<h2>IMAGE</h2>
 <p>Some text?</p>
 <img src="/path/to/pic.jpg" recindex="1" >
 <p>This is the description!</p>

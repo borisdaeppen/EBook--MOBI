@@ -65,10 +65,37 @@ sub command {
     # =image PATH_TO_IMAGE ANY TEXT FOLLOWING UNTIL END OF LINE
     if ($command eq 'image') {
 
+        print
+            "WARNING: the unofficial POD command '=image' is deprecated.\n";
+
         # With this regex we parse the content, coming with the command.
         # An example could look like this:
         # $paragraph = '/home/user/picture.jpg Pic1: A Camel'
         if ($paragraph =~ m/(\S*)\s*(.*)/g) {
+            my $img_path = $1;  # e.g.: '/home/user/picture.jpg'
+            my $img_desc = $2;  # e.g.: 'A Camel'
+
+            # We convert special chars to HTML, but only in the
+            # description, not in the path!
+            $img_desc = _html_enc($img_desc);
+
+            # We print out an html image tag.
+            # e.g.: <img src="/home/user/picture.jpg" recindex="1">
+            # recindex is MOBI specific, its the number of the picture,
+            # pointing into the picture records of the Mobi-format
+            print $out_fh
+                $parser->{+P . 'toMobi'}
+                    ->image($img_path, $img_desc);
+        }
+    }
+    # POD compatible additional syntax to process images
+    # =for image PATH_TO_IMAGE ANY TEXT FOLLOWING UNTIL END OF LINE
+    if ($command eq 'for') {
+
+        # With this regex we parse the content, coming with the command.
+        # An example could look like this:
+        # $paragraph = 'image /home/user/picture.jpg Pic1: A Camel'
+        if ($paragraph =~ m/image\s*(\S*)\s*(.*)/g) {
             my $img_path = $1;  # e.g.: '/home/user/picture.jpg'
             my $img_desc = $2;  # e.g.: 'A Camel'
 
@@ -404,7 +431,7 @@ sub textblock {
     my ($parser, $paragraph, $line_num) = @_; 
     my $out_fh = $parser->output_handle();       # handle for parsing output
 
-    # we could be in a =begin block so we just check that an return if
+    # we could be in a =begin block so we just check that and return if
     # this is the case
     if ($parser->{+P . 'begin'} eq 'html') {
         # we are in a html block, so just print the plain thing
@@ -772,11 +799,19 @@ This feature is useful if you want to have the documentation of several modules 
 
 Default is to ignore any C<=head0> command.
 
+B<Note:> C<=head0> is not part of the official POD standard. You will create invalid POD if you use this syntax. However I find it usefull for processing existing docs. You have been warned.
+
 =head1 SPECIAL SYNTAX FOR IMAGES
 
 POD does not support images.
 However you can add images with some special markup.
 
+ =for image /path/to/image.jpg And some description here.
+
+B<Note:> This version marks the old style of adding images as B<DEPRECATED>.
+Please DON'T use this markup anymore:
+
+ # DEPRECATED, will not be supported in next version
  =image /path/to/image.jpg And some description here.
 
 =head1 COPYRIGHT & LICENSE

@@ -20,7 +20,7 @@ for (my $i=0;$i<50;$i++) {
     push (@image_paths, $img_path);
 
     $pod .= "=head1 Title $i\n\nThis picture should have the same number as the title...\n\n";
-    $pod .= "=image $img_path Pic number $i\n\n$someText\n\n";
+    $pod .= "=for image $img_path Pic number $i\n\n$someText\n\n";
 
     my $im = GD::Simple->new(200, 80);
     $im->fgcolor('black');
