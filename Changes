@@ -1,6 +1,6 @@
 Changes for EBook::MOBI
 
-0.54 2012-11-30
+0.55 2012-11-30
 
     - Marked inofficial POD command '=image' as deprecated
     - Introduced POD command '=for image' (github issue #9)
