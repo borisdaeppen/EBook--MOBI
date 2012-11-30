@@ -732,6 +732,16 @@ The plugin is called like this while using C<EBook::MOBI>:
  =head1 SOME POD
 
  Just an example.
+ Normal text is easy.
+ Some specials following now...
+
+ =for image /path/to/camel.jpg This is a nice animal.
+
+ =begin html
+
+ <p>Some <i>HTML</i> junks.</p>
+
+ =end html
 
  END
 
@@ -813,6 +823,19 @@ Please DON'T use this markup anymore:
 
  # DEPRECATED, will not be supported in next version
  =image /path/to/image.jpg And some description here.
+
+=head1 EMPEDDING HTML IN YOUR POD
+
+This module can detect HTML in your POD.
+It will directly put it "as is" into the MOBI format, which should always work fine for simple stuff.
+You have to use C<=begin> and C<=end> commands to mark your HTML recognisable.
+C<=for> is not supported.
+
+ =begin html
+ 
+ <p>Some stuff in <i>HTML</i>...</p>
+
+ =end html
 
 =head1 COPYRIGHT & LICENSE
 
