@@ -32,7 +32,26 @@ use File::Spec;
 use Carp;
 
 # Use some project library
-use EBook::MOBI::Picture;
+#use EBook::MOBI::Image; # this lib gets called from the fly
+{
+    package MockImage;
+
+    sub new {
+        return bless {}, shift
+    }
+    sub rescale_dimensions {
+        print "EBook::MOBI::Image not loaded, rescale_dimensions command ignored\n"
+    }
+    sub debug_on {
+        print "EBook::MOBI::Image not loaded, debug_on command ignored\n"
+    }
+    sub debug_off {
+        print "EBook::MOBI::Image not loaded, debug_off command ignored\n"
+    }
+    sub _debug {
+        print "EBook::MOBI::Image not loaded, _debug command ignored\n"
+    }
+}
 
 # Use the library, downloaded from MobiPerl
 use EBook::MOBI::MobiPerl::Palm::PDB;
@@ -51,7 +70,7 @@ sub new {
     my $ref={};
 
     $ref->{picture_paths} = []; # containing all the pictures path
-    $ref->{mobi_pic} = EBook::MOBI::Picture->new();
+    $ref->{mobi_pic} = MockImage->new();
 
     bless($ref, $self);
     return $ref;
@@ -63,8 +82,6 @@ sub debug_on {
     $self->{ref_to_debug_sub} = $ref_to_debug_sub;
     
     &$ref_to_debug_sub('DEBUG mode on');
-
-    $self->{mobi_pic}->debug_on($ref_to_debug_sub);
 }
 
 sub debug_off {
@@ -170,6 +187,19 @@ sub pack {
     # Looking for pictures in the html data,
     # storing the path of the pics in $self->{picture_paths}
     $self->_gather_IMG_ref($html);
+
+    if ( @{$self->{picture_paths}} ) {
+        eval {
+            require EBook::MOBI::Image;
+            EBook::MOBI::Image->import();
+            $self->{mobi_pic} = EBook::MOBI::Image->new();
+        };  
+        die "MODULE MISSING! Ebook contains images. Can only proceed if you install EBook::MOBI::Image\n$@" if $@;
+
+        if ($self->{ref_to_debug_sub}) {
+            $self->{mobi_pic}->debug_on($self->{ref_to_debug_sub});
+        }
+    }
     
     # add each pic to the mobi container
     foreach my $img_path (@{$self->{picture_paths}}) {
@@ -280,7 +310,7 @@ After the method call, a Mobi ebook should be found at the path you specified in
 
 =head3 Handling of Images
 
-If your input data ($mhtml) contains <img> tags which are pointing to images on the filesystem, these images will be stored and linked into the MOBI datafile. The images will be rescaled if necessary, according to L<EBook::MOBI::Picture>.
+If your input data ($mhtml) contains <img> tags which are pointing to images on the filesystem, these images will be stored and linked into the MOBI datafile. The images will be rescaled if necessary, according to L<EBook::MOBI::Image>.
 
 =head1 COPYRIGHT & LICENSE
 

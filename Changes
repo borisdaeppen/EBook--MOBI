@@ -1,5 +1,12 @@
 Changes for EBook::MOBI
 
+0.56 2013-01-14
+
+    - Excluded image code from EBook::MOBI::Picture to seperate CPAN module
+      EBook::MOBI::Image
+    - Changing image processing from GD to Image::Imlib2
+    - Exclude *.mobi from dzil packaging
+
 0.55 2012-11-30
 
     - Marked inofficial POD command '=image' as deprecated

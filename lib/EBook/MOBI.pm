@@ -3,7 +3,7 @@ package EBook::MOBI;
 use strict;
 use warnings;
 
-our $VERSION = 0.55;
+our $VERSION = 0.56;
 
 # needed CPAN stuff
 use File::Temp qw(tempfile);
@@ -300,12 +300,6 @@ EBook::MOBI - create an ebook in the MOBI format.
 
 You are at the right place here if you want to create an ebook in the so called MOBI format (somethimes also called PRC format or Mobipocket).
 
-=head1 VERSION
-
-B<Important:> This version (>= 0.5) has different API then older releases (<= 0.491).
-add_pod_content() is no more.
-Please take care while upgrading and change your code to the new way of adding content with the add_content() method.
-
 =head1 SYNOPSIS
 
 If you plan to create a typical ebook you probably will need most of the methods provided by this module. So it might be a good idea to read all the descriptions in the methods section, and also have a look at this example here.
@@ -556,6 +550,15 @@ Please see its docs for more information and options.
 L<EBook::MOBI::Driver::Example> is an example implementation of a simple plugin. It is only useful for plugin writers, as an example.
 Please see its docs for more information and options.
 
+=head1 IMAGES
+
+Since C<v0.56> there is a change to the image behaviour.
+If you like to include images or pictures into your ebook you now should install the module L<EBook::MOBI::Image>.
+This code is no more with the main module, to reduce dependencies to image libraries (not everybody need to add images).
+It depends on your input plugin, how you can add images to your book.
+For POD, see the special syntax described in L<EBook::MOBI::Driver::POD>.
+For adding manually in MHTML, see L<EBook::MOBI::Converter>.
+
 =head1 SEE ALSO
 
 =over
@@ -572,7 +575,6 @@ Please see its docs for more information and options.
 
 =item * L<EBook::MOBI::Converter> - Tool to create MHTML.
 
-=item * L<EBook::MOBI::Picture> - Make sure that pictures cope with the MOBI standards.
 
 =item * L<EBook::MOBI::Mhtml2Mobi> - Create a Mobi ebook by packing MOBI-ready HTML.
 
