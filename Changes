@@ -1,5 +1,12 @@
 Changes for EBook::MOBI
 
+0.57 2013-01-14
+
+    - Corrected minor issues brought with v0.56
+        Remove Image::Imlib2 from dist.ini
+        Add year 2013 to Copyright
+    - Exclude older releases from packaging (dzil)
+
 0.56 2013-01-14
 
     - Excluded image code from EBook::MOBI::Picture to seperate CPAN module

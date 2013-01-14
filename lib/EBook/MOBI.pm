@@ -3,7 +3,7 @@ package EBook::MOBI;
 use strict;
 use warnings;
 
-our $VERSION = 0.56;
+our $VERSION = 0.57;
 
 # needed CPAN stuff
 use File::Temp qw(tempfile);
@@ -608,7 +608,7 @@ For adding manually in MHTML, see L<EBook::MOBI::Converter>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2012 Boris Däppen, all rights reserved.
+Copyright 2012, 2013 Boris Däppen, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the same terms of Artistic License 2.0.
 
