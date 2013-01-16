@@ -1,5 +1,10 @@
 Changes for EBook::MOBI
 
+0.58 2013-01-16
+
+    - Fixed bug in checking for POD. Excluded POD checking from shipping.
+      Thanks CPAN-Testers for detecting this issue.
+
 0.57 2013-01-14
 
     - Corrected minor issues brought with v0.56
