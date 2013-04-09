@@ -1,5 +1,9 @@
 Changes for EBook::MOBI
 
+0.58_1 2013-04-09
+
+    - Remove all POD and VERSION tests from release packaging.
+
 0.58 2013-01-16
 
     - Fixed bug in checking for POD. Excluded POD checking from shipping.
