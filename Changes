@@ -1,6 +1,6 @@
 Changes for EBook::MOBI
 
-0.58_1 2013-04-09
+0.58_1 2013-04-09 (DEVELOPER RELEASE)
 
     - Remove all POD and VERSION tests from release packaging.
 
