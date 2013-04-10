@@ -5,6 +5,7 @@ Changes for EBook::MOBI
     - Remove all POD and VERSION tests from release packaging.
     - Allow special chars (regex) in TOC
     - Minor POD stuff (update license year)
+    - Change directory ./example to ./examples
 
 0.58 2013-01-16
 
