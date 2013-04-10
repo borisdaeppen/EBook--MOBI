@@ -5,6 +5,8 @@ use File::Slurp;
 
 my $pod = read_file( 'backslashQ.pod' ) ;
 
+warn EBook::MOBI->VERSION;
+
 my $book = EBook::MOBI->new();
 
 # let's define a debug sub witch will be used by all modules
@@ -23,10 +25,10 @@ $book->set_author  ('Boris');
 $book->set_encoding(':encoding(UTF-8)');
 
 # fill the book with content
+$book->add_toc_once;
 $book->add_content( data => $pod,
                     driver => 'EBook::MOBI::Driver::POD',
                   );
-
 $book->make();
 $book->print_mhtml();
 $book->save();

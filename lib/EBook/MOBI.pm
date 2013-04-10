@@ -274,14 +274,15 @@ sub _generate_toc {
             $self->_debug("...ref to char $this_pos,\ttitle '$1'");
 
             $self->{html_data} =~
-            s/<li><a filepos="00000000">$m<\/a><\/li><!-- TOC entry -->/<li><a filepos="$fill_pos">$m<\/a><\/li><!-- TOC entry -->/;
+            s/<li><a filepos="00000000">\Q$m\E<\/a><\/li><!-- TOC entry -->/<li><a filepos="$fill_pos">$m<\/a><\/li><!-- TOC entry -->/;
         }
         elsif ($line =~ /<!-- TOC start -->$/) {
             my $this_pos = $chars;
             my $fill_pos = sprintf("%08d", $this_pos);
+            my $label    = $self->{toc_label};
 
             $self->{html_data} =~
-            s/<reference type="toc" title="$self->{toc_label}" filepos="00000000"\/>/<reference type="toc" title="$self->{toc_label}" filepos="$fill_pos"\/>/;
+            s/<reference type="toc" title="\Q$label\E" filepos="00000000"\/>/<reference type="toc" title="$self->{toc_label}" filepos="$fill_pos"\/>/;
         }
         $chars += length($line) + 1;
     }
