@@ -3,7 +3,7 @@ package EBook::MOBI;
 use strict;
 use warnings;
 
-our $VERSION = 0.59;
+our $VERSION = 0.60;
 
 # needed CPAN stuff
 use File::Temp qw(tempfile);

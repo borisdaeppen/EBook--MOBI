@@ -1,5 +1,9 @@
 Changes for EBook::MOBI
 
+0.60 2013-04-10
+
+    - Fix messed up build with dzil
+
 0.59 2013-04-10
 
     - Remove all POD and VERSION tests from release packaging.
