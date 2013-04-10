@@ -1,8 +1,10 @@
 Changes for EBook::MOBI
 
-0.58_1 2013-04-09 (DEVELOPER RELEASE)
+0.59 2013-04-10
 
     - Remove all POD and VERSION tests from release packaging.
+    - Allow special chars (regex) in TOC
+    - Minor POD stuff (update license year)
 
 0.58 2013-01-16
 
