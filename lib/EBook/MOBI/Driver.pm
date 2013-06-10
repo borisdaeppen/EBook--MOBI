@@ -138,7 +138,7 @@ Takes a hash ref with arguments.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2012 Boris Däppen, all rights reserved.
+Copyright 2012, 2013 Boris Däppen, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the same terms of Artistic License 2.0.
 

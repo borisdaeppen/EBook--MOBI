@@ -7,10 +7,6 @@ plan skip_all
     => "Test::Pod::Coverage 1.08 required for testing POD coverage"
         if $@;
 
-plan skip_all
-    => 'CPAN-Testers should never fail because of this'
-        unless (-e 'developer_machine' );
-
 plan tests => 6;
 
 #all_pod_coverage_ok();

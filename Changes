@@ -1,9 +1,21 @@
 Changes for EBook::MOBI
 
-0.59 2013-06-10
+0.61 2013-06-10
 
     - Detect prereqs automatically
     - Update author email
+
+0.60 2013-04-10
+
+    - Fix messed up build with dzil
+
+0.59 2013-04-10
+
+    - Remove all POD and VERSION tests from release packaging.
+    - Allow special chars (regex) in TOC
+    - Minor POD stuff (update license year)
+    - Change directory ./example to ./examples
+>>>>>>> 5994b7c25e5e20408ce5688eaec1b2c218154509
 
 0.58 2013-01-16
 

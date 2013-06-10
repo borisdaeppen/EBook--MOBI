@@ -314,7 +314,7 @@ If your input data ($mhtml) contains <img> tags which are pointing to images on 
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2012 Boris Däppen, all rights reserved.
+Copyright 2012, 2013 Boris Däppen, all rights reserved.
 
 Parts of this code are coming from MobiPerl.
 
