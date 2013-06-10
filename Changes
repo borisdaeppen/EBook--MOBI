@@ -1,5 +1,10 @@
 Changes for EBook::MOBI
 
+0.59 2013-06-10
+
+    - Detect prereqs automatically
+    - Update author email
+
 0.58 2013-01-16
 
     - Fixed bug in checking for POD. Excluded POD checking from shipping.
