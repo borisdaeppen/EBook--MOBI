@@ -1,9 +1,13 @@
 Changes for EBook::MOBI
 
-0.61 2013-06-10
+0.62 2013-06-10
 
     - Detect prereqs automatically
     - Update author email
+
+0.61 2013-04-15
+
+    - this one got forgotten once... no clue what changed here :-/
 
 0.60 2013-04-10
 
