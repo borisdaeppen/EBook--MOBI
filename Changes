@@ -1,5 +1,14 @@
 Changes for EBook::MOBI
 
+0.63 2013-06-11
+
+    - Merge all the git-confusing trouble with v0.61 and v0.62
+      Please be sure to use this version now... releasing is really a mess
+
+0.62 2013-06-10
+
+    - Detect prereqs automatically
+
 0.61 2013-04-15
 
     - Add File::Slurp to prereqs in dist.ini (thx CpanTesters once again)
