@@ -1,5 +1,9 @@
 Changes for EBook::MOBI
 
+0.64 2013-06-11
+
+    - Add a test for creating a book
+
 0.63 2013-06-11
 
     - Merge all the git-confusing trouble with v0.61 and v0.62
