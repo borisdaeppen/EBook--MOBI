@@ -326,6 +326,6 @@ You should have received a copy of the GNU General Public License along with thi
 
 =head1 AUTHOR
 
-Boris Däppen E<lt>boris_daeppen@bluewin.chE<gt>
+Boris Däppen E<lt>bdaeppen.perl@gmail.comE<gt>
 
 =cut

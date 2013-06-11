@@ -3,7 +3,7 @@ package EBook::MOBI;
 use strict;
 use warnings;
 
-our $VERSION = 0.60;
+our $VERSION = 0.61;
 
 # needed CPAN stuff
 use File::Temp qw(tempfile);
@@ -616,7 +616,7 @@ This program is free software; you can redistribute it and/or modify it under th
 
 =head1 AUTHOR
 
-Boris Däppen E<lt>boris_daeppen@bluewin.chE<gt>
+Boris Däppen E<lt>bdaeppen.perl@gmail.comE<gt>
 
 =cut
 
