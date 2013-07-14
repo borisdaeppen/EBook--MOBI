@@ -111,7 +111,8 @@ sub pack {
         $html,      # data to put in the mobi eBook
         $filename,  # filename (with path) of the desired eBook
         $author,    # author of the eBook
-        $title      # title of the eBook
+        $title,     # title of the eBook
+        $codepage   # codepage that eBook reader is to use when displaying text
        ) = @_;
 
     # un-comment if you need to see all the HTML
@@ -177,6 +178,7 @@ sub pack {
     my $mh = new EBook::MOBI::MobiPerl::MobiHeader;
     $mh->set_title ($title);
     $mh->set_author ($author);
+    $mh->set_codepage ($codepage);
     $mh->set_image_record_index ($current_record_index);
 
     $header->{'data'} .= $mh->get_data ();
