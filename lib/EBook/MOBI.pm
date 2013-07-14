@@ -169,28 +169,7 @@ sub add_content {
         $parser->set_options($driver_opt);
     }
 
-    # ok, now we prepare the parsing, unfortunately we have to do
-    # some complicated magic with the string data...
-
-    # INPUT:
-    # We do this trick so that we have UTF8
-    # It seems like this is working after all...
-    my ($fh,$f_name) = tempfile();
-    binmode $fh, $self->{encoding};
-    print $fh $data;
-    close $fh;
-    open my $data_handle, "<$self->{encoding}", $f_name;
-
-    # and we have a file again...
-    my $input = '';
-    while (my $line = <$data_handle>) {
-        $input .= $line;
-    }
-    close $data_handle;
-    unlink $f_name;
-
-    # we call the parser to parse, result will be in $buffer4html
-    my $output = $parser->parse($input);
+    my $output = $parser->parse($data);
 
     $self->{html_data} .= $output;
 }
