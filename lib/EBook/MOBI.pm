@@ -3,7 +3,7 @@ package EBook::MOBI;
 use strict;
 use warnings;
 
-our $VERSION = 0.64;
+our $VERSION = 0.65;
 
 # needed CPAN stuff
 use File::Temp qw(tempfile);
@@ -621,9 +621,11 @@ For adding manually in MHTML, see L<EBook::MOBI::Converter>.
 
 =over
 
-=item * L<GARU|https://metacpan.org/author/GARU>
+=item * L<Breno G. de Oliveira (GARU)|https://metacpan.org/author/GARU>
 
-=item * L<RENEEB|https://metacpan.org/author/RENEEB>
+=item * L<Renée Bäcker (RENEEB)|https://metacpan.org/author/RENEEB>
+
+=item * L<Rupert Lane (RUPERTL)|https://metacpan.org/author/RUPERTL>
 
 =back
 
