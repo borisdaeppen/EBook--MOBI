@@ -433,6 +433,12 @@ If you indent the 'h1' tag with any whitespace, it will not appear in the TOC (o
 
 There is a module L<EBook::MOBI::Converter> which helps you in creating this format. See it's documentation for more information.
 
+If you are passing your own text to add_mhtml_content rather than
+using a converter you will need to: a) encode the text according to
+your chosen encoding, eg call L<Encode::encode_utf8>; b) ensure that
+any HTML entities such as '<' in your text are replaced, eg by calling
+L<HTML::Entities::encode_entities>.
+
 =head2 add_content
 
 Use this method if you have your content in a specific markup format.
