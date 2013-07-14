@@ -7,6 +7,7 @@ our $VERSION = 0.64;
 
 # needed CPAN stuff
 use File::Temp qw(tempfile);
+use Carp;
 
 # needed local stuff
 use EBook::MOBI::Driver::POD;
@@ -103,8 +104,36 @@ sub set_filename {
 
 sub set_encoding {
     my $self = shift;
+    my $encoding = shift;
 
-    $self->{encoding} = shift;
+    if (! $self->_encoding_to_codepage($encoding))
+    {
+        croak "Encoding $encoding is not supported by EPub::MOBI";
+    }
+
+    $self->{encoding} = $encoding;
+}
+
+sub _encoding_to_codepage
+{
+    # Translate a Perl encoding name into a codepage value or return
+    # undef if not supported.
+
+    my $self = shift;
+    my $encoding = shift;
+
+    if ($encoding =~ /iso-8859-1|ascii/i)
+    {
+        return 1252;
+    }
+    elsif ($encoding =~ /utf-*8/i)
+    {
+        return 65001;
+    }
+    else
+    {
+        return undef;
+    }
 }
 
 sub add_mhtml_content {
@@ -140,28 +169,7 @@ sub add_content {
         $parser->set_options($driver_opt);
     }
 
-    # ok, now we prepare the parsing, unfortunately we have to do
-    # some complicated magic with the string data...
-
-    # INPUT:
-    # We do this trick so that we have UTF8
-    # It seems like this is working after all...
-    my ($fh,$f_name) = tempfile();
-    binmode $fh, $self->{encoding};
-    print $fh $data;
-    close $fh;
-    open my $data_handle, "<$self->{encoding}", $f_name;
-
-    # and we have a file again...
-    my $input = '';
-    while (my $line = <$data_handle>) {
-        $input .= $line;
-    }
-    close $data_handle;
-    unlink $f_name;
-
-    # we call the parser to parse, result will be in $buffer4html
-    my $output = $parser->parse($input);
+    my $output = $parser->parse($data);
 
     $self->{html_data} .= $output;
 }
@@ -216,10 +224,13 @@ sub save {
     $mobi->debug_on($self->{ref_to_debug_sub})
         if ($self->{ref_to_debug_sub});
 
+    my $codepage = $self->_encoding_to_codepage($self->{encoding});
+
     $mobi->pack(    $self->{html_data},
                     $self->{filename},
                     $self->{author},
                     $self->{title},
+                    $codepage
                 );
 }
 
@@ -409,9 +420,12 @@ If you don't use this method, the default name will be 'book.mobi'.
 =head2 set_encoding
 
 If you don't set anything here, C<:encoding(UTF-8)> will be default.
-As far as I know, only CP1252 (Win Latin1) und UTF-8 are supported by popular readers.
 
  $book->set_encoding(':encoding(UTF-8)');
+
+Only two encodings are supported by the mobiperl driver: UTF-8 or
+ISO-8859-1. ASCII is treated the same as ISO-8859-1. If any other
+encodings are passed in, the module will raise an error.
 
 Please see L<http://perldoc.perl.org/functions/binmode.html> for the syntax of your encoding keyword.
 If you use use hardcoded strings in your program, C<use utf8;> should be helping.
@@ -432,6 +446,12 @@ If you stick to the most basic HTML tags it should be perfect mhtml 'compatible'
 If you indent the 'h1' tag with any whitespace, it will not appear in the TOC (only 'h1' tags directly starting and ending with a newline are marked for the TOC). This may be usefull if you want to design a title page.
 
 There is a module L<EBook::MOBI::Converter> which helps you in creating this format. See it's documentation for more information.
+
+If you are passing your own text to add_mhtml_content rather than
+using a converter you will need to: a) encode the text according to
+your chosen encoding, eg call L<Encode::encode_utf8>; b) ensure that
+any HTML entities such as '<' in your text are replaced, eg by calling
+L<HTML::Entities::encode_entities>.
 
 =head2 add_content
 
