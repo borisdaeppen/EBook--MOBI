@@ -16,8 +16,10 @@ my @image_paths = ();
 my $img_path = '';
 
 for (my $i=0;$i<50;$i++) {
-    $img_path = "./example/img/img_$i.jpg";
+    $img_path = "./examples/img/img_$i.jpg";
     push (@image_paths, $img_path);
+
+    print "creating $img_path\n";
 
     $pod .= "=head1 Title $i\n\nThis picture should have the same number as the title...\n\n";
     $pod .= "=for image $img_path Pic number $i\n\n$someText\n\n";
@@ -72,3 +74,4 @@ foreach my $pic (@image_paths) {
     print "deleting $pic\n";
     unlink $pic;
 }
+
