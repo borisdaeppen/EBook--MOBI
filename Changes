@@ -1,9 +1,10 @@
 Changes for EBook::MOBI
 
-0.65 2013-07-15
+0.65 2013-07-17
 
     - Patch (#26) from Rupert Lane (rupertl) fixing problems with utf8 by
       introducing codepages
+    - small fix on path in examples
 
 0.64 2013-06-11
 
