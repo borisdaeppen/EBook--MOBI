@@ -1,5 +1,10 @@
 Changes for EBook::MOBI
 
+0.66 2013-07-30
+
+    - Add xt test for Changes-file
+    - Move POD tests and version test to xt
+
 0.65 2013-07-17
 
     - Patch (#26) from Rupert Lane (rupertl) fixing problems with utf8 by
