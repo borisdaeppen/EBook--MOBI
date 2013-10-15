@@ -1,5 +1,9 @@
 Changes for EBook::MOBI
 
+0.67 2013-10-15
+
+    - Added keyword "perl programming language" to the docs
+
 0.66 2013-07-30
 
     - Add xt test for Changes-file

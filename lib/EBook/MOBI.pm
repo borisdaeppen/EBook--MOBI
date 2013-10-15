@@ -3,7 +3,7 @@ package EBook::MOBI;
 use strict;
 use warnings;
 
-our $VERSION = 0.66;
+our $VERSION = 0.67;
 
 # needed CPAN stuff
 use File::Temp qw(tempfile);
@@ -311,6 +311,8 @@ __END__
 EBook::MOBI - create an ebook in the MOBI format.
 
 You are at the right place here if you want to create an ebook in the so called MOBI format (somethimes also called PRC format or Mobipocket).
+
+This is a software library for the I<perl programming language>.
 
 =head1 SYNOPSIS
 
