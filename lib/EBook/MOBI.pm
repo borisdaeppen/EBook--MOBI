@@ -230,7 +230,8 @@ sub save {
                     $self->{filename},
                     $self->{author},
                     $self->{title},
-                    $codepage
+                    $codepage,
+                    $self->{header_opts}, 
                 );
 }
 
