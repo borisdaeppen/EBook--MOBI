@@ -112,7 +112,8 @@ sub pack {
         $filename,  # filename (with path) of the desired eBook
         $author,    # author of the eBook
         $title,     # title of the eBook
-        $codepage   # codepage that eBook reader is to use when displaying text
+        $codepage,   # codepage that eBook reader is to use when displaying text
+        $header_opts, 
        ) = @_;
 
     # un-comment if you need to see all the HTML
@@ -179,6 +180,11 @@ sub pack {
     $mh->set_title ($title);
     $mh->set_author ($author);
     $mh->set_codepage ($codepage);
+    
+    if($header_opts and ref($header_opts) eq 'HASH'){
+     $mh->set_language($header_opts->{language}) if(exists $header_opts->{language});
+    }
+    
     $mh->set_image_record_index ($current_record_index);
 
     $header->{'data'} .= $mh->get_data ();
