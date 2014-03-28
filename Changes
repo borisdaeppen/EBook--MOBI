@@ -1,5 +1,9 @@
 Changes for EBook::MOBI
 
+0.68 2014-03-28
+
+    - Hack-Patch (#28) from Rupert Lane (rupertl) making GD optional
+
 0.67 2013-10-15
 
     - Added keyword "perl programming language" to the docs
