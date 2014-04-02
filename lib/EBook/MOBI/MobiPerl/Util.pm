@@ -17,12 +17,16 @@ package EBook::MOBI::MobiPerl::Util;
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+BEGIN {
+    # Optionally load GD
+    eval 'require GD';
+}
 
 use strict;
 
 our $VERSION = 2011.11.26;
 
-use GD;
+use Module::Loaded;
 use Image::BMP;
 use Image::Size;
 use File::Copy;
@@ -35,6 +39,9 @@ my $rescale_large_images = 0;
 
 sub is_cover_image {
     my $file = shift;
+
+    die 'ERROR: GD not available ' unless is_loaded('GD');
+
     my $res = 0;
     if (not -e "$file") {
 	die "ERROR: File does not exist: $file";
@@ -374,6 +381,9 @@ sub unpack_lit_file {
 
 sub get_thumb_cover_image_data {
     my $filename = shift;
+
+    die 'ERROR: GD not available ' unless is_loaded('GD');
+
 ##    print STDERR "COVERIMAGE: $filename\n";
     my $data = "";
 
@@ -403,6 +413,9 @@ sub scale_gd_image {
     my $im = shift;
     my $x = shift;
     my $y = shift;
+
+    die 'ERROR: GD not available ' unless is_loaded('GD');
+
     my ($w0, $h0) = $im->getBounds();
 #    my $w0 = $im->width;
 #    my $h0 = $im->height;
@@ -485,6 +498,8 @@ sub get_image_data {
     my $filename = shift;
     my $rescale = shift;
     my $config = shift;
+
+    die 'ERROR: GD not available ' unless is_loaded('GD');
 
     $rescale_large_images = $rescale if defined $rescale;
 

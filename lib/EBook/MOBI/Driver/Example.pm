@@ -2,8 +2,6 @@ package EBook::MOBI::Driver::Example;
 
 # VERSION (hook for Dist::Zilla::Plugin::OurPkgVersion)
 
-use feature 'switch';
-
 use EBook::MOBI::Converter;
 use EBook::MOBI::Driver;
 
@@ -44,16 +42,14 @@ sub parse {
 
             $self->debug_msg('work');
 
-            given ($cmd) {
-                when ('h') { $mobiFormat .= $converter->title ($txt)  }
-                when ('i') { $mobiFormat .= $converter->italic($txt)
+            if ($cmd eq 'h')    { $mobiFormat .= $converter->title ($txt)  }
+            elsif ($cmd eq 'i') { $mobiFormat .= $converter->italic($txt)
                                          .  $converter->newline();    }   
-                when ('b') { $mobiFormat .= $converter->bold  ($txt)
+            elsif ($cmd eq 'b') { $mobiFormat .= $converter->bold  ($txt)
                                          .  $converter->newline();    }
-                when (' ') { $mobiFormat .=                    $txt
+            elsif ($cmd eq ' ') { $mobiFormat .=                    $txt
                                          .  $converter->newline();    }
-                default    { $self->debug_msg("Unknown format: $cmd") }
-            }
+            else                { $self->debug_msg("Unknown format: $cmd") }
         }
         else {
             $self->debug_msg("Unknown line: $mobi_line");
