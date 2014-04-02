@@ -639,6 +639,8 @@ If you don't want to use the POD driver for adding images then you should read t
 
 =item * L<Rupert Lane (RUPERTL)|https://metacpan.org/author/RUPERTL>
 
+=item * L<Abby Pan (abbypan)|http://abbypan.github.io/>
+
 =back
 
 =head1 COPYRIGHT & LICENSE
