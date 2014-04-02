@@ -1,5 +1,11 @@
 Changes for EBook::MOBI
 
+0.69 2014-04-02
+
+    - Patch (#27) from abbypan dealing with chinese font stuff
+    - removed switch feature for backwards compatibility with perl 5.8
+    - added some hints in docs for TOC and adding images
+
 0.68 2014-03-28
 
     - Hack-Patch (#28) from Rupert Lane (rupertl) making GD optional
