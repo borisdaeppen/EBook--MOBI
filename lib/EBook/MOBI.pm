@@ -583,6 +583,15 @@ It depends on your input plugin, how you can add images to your book.
 For POD, see the special syntax described in L<EBook::MOBI::Driver::POD>.
 For adding manually in MHTML, see L<EBook::MOBI::Converter>.
 
+B<Shortcut> for lazy guys: The conclusion of reading L<EBook::MOBI::Driver::POD> will be that you can add images via the POD-driver as following:
+
+ $book->add_content( data   => '=for image /my/camel.jpg This is a Camel.',
+                     driver => 'EBook::MOBI::Driver::POD',
+                     driver_options => { pagemode => 0, head0_mode => 0 }
+                   );
+
+If you don't want to use the POD driver for adding images then you should read the section I<WHAT IS MHTML?> in the module L<EBook::MOBI::Converter> (as said already). But this needs some effort.
+
 =head1 SEE ALSO
 
 =over
