@@ -494,7 +494,7 @@ Use this method to seperate content and give some structure to your book.
 
 =head2 add_toc_once
 
-Use this method to place a table of contents into your book. You will B<need to> call the make() method later, B<after> you added all your content to the book. This is, because we need all the content - to be able to calculate the references where the TOC is pointing to. Only 'h1' tags starting and ending with a newline char will enter the TOC.
+Use this method to place a table of contents into your book. You will B<need to> call the make() method later, B<after> you added all your content to the book. This is, because we need all the content - to be able to calculate the references where the TOC is pointing to. B<Only 'h1' tags starting and ending with a newline char will enter the TOC.>
 
  $book->add_toc_once();
 
