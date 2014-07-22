@@ -33,8 +33,16 @@ sub text {
 sub title {
     my $self = shift;
     my $txt  = shift;
-    my $lvl  = shift || 1;
-    my $toc  = shift || 1;
+    my $lvl  = shift;
+    my $toc  = shift;
+
+    # default values for lvl and toc (issue #31 on github)
+    unless( defined $lvl ) {
+        $lvl = 1;
+    }
+    unless( defined $toc ) {
+        $toc = 1;
+    }
 
     die("Titles can't be higher than level 6\n") if ($lvl > 6);
 
