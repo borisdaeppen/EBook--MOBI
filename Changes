@@ -1,5 +1,10 @@
 Changes for EBook::MOBI
 
+0.72  2015-09-26
+
+    - added link to github from metacpan and travis config (szabgab)
+    - updatet contributor list and copyright year (borisd)
+
 0.7  2014-07-22
 
     - handle default values correct in EBook::MOBI::Converter (#31)

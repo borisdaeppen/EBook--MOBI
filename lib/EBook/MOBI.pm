@@ -3,7 +3,7 @@ package EBook::MOBI;
 use strict;
 use warnings;
 
-our $VERSION = 0.71;
+our $VERSION = 0.72;
 
 # needed CPAN stuff
 use File::Temp qw(tempfile);
@@ -641,11 +641,13 @@ If you don't want to use the POD driver for adding images then you should read t
 
 =item * L<Abby Pan (abbypan)|http://abbypan.github.io/>
 
+=item * L<Gabor Szabo (szabgab)|https://metacpan.org/author/SZABGAB>
+
 =back
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2012, 2013 Boris Däppen, all rights reserved.
+Copyright 2015 Boris Däppen, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the same terms of Artistic License 2.0.
 
