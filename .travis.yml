@@ -1,3 +1,4 @@
+env: AUTHOR_TESTING=0
 branches:
   except:
     - gh-pages
