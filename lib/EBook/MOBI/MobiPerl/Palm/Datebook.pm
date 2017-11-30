@@ -96,15 +96,15 @@ An integer which specifies the type of repeat:
 
 =over 4
 
-=item 0
+=item 0 - "no repeat"
 
 no repeat.
 
-=item 1
+=item 1 - "daily event"
 
 a daily event, one that occurs every day.
 
-=item 2
+=item 2 - "weekly event"
 
 a weekly event, one that occurs every week on the same dayZ<>(s). An
 event may occur on several days every week, I<e.g.>, every Monday,
@@ -123,7 +123,7 @@ Monday, and so forth.
 I'm not sure what this is, but the Datebook app appears to perform
 some hairy calculations involving this.
 
-=item 3
+=item 3 - "monthly by day"
 
 a "monthly by day" event, I<e.g.>, one that occurs on the second
 Friday of every month.
@@ -142,12 +142,12 @@ month.
 An integer, the day of the week on which the event occurs. 0 means
 Sunday, 1 means Monday, and so forth.
 
-=item 4
+=item 4 - "monthly by date"
 
 a "monthly by date" event, I<e.g.>, one that occurs on the 12th of
 every month.
 
-=item 5
+=item 5 - "yearly event"
 
 a yearly event, I<e.g.>, one that occurs every year on December 25th.
 
